@@ -1,0 +1,115 @@
+---
+title: 'Diversification'
+description: 'Understanding diversification - the only free lunch in investing'
+---
+
+Diversification is spreading investments across different assets, sectors, or strategies to reduce risk. It's often called the only "free lunch" in investing - you can reduce risk without necessarily reducing expected returns.
+
+## Beginner
+
+### What It Means
+
+Different investments don't move in perfect lockstep. When some are down, others may be up or stable. By holding a variety of investments, you smooth out the bumps in your portfolio's returns.
+
+### Portfolio Example
+
+| Portfolio | Holdings | Risk Level |
+|-----------|----------|------------|
+| Portfolio A | \$100,000 in one tech stock | Very High - all eggs in one basket |
+| Portfolio B | \$100,000 across 50 stocks in 10 sectors | Much Lower - same expected return |
+
+### The Core Principle
+
+If you own just one stock and it drops 50%, your portfolio drops 50%. If you own 50 stocks and one drops 50%, your portfolio drops only 1% from that stock.
+
+### Why It Matters
+
+Diversification protects you from catastrophic losses in any single investment. It's the foundation of prudent investing and the reason index funds are so popular.
+
+---
+
+## Advanced
+
+### The Math of Diversification
+
+```
+For N equally-weighted stocks:
+σ_portfolio = σ_stock × √[(1/N) + ((N-1)/N) × ρ_avg]
+
+Where:
+- σ = Standard deviation (volatility)
+- N = Number of holdings
+- ρ_avg = Average correlation between holdings
+```
+
+### Diversification by Correlation
+
+| Correlation (ρ) | Effect on Portfolio |
+|-----------------|---------------------|
+| ρ = 1.0 | No diversification benefit |
+| ρ = 0.0 | Maximum theoretical benefit |
+| ρ = -1.0 | Can create zero-risk portfolio |
+
+**Reality Check**: Real stocks within a market exhibit 0.3-0.5 average correlation, limiting diversification benefits to approximately 2× risk reduction.
+
+### Diminishing Returns
+
+```
+Number of Stocks → Risk Reduction (assuming ρ = 0.3)
+1 stock:   100% of single-stock risk
+5 stocks:  ~60% of single-stock risk
+10 stocks: ~50% of single-stock risk
+30 stocks: ~40% of single-stock risk
+100 stocks: ~35% of single-stock risk
+500 stocks: ~33% of single-stock risk (approaching limit)
+```
+
+<Note>
+Most diversification benefit is achieved with 20-30 stocks. Beyond that, you're mainly adding complexity without much additional risk reduction.
+</Note>
+
+### What You Can and Can't Diversify Away
+
+| Risk Type | Can Diversify? | Examples |
+|-----------|----------------|----------|
+| **Idiosyncratic Risk** | Yes | Company scandals, product failures, management issues |
+| **Systematic Risk** | No | Market crashes, recessions, interest rate changes |
+
+<Warning>
+**Systematic market risk (beta) cannot be diversified away**, regardless of number of holdings. In a market crash, nearly all stocks fall together.
+</Warning>
+
+### Types of Diversification
+
+| Type | Description |
+|------|-------------|
+| **Asset Class** | Stocks, bonds, real estate, commodities |
+| **Geographic** | US, International, Emerging Markets |
+| **Sector** | Technology, Healthcare, Financials, etc. |
+| **Style** | Growth vs. Value, Large vs. Small cap |
+| **Time** | Dollar-cost averaging across time |
+
+### Historical Context
+
+The mathematical foundation of diversification comes from **Harry Markowitz's** 1952 Modern Portfolio Theory, for which he won the Nobel Prize in 1990. He proved that portfolio risk depends on correlations, not just individual asset risks.
+
+### Limitations
+
+- **Correlation Breakdown**: During crises, correlations spike toward 1.0 - diversification fails when you need it most
+- **Over-Diversification**: Too many holdings increase costs and complexity without meaningful risk reduction
+- **False Diversification**: Owning 10 tech stocks isn't diversification
+- **Doesn't Eliminate Market Risk**: Even a perfectly diversified portfolio falls in bear markets
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Correlation" href="/glossary/correlation">
+    The key to diversification math
+  </Card>
+  <Card title="Standard Deviation" href="/glossary/standard-deviation">
+    What diversification reduces
+  </Card>
+  <Card title="Beta" href="/glossary/beta">
+    Risk you can't diversify away
+  </Card>
+</CardGroup>

@@ -1,0 +1,159 @@
+---
+title: 'Information Ratio'
+description: 'Understanding the Information Ratio - measuring the efficiency of active management'
+---
+
+The Information Ratio measures how much excess return you're generating per unit of risk taken *relative to a benchmark*. It tells you how efficiently a strategy or manager beats their benchmark.
+
+## Beginner
+
+### What It Means
+
+The Information Ratio shows how consistently you outperform your benchmark, adjusted for the extra risk you're taking. High IR = consistent, efficient outperformance. Low IR = erratic or inefficient active management.
+
+### Portfolio Example
+
+- Your portfolio returns 14% vs. S&P 500's 10% (4% excess return)
+- Your tracking error (active risk) is 5%
+- **Information Ratio = 4% / 5% = 0.80**
+
+This means for every 1% of additional risk taken relative to the S&P 500, you're generating 0.80% of excess return.
+
+### Why It Matters
+
+It separates skilled active management from luck. A high Information Ratio means consistent outperformance, not just occasional big wins. It's the key metric for evaluating whether active management fees are worth paying.
+
+---
+
+## Advanced
+
+### Mathematical Definition
+
+```
+Information Ratio (IR) = (Rp - Rb) / TE
+
+Where:
+- Rp = Portfolio return
+- Rb = Benchmark return
+- TE = Tracking Error = σ(Rp - Rb)
+
+Tracking Error = Standard deviation of (Portfolio - Benchmark) returns
+```
+
+### Interpretation Benchmarks
+
+For active equity managers (annualized):
+
+| Information Ratio | Interpretation |
+|-------------------|----------------|
+| < 0 | Destroying value relative to benchmark |
+| 0 to 0.3 | Weak active management |
+| 0.3 to 0.5 | Moderate (median for active equity managers) |
+| 0.5 to 0.75 | Good (top quartile) |
+| 0.75 to 1.0 | Very good (top decile) |
+| > 1.0 | Excellent (rare when sustained over 3+ years) |
+
+### Historical Context
+
+The Information Ratio emerged from active portfolio management theory in the 1970s-80s, formalized by **Richard Grinold** and **Ronald Kahn** in "Active Portfolio Management" (1994). It became the standard for evaluating active management efficiency.
+
+### What Makes It Useful
+
+- **Active Management Focus**: Specifically designed to evaluate active strategies against benchmarks
+- **Risk-Adjusted**: Accounts for the additional risk taken to generate excess returns
+- **Consistency Measure**: High IR requires consistent outperformance, not volatile alpha
+- **Portfolio Construction**: Can use IR to optimally combine multiple active strategies
+- **Manager Evaluation**: Standard metric for comparing active managers
+
+### Detailed Example
+
+```
+Strategy A:
+- Returns 15% vs. benchmark 10% → Alpha = 5%
+- Tracking Error = 10%
+- Information Ratio = 5% / 10% = 0.50
+
+Strategy B:
+- Returns 13% vs. benchmark 10% → Alpha = 3%
+- Tracking Error = 3%
+- Information Ratio = 3% / 3% = 1.00
+
+Strategy B is better: more efficient alpha generation despite lower absolute alpha
+```
+
+### Data Requirements
+
+| Requirement | Duration | Notes |
+|------------|----------|-------|
+| Minimum | 36 months (3 years) | Initial IR estimate |
+| Preferred | 60+ months (5 years) | Meaningful evaluation |
+| Institutional standard | 3-5 years track record | Before considering IR credible |
+
+**Statistical Significance:**
+- IR = 0.5 needs ~6 years to be statistically significant at 95% confidence
+- IR = 1.0 needs ~4 years to be statistically significant
+- IR = 1.5 needs ~3 years to be statistically significant
+
+<Warning>
+Annual IR estimates are nearly useless due to noise. IR is extremely volatile over short periods.
+</Warning>
+
+### Relationship to Sharpe Ratio
+
+If benchmark is the risk-free rate, Information Ratio equals Sharpe Ratio.
+
+For most active strategies:
+```
+Simplified relationship (when active returns uncorrelated with benchmark):
+SR_p² ≈ SR_b² + IR²
+
+Important: This is primarily theoretical. In practice, long-only equity
+strategies have correlated active returns, so the relationship is more complex.
+```
+
+### The Fundamental Law of Active Management
+
+```
+E(IR) = IC × √BR  (theoretical maximum)
+
+Where:
+- IC = Information Coefficient (manager skill, typically 0.03-0.10)
+- BR = Breadth (number of independent investment decisions per year)
+```
+
+<Note>
+**Critical Caveats:**
+- This represents theoretical maximum, not expected outcome
+- Realistic IC: 0.03-0.10 (not 0.20+ often assumed)
+- Effective BR is much lower than nominal positions due to correlations
+- Real-world frictions reduce achievable IR to 20-50% of theoretical maximum
+</Note>
+
+### Limitations
+
+- **Benchmark Dependency**: Only meaningful with appropriate benchmark
+- **Assumes Normal Distribution**: Like Sharpe Ratio, assumes normally distributed returns
+- **Time Period Sensitive**: Short periods give noisy estimates
+- **Doesn't Capture Tail Risk**: Can miss rare but severe underperformance
+
+### Alternatives
+
+| Alternative | Description |
+|-------------|-------------|
+| **Modified IR** | Uses downside tracking error instead of total tracking error |
+| **Appraisal Ratio** | Similar concept with different statistical properties |
+| **t-statistic of Alpha** | Provides statistical significance of outperformance |
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Alpha" href="/glossary/alpha">
+    The numerator of IR
+  </Card>
+  <Card title="Sharpe Ratio" href="/glossary/sharpe-ratio">
+    Total risk version
+  </Card>
+  <Card title="Treynor Ratio" href="/glossary/treynor-ratio">
+    Systematic risk version
+  </Card>
+</CardGroup>

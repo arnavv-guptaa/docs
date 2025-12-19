@@ -1,0 +1,158 @@
+---
+title: 'Drawdown'
+description: 'Understanding drawdown - measuring peak-to-trough losses and the real pain of investing'
+---
+
+Drawdown measures how much your portfolio fell from its highest point to its lowest point before recovering. It shows the worst loss you would have experienced and the psychological pain of staying invested.
+
+## Beginner
+
+### What It Means
+
+Drawdown is the decline from a peak to a trough. Maximum drawdown is the largest such decline over your investment period - the worst-case scenario you'd have lived through.
+
+### Portfolio Example
+
+Your portfolio hits an all-time high of \$100,000. Over the next 6 months, it falls to \$75,000 before starting to recover.
+
+**Maximum Drawdown = 25%** (\$25,000 loss / \$100,000 peak)
+
+### Recovery Reality
+
+The math of recovery is brutal - you need bigger gains to recover from losses:
+
+| Drawdown | Gain Needed to Recover |
+|----------|------------------------|
+| 10% | 11% |
+| 20% | 25% |
+| 30% | 43% |
+| 50% | 100% |
+| 75% | 300% |
+
+### Why It Matters
+
+Drawdown tells you the psychological and financial pain you'll need to endure during rough patches. Many investors abandon strategies at the bottom of drawdowns, locking in losses. Understanding potential drawdowns helps you stay the course.
+
+---
+
+## Advanced
+
+### Mathematical Definition
+
+```
+Drawdown (DD) = (Trough Value - Peak Value) / Peak Value × 100%
+
+Maximum Drawdown (MDD) = max{DDi} for all i
+
+Recovery Time = Time from trough back to peak value
+
+Calmar Ratio = Annual Return / |Maximum Drawdown|
+```
+
+### Historical Context
+
+While drawdown analysis has long been part of investment practice, **Ed Seykota** and other commodity trading advisors in the 1970s-80s popularized maximum drawdown as a key risk metric. The **Calmar Ratio** (developed by Terry W. Young in 1991) formalized using MDD for risk-adjusted performance.
+
+### What Makes It Useful
+
+- **Practical Risk Measure**: Directly represents largest loss an investor would have experienced
+- **Psychological Relevance**: Captures the emotional difficulty of staying invested
+- **Capital Preservation**: Shows capital at risk during worst periods
+- **Recovery Analysis**: Time-to-recovery provides insight into strategy resilience
+- **Downside Focus**: Unlike standard deviation, only measures harmful outcomes
+
+### Detailed Example
+
+```
+Portfolio values over time:
+Month 0:  $100,000 (peak)
+Month 1:  $95,000   (5% drawdown)
+Month 2:  $88,000   (12% drawdown)
+Month 3:  $75,000   (25% maximum drawdown - trough)
+Month 4:  $82,000   (still in drawdown: 18% from peak)
+Month 5:  $93,000   (still in drawdown: 7% from peak)
+Month 6:  $103,000  (recovery complete, new peak)
+
+Key Metrics:
+- Maximum Drawdown: -25%
+- Drawdown Duration: 3 months (peak to trough)
+- Recovery Time: 3 months (trough to new peak)
+- Total Drawdown Period: 6 months (peak to full recovery)
+```
+
+### Data Requirements
+
+| Requirement | Duration | Notes |
+|------------|----------|-------|
+| Minimum | 5 years | Capture at least one significant correction |
+| Preferred | 10+ years | Include a full market cycle |
+| Ideal | 15-20 years | See 2-3 complete market cycles |
+
+<Warning>
+Short periods (less than 5 years) likely miss the strategy's true worst-case drawdown. You need to see how it performs through a real bear market.
+</Warning>
+
+### Relationship to Volatility
+
+The relationship between volatility and maximum drawdown is non-linear and strategy-dependent:
+
+**Empirical Reality:**
+- Equity strategies with 15% annual volatility have experienced maximum drawdowns of 40-60% over multi-decade periods
+- S&P 500: 2000-2002 MDD ≈ 50%, 2008-2009 MDD ≈ 55%
+
+**General Relationships:**
+- Higher Sharpe Ratio → Lower maximum drawdown (generally)
+- Lower correlation → Lower portfolio drawdown vs. individual assets
+
+### Limitations
+
+- **Endpoint Sensitivity**: MDD depends heavily on start/end dates of measurement period
+- **Ignores Frequency**: Single severe drawdown vs. multiple moderate drawdowns treated differently
+- **Backward-Looking**: Historical MDD doesn't predict future maximum loss
+- **Path Dependency**: Same average return and volatility can have very different drawdown profiles
+
+### Alternatives
+
+| Alternative | Description |
+|-------------|-------------|
+| **CDaR** | Conditional Drawdown at Risk - average of worst X% of drawdowns |
+| **Ulcer Index** | Measures depth and duration of drawdowns, not just maximum |
+| **Pain Ratio** | Return divided by Ulcer Index |
+| **Recovery Factor** | Net profit divided by maximum drawdown |
+
+### Path Dependency Insight
+
+Two portfolios with identical statistics can have very different drawdown profiles:
+
+```
+Both portfolios: Mean 10%, Volatility 15%, Sharpe 0.53
+
+Portfolio A: Gradual decline, quick recovery
+- MDD: 22%, Duration: 8 months
+
+Portfolio B: Sharp crash, slow grind recovery
+- MDD: 45%, Duration: 36 months
+
+Volatility alone cannot predict drawdown profile - path matters
+```
+
+<Tip>
+**Practical Guidelines:**
+- Strategy type drives drawdown: Momentum has sharp crashes, value has grinding drawdowns
+- 2× leverage → 2× MDD (linear), but recovery time increases non-linearly
+- Expect recovery time ≈ 1.5× drawdown duration as empirical rule
+</Tip>
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Standard Deviation" href="/glossary/standard-deviation">
+    Related but different risk measure
+  </Card>
+  <Card title="Sharpe Ratio" href="/glossary/sharpe-ratio">
+    Higher Sharpe = lower drawdowns
+  </Card>
+  <Card title="Correlation" href="/glossary/correlation">
+    Spikes during drawdowns
+  </Card>
+</CardGroup>

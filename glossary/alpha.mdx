@@ -1,0 +1,80 @@
+---
+title: 'Alpha'
+description: 'Understanding alpha - the measure of investment performance beyond market movements'
+---
+
+Alpha measures how much better (or worse) your portfolio performed compared to a benchmark index, after accounting for the risk you took. It represents the value added (or lost) through active investment decisions.
+
+## Beginner
+
+### What It Means
+
+Alpha is the excess return of your portfolio compared to what you'd expect given the level of market risk you took. A positive alpha means you beat expectations; a negative alpha means you underperformed.
+
+### Portfolio Example
+
+Your portfolio returned 15% this year while the S&P 500 returned 12%. If your portfolio has the same risk profile as the S&P 500, your alpha is 3% - you added 3% of value beyond what the market provided.
+
+### Why It Matters
+
+Alpha tells you if your investment strategy or portfolio manager is actually adding value, or if returns are just coming from general market movements. It separates skill from simply riding the market wave.
+
+---
+
+## Advanced
+
+### Mathematical Definition
+
+```
+Alpha (α) = Rp - [Rf + β(Rm - Rf)]
+
+Where:
+- Rp = Portfolio return
+- Rf = Risk-free rate
+- β = Portfolio beta
+- Rm = Market return
+```
+
+### Historical Context
+
+The concept was formalized by **Michael Jensen** (1968) in the context of the Capital Asset Pricing Model (CAPM). Jensen's Alpha became the standard measure for evaluating mutual fund performance.
+
+### What Makes It Useful
+
+Alpha isolates the portion of returns attributable to manager skill or strategy effectiveness, separate from returns from market exposure (beta). It provides a risk-adjusted performance metric that enables fair comparison across different investment strategies.
+
+### Data Requirements
+
+| Requirement | Duration | Notes |
+|------------|----------|-------|
+| Minimum | 36 months (3 years) | Basic statistical significance |
+| Preferred | 60+ months (5 years) | Stable alpha estimates |
+| Statistical test | t-statistic > 2.0 | 95% confidence threshold |
+
+<Warning>
+Alpha estimates remain noisy even with long histories. Short-term alpha measurements are essentially meaningless for evaluating skill.
+</Warning>
+
+### Limitations
+
+- **Single-Factor Problem**: Traditional alpha only adjusts for market risk (beta), ignoring other risk factors like size, value, or momentum
+- **Benchmark Sensitivity**: Alpha is only meaningful relative to an appropriate benchmark; wrong benchmark = meaningless alpha
+
+### Alternatives
+
+- **Fama-French Alpha**: Adjusts for multiple risk factors (market, size, value) providing more accurate skill measurement
+- **Information Ratio**: Measures alpha per unit of active risk, showing efficiency of alpha generation
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Beta" href="/glossary/beta">
+    Market sensitivity measure
+  </Card>
+  <Card title="Sharpe Ratio" href="/glossary/sharpe-ratio">
+    Return per unit of total risk
+  </Card>
+  <Card title="Information Ratio" href="/glossary/information-ratio">
+    Active return efficiency
+  </Card>
+</CardGroup>

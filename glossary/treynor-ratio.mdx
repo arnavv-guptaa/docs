@@ -1,0 +1,129 @@
+---
+title: 'Treynor Ratio'
+description: 'Understanding the Treynor Ratio - measuring return per unit of systematic risk'
+---
+
+The Treynor Ratio measures return per unit of systematic (market) risk, focusing only on risk that can't be diversified away. It's best suited for evaluating well-diversified portfolios.
+
+## Beginner
+
+### What It Means
+
+The Treynor Ratio tells you how much return you're getting for each unit of market risk (beta) you're taking. Unlike the Sharpe Ratio which uses total volatility, Treynor only considers systematic risk.
+
+### Portfolio Example
+
+| Portfolio | Return | Beta | Treynor Ratio* |
+|-----------|--------|------|----------------|
+| Portfolio A | 14% | 1.2 | 10.0 |
+| Portfolio B | 12% | 0.8 | 12.5 |
+
+*Assuming 2% risk-free rate
+
+Portfolio B is better - generating more return per unit of market risk taken, despite lower absolute returns.
+
+### When to Use It
+
+Best for evaluating well-diversified portfolios where unsystematic (stock-specific) risk has been eliminated through diversification. If your portfolio is well-diversified, beta is what matters most.
+
+### Why It Matters
+
+If your portfolio is part of a larger, diversified allocation, the Treynor Ratio tells you if you're being compensated fairly for market exposure. Unsystematic risk can be diversified away, so only systematic risk matters.
+
+---
+
+## Advanced
+
+### Mathematical Definition
+
+```
+Treynor Ratio = (Rp - Rf) / βp
+
+Where:
+- Rp = Portfolio return
+- Rf = Risk-free rate
+- βp = Portfolio beta (systematic risk)
+```
+
+### Historical Context
+
+Developed by **Jack Treynor** (1965), one of the developers of CAPM alongside Sharpe, Lintner, and Mossin. While less famous than the Sharpe Ratio, it provides complementary insights for portfolio evaluation.
+
+### What Makes It Useful
+
+- **Focus on Systematic Risk**: For well-diversified portfolios, only systematic risk matters
+- **Complements Sharpe Ratio**: Sharpe uses total risk (σ), Treynor uses systematic risk (β)
+- **Portfolio Comparison**: Compare portfolios with different diversification levels
+- **Theoretical Foundation**: Direct link to CAPM expected return framework
+
+### Sharpe vs. Treynor: Key Insight
+
+```
+Well-diversified portfolio:
+- Treynor and Sharpe Ratios give similar rankings
+- Most risk is systematic (β explains most of σ)
+
+Poorly diversified portfolio:
+- Sharpe penalizes for total risk (including idiosyncratic)
+- Treynor only penalizes for market risk
+- Gap between them indicates poor diversification
+```
+
+### Data Requirements
+
+| Requirement | Duration | Notes |
+|------------|----------|-------|
+| Minimum | 36 months (3 years) | Needs stable beta estimate |
+| Preferred | 60 months (5 years) | More reliable |
+
+<Note>
+Treynor Ratio reliability depends entirely on beta estimation quality. Beta instability makes Treynor Ratio time-varying.
+</Note>
+
+### When Treynor is Better Than Sharpe
+
+| Scenario | Use Treynor |
+|----------|-------------|
+| Evaluating mutual funds | Typically well-diversified |
+| Comparing index funds/ETFs | Low idiosyncratic risk |
+| Portfolio is part of larger allocation | Unsystematic risk diversified at higher level |
+| Idiosyncratic risk is small | Beta captures most risk |
+
+### When Sharpe is Better Than Treynor
+
+| Scenario | Use Sharpe |
+|----------|------------|
+| Concentrated portfolios | Significant stock-specific risk |
+| Stand-alone investment evaluation | Total risk matters |
+| Strategies with high idiosyncratic risk | Can't assume diversification |
+| Most practical applications | More widely applicable |
+
+### Limitations
+
+- **Assumes Good Diversification**: Misleading for concentrated portfolios with significant idiosyncratic risk
+- **Beta Limitations**: Inherits all limitations of beta (time-varying, single-factor, etc.)
+- **Less Intuitive**: Denominator (beta) is more abstract than volatility
+- **Limited Usage**: Less common in practice than Sharpe Ratio
+
+### Alternatives
+
+| Alternative | When to Use |
+|-------------|-------------|
+| **Sharpe Ratio** | When total risk matters (most cases) |
+| **Sortino Ratio** | Downside risk focus |
+| **Jensen's Alpha** | Direct risk-adjusted excess return |
+| **Information Ratio** | Active management evaluation |
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Beta" href="/glossary/beta">
+    The denominator of Treynor
+  </Card>
+  <Card title="Sharpe Ratio" href="/glossary/sharpe-ratio">
+    Uses total risk instead
+  </Card>
+  <Card title="Alpha" href="/glossary/alpha">
+    Related performance measure
+  </Card>
+</CardGroup>

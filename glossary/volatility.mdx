@@ -1,0 +1,160 @@
+---
+title: 'Volatility'
+description: 'Understanding volatility - the measure of price fluctuations and market uncertainty'
+---
+
+Volatility measures how much and how quickly prices fluctuate. It's the market's gauge of uncertainty and risk, often called the "fear factor" when it spikes.
+
+## Beginner
+
+### What It Means
+
+Volatility tells you how wildly prices are swinging. High volatility means big daily moves (up or down). Low volatility means calm, steady price action.
+
+### Market Conditions
+
+| Volatility Level | What It Feels Like |
+|------------------|-------------------|
+| Low (VIX < 15) | Calm markets, small daily moves (±0.5%) |
+| Normal (VIX 15-20) | Typical conditions, moderate moves (±1%) |
+| Elevated (VIX 20-30) | Nervous markets, larger swings (±1.5%) |
+| High (VIX > 30) | Fear and uncertainty, big moves (±2-3%+) |
+
+### The VIX - Fear Gauge
+
+The VIX (Volatility Index) measures expected S&P 500 volatility over the next 30 days. It's widely watched as a barometer of market fear.
+
+| VIX Level | Interpretation |
+|-----------|----------------|
+| Below 15 | Complacency, calm |
+| 15-20 | Normal |
+| 20-30 | Elevated concern |
+| Above 30 | High fear |
+| Above 40 | Panic (rare) |
+
+### Why It Matters
+
+Volatility affects everything: trading decisions, option prices, risk management, and investor psychology. Understanding volatility helps you prepare for and navigate different market conditions.
+
+---
+
+## Advanced
+
+### Volatility vs. Standard Deviation
+
+Volatility and standard deviation are closely related but not identical:
+
+| Term | Usage |
+|------|-------|
+| **Standard Deviation** | Statistical measure of return dispersion |
+| **Volatility** | Often refers to annualized standard deviation or implied volatility |
+| **Realized Volatility** | Historical, calculated from past returns |
+| **Implied Volatility** | Forward-looking, derived from option prices |
+
+### Calculating Volatility
+
+```
+Realized Volatility (annualized):
+σ_annual = σ_daily × √252
+
+Where 252 = trading days per year
+
+Example:
+- Daily std dev: 1%
+- Annualized volatility: 1% × √252 = 15.9%
+```
+
+### Volatility Clustering
+
+**Key Insight**: Volatility begets volatility. High-volatility days tend to follow high-volatility days, and calm periods persist.
+
+```
+Empirical Pattern:
+- After a 3%+ daily move, expect above-average volatility for weeks
+- After weeks of <0.5% daily moves, expect continued calm
+- Volatility mean-reverts but slowly
+```
+
+<Note>
+This clustering effect is captured by GARCH models, developed by Robert Engle (Nobel Prize 2003) and Tim Bollerslev.
+</Note>
+
+### Implied vs. Realized Volatility
+
+| Type | Source | Use |
+|------|--------|-----|
+| **Implied** | Option prices | Forward-looking expectation |
+| **Realized** | Historical returns | What actually happened |
+
+The gap between them is the **volatility risk premium**:
+- Implied usually exceeds realized (investors pay for protection)
+- This premium averages 2-4% annually
+
+### Volatility Regimes
+
+Markets exhibit distinct volatility regimes:
+
+| Regime | Characteristics | Duration |
+|--------|-----------------|----------|
+| **Low Vol** | VIX < 15, steady gains | Months to years |
+| **Normal** | VIX 15-20, typical markets | Most common |
+| **High Vol** | VIX > 25, large swings | Weeks to months |
+| **Crisis** | VIX > 40, extreme moves | Days to weeks |
+
+<Warning>
+Regime changes happen suddenly. Markets can shift from calm to crisis in days. Don't assume current conditions will persist.
+</Warning>
+
+### Volatility and Returns
+
+**The Low Volatility Anomaly**: Counterintuitively, low-volatility stocks have historically outperformed high-volatility stocks on a risk-adjusted basis.
+
+| Stock Type | Return | Volatility | Sharpe |
+|------------|--------|------------|--------|
+| Low Vol | Lower | Much Lower | Higher |
+| High Vol | Higher | Much Higher | Lower |
+
+This contradicts traditional finance theory (higher risk should mean higher returns).
+
+### Volatility Smile/Skew
+
+Option markets reveal more nuanced volatility expectations:
+
+```
+Volatility Skew:
+- Out-of-the-money puts have higher implied vol than calls
+- Markets price in crash risk (fat left tail)
+- Steeper skew = more fear of downside
+```
+
+### Practical Applications
+
+| Application | How Volatility Is Used |
+|-------------|------------------------|
+| Position Sizing | Smaller positions in high-vol assets |
+| Risk Budgeting | Allocate risk, not just dollars |
+| Option Trading | Buy/sell based on vol views |
+| Hedging | Hedge more when vol is low (cheaper) |
+
+### Data Sources
+
+| Source | Description |
+|--------|-------------|
+| VIX | S&P 500 implied volatility |
+| VVIX | Volatility of VIX (vol of vol) |
+| VXN | Nasdaq 100 implied volatility |
+| Historical | Calculate from price history |
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Standard Deviation" href="/glossary/standard-deviation">
+    The statistical foundation
+  </Card>
+  <Card title="Drawdown" href="/glossary/drawdown">
+    What high volatility can cause
+  </Card>
+  <Card title="Sharpe Ratio" href="/glossary/sharpe-ratio">
+    Returns adjusted for volatility
+  </Card>
+</CardGroup>

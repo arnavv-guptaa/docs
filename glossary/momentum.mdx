@@ -1,0 +1,134 @@
+---
+title: 'Momentum'
+description: 'Understanding momentum - the tendency for recent winners to keep winning'
+---
+
+Momentum is the tendency for assets that have outperformed recently to continue outperforming over intermediate horizons. It's one of the most robust and well-documented factors in finance.
+
+## Beginner
+
+### What It Means
+
+Momentum is simple: stocks that have been going up tend to keep going up, and stocks that have been going down tend to keep going down - at least for a while. It's about riding trends, not fighting them.
+
+### Portfolio Example
+
+Stock X rose 30% over the past year while Stock Y fell 15%. A momentum strategy would buy Stock X (the winner) and avoid or sell Stock Y (the loser), betting that these trends continue.
+
+### The Key Insight
+
+Momentum works over intermediate timeframes (3-12 months). It's not about day trading or long-term value - it's about capturing persistent trends before they reverse.
+
+### Why It Matters
+
+Momentum is one of the strongest factors in investing. It works across asset classes (stocks, bonds, currencies, commodities) and across countries. Understanding it helps explain market movements and can improve returns.
+
+---
+
+## Advanced
+
+### Time Horizon Matters
+
+Different horizons show opposite effects:
+
+| Horizon | Effect | What Happens |
+|---------|--------|--------------|
+| Short-term (1 week - 1 month) | **Reversal** | Recent winners become losers |
+| Intermediate (3-12 months) | **Momentum** | Recent winners keep winning |
+| Long-term (3-5 years) | **Reversal** | Value reversion kicks in |
+
+### Typical Implementation
+
+```
+Standard Momentum Strategy:
+- Formation period: 12-month lookback
+- Skip most recent month (avoids short-term reversal)
+- Holding period: 3-6 months
+- Rebalance monthly or quarterly
+```
+
+<Note>
+Skipping the most recent month is critical. Including it reduces momentum returns significantly due to short-term reversal effects.
+</Note>
+
+### Types of Momentum
+
+| Type | Definition | Application |
+|------|------------|-------------|
+| **Cross-Sectional** | Relative performance vs. peers | Long winners, short losers within universe |
+| **Time-Series** | Absolute performance vs. self | Long if positive trend, cash if negative |
+| **Industry Momentum** | Sector-level trends | Tilt toward trending sectors |
+
+### Why Momentum Works
+
+**Behavioral Explanations:**
+- **Underreaction**: Investors are slow to update beliefs on new information
+- **Herding**: Trend-following creates self-reinforcing cycles
+- **Disposition Effect**: Investors sell winners too early, hold losers too long
+- **Confirmation Bias**: Investors seek information confirming existing trends
+
+**Risk-Based Explanations:**
+- **Crash Risk**: Momentum strategies suffer severe losses during reversals
+- **Liquidity Risk**: Momentum stocks may be harder to trade during stress
+
+### Historical Performance
+
+| Metric | Value |
+|--------|-------|
+| Annualized Premium | 6-8% (long-term average) |
+| Sharpe Ratio | ~0.5-0.7 |
+| Worst Drawdown | -50% or more (2009) |
+
+### The Momentum Crash Risk
+
+<Warning>
+Momentum strategies experience severe crashes during market reversals. In 2009, momentum lost 50-80% in just 2 months as beaten-down stocks rallied sharply and prior winners collapsed.
+</Warning>
+
+**Crash Characteristics:**
+- Occur during sharp market reversals (V-shaped recoveries)
+- Often follow prolonged market declines
+- Can wipe out years of gains in weeks
+- Most severe when momentum spread (winners vs. losers) is extreme
+
+### Implementation Considerations
+
+| Factor | Consideration |
+|--------|---------------|
+| **Turnover** | High (50-100%+ annually) - increases trading costs |
+| **Capacity** | Limited for very large funds |
+| **Timing** | Entry/exit timing affects returns significantly |
+| **Combination** | Works well with value (negatively correlated) |
+
+### Momentum + Value Diversification
+
+Momentum and value tend to work at different times:
+
+```
+Value struggles → Momentum often works
+Momentum crashes → Value often rebounds
+
+Combining them provides smoother returns than either alone
+```
+
+### Data Requirements
+
+| Requirement | Details |
+|-------------|---------|
+| History | 12 months for signal, 5+ years for evaluation |
+| Frequency | Monthly rebalancing typical |
+| Universe | Liquid stocks only (small-cap momentum harder to capture) |
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Factor Investing" href="/glossary/factor-investing">
+    Momentum is a key factor
+  </Card>
+  <Card title="Value Investing" href="/glossary/value-investing">
+    Often negatively correlated
+  </Card>
+  <Card title="Drawdown" href="/glossary/drawdown">
+    Momentum has severe drawdowns
+  </Card>
+</CardGroup>

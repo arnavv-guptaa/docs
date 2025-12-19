@@ -1,0 +1,115 @@
+---
+title: 'Sharpe Ratio'
+description: 'Understanding the Sharpe Ratio - the gold standard for risk-adjusted performance measurement'
+---
+
+The Sharpe Ratio tells you how much return you're getting for each unit of risk you're taking. It's the most widely used measure of risk-adjusted performance in the investment industry.
+
+## Beginner
+
+### What It Means
+
+The Sharpe Ratio measures "bang for your buck" in terms of risk. Higher is better - you're getting more return for each unit of volatility you endure.
+
+### Portfolio Example
+
+| Portfolio | Return | Volatility | Sharpe Ratio* |
+|-----------|--------|------------|---------------|
+| Portfolio A | 12% | 8% | 1.25 |
+| Portfolio B | 15% | 15% | 0.87 |
+
+*Assuming 2% risk-free rate
+
+Even though Portfolio B has higher returns, Portfolio A is better on a risk-adjusted basis. You're getting more reward per unit of risk.
+
+### Why It Matters
+
+It helps you compare different investments fairly. A 20% return with 30% volatility isn't necessarily better than a 12% return with 8% volatility. The Sharpe Ratio reveals which investment is truly more efficient.
+
+---
+
+## Advanced
+
+### Mathematical Definition
+
+```
+Sharpe Ratio = (Rp - Rf) / σp
+
+Where:
+- Rp = Portfolio return
+- Rf = Risk-free rate (typically 3-month T-bills)
+- σp = Portfolio standard deviation (total volatility)
+```
+
+### Historical Context
+
+Developed by **William Sharpe** (1966), originally called the "reward-to-variability ratio." It became the industry standard for risk-adjusted performance measurement. Sharpe received the 1990 Nobel Prize partly for this contribution.
+
+### Interpretation Benchmarks
+
+For long-only equity strategies (annualized):
+
+| Sharpe Ratio | Interpretation |
+|--------------|----------------|
+| < 0 | Portfolio underperforming risk-free rate |
+| 0 to 0.5 | Below average risk-adjusted returns |
+| 0.5 to 1.0 | Good risk-adjusted performance |
+| 1.0 to 1.5 | Very good risk-adjusted performance |
+| > 1.5 | Excellent (rare over multi-year periods) |
+
+**Strategy-Specific Benchmarks:**
+- **Long-only equity**: SR 0.5-1.0 typical, >1.5 excellent
+- **Long/short equity**: SR 1.0-2.0 good, >2.5 excellent
+- **Market-neutral**: SR >2.0 achievable but rare over multi-year periods
+
+### What Makes It Useful
+
+- **Universal Comparability**: Can compare across any asset classes or strategies
+- **Intuitive Interpretation**: Simple ratio that captures risk-return tradeoff
+- **Portfolio Optimization**: Maximizing Sharpe Ratio leads to optimal risk-adjusted portfolios
+- **Performance Evaluation**: Standard metric for evaluating fund managers and strategies
+
+### Data Requirements
+
+| Requirement | Duration | Notes |
+|------------|----------|-------|
+| Minimum | 36 months (3 years) | Basic Sharpe Ratio estimate |
+| Preferred | 60-120 months (5-10 years) | Stable, meaningful comparisons |
+
+**Statistical Confidence:**
+- Sharpe = 0.5 needs ~4 years to be statistically different from zero
+- Sharpe = 1.0 needs ~2 years to be statistically significant
+
+<Warning>
+Short-period (less than 2 years) Sharpe Ratios are essentially noise. Bull vs. bear markets dramatically affect estimates.
+</Warning>
+
+### Limitations
+
+- **Assumes Normal Distribution**: Real return distributions have fat tails and skewness; Sharpe Ratio doesn't capture this
+- **Symmetric Risk Treatment**: Treats upside and downside volatility equally, but investors care more about downside
+- **Time Period Sensitive**: Can vary significantly based on measurement period
+- **Gaming Potential**: Can be artificially inflated through return smoothing or option writing strategies
+
+### Alternatives
+
+| Alternative | Use Case |
+|-------------|----------|
+| **Sortino Ratio** | Uses downside deviation instead of total volatility, focusing on harmful volatility |
+| **Calmar Ratio** | Return over maximum drawdown, captures tail risk better |
+| **Information Ratio** | For active strategies, measures excess return per unit of active risk |
+| **Omega Ratio** | Probability-weighted ratio of gains vs. losses above/below threshold |
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Standard Deviation" href="/glossary/standard-deviation">
+    The denominator in Sharpe Ratio
+  </Card>
+  <Card title="Information Ratio" href="/glossary/information-ratio">
+    Active management version
+  </Card>
+  <Card title="Treynor Ratio" href="/glossary/treynor-ratio">
+    Uses beta instead of volatility
+  </Card>
+</CardGroup>

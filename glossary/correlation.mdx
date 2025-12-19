@@ -1,0 +1,142 @@
+---
+title: 'Correlation'
+description: 'Understanding correlation - how assets move together and the foundation of diversification'
+---
+
+Correlation measures whether two investments tend to move together, move in opposite directions, or move independently. It's the foundation of diversification and portfolio construction.
+
+## Beginner
+
+### What It Means
+
+Correlation tells you the relationship between how two investments move:
+- **Positive correlation (+1)**: They move together
+- **Negative correlation (-1)**: They move in opposite directions
+- **Zero correlation (0)**: Their movements are unrelated
+
+### Portfolio Examples
+
+| Stock Pair | Correlation | What It Means |
+|------------|-------------|---------------|
+| Stock A & B | +0.9 | When A goes up, B strongly tends to go up too |
+| Stock A & C | -0.7 | When A goes up, C strongly tends to go down |
+| Stock A & D | 0.0 | A's movements tell you nothing about D |
+
+<Note>
+Correlation doesn't tell you the *magnitude* of movements, only the *direction* and *strength* of the relationship. The actual percentage moves depend on each investment's volatility.
+</Note>
+
+### Why It Matters
+
+Lower correlation between your holdings means better diversification. When one investment falls, others may hold steady or rise, reducing overall portfolio risk. This is the only "free lunch" in investing.
+
+---
+
+## Advanced
+
+### Mathematical Definition
+
+```
+Correlation (ρ) = Cov(Ra, Rb) / (σa × σb)
+
+Where:
+- Cov(Ra, Rb) = Covariance of returns between assets A and B
+- σa, σb = Standard deviations of assets A and B
+- Range: -1.0 to +1.0
+```
+
+### Interpretation Scale
+
+| Correlation | Interpretation |
+|-------------|----------------|
+| +1.0 | Perfect positive (move in lockstep) |
+| +0.7 to +0.9 | Strong positive |
+| +0.4 to +0.6 | Moderate positive |
+| -0.1 to +0.3 | Weak/no correlation |
+| -0.4 to -0.6 | Moderate negative |
+| -0.7 to -0.9 | Strong negative |
+| -1.0 | Perfect negative (perfect hedges) |
+
+### Historical Context
+
+Correlation's importance in portfolio theory stems from **Markowitz's Modern Portfolio Theory** (1952). He showed mathematically that portfolio risk depends not just on individual asset risks, but critically on how assets correlate with each other. This insight revolutionized portfolio construction.
+
+### What Makes It Useful
+
+- **Diversification Quantification**: Lower correlation = greater diversification benefits
+- **Portfolio Risk Reduction**: Portfolio with N uncorrelated assets has risk reduced by factor of √N
+- **Risk Decomposition**: Identify which holdings contribute most to portfolio risk
+- **Hedging Strategy**: Find negative correlation assets for portfolio protection
+- **Multi-Asset Allocation**: Construct portfolios spanning stocks, bonds, commodities based on correlation matrix
+
+### Diversification Math
+
+```
+Two-asset portfolio variance:
+σp² = wa²σa² + wb²σb² + 2wawbσaσbρab
+
+Where ρab is correlation between assets A and B
+
+If ρab = 1.0:  No diversification benefit (risk is weighted average)
+If ρab = 0.0:  Significant diversification (portfolio risk < weighted average)
+If ρab = -1.0: Maximum diversification (can create zero-risk portfolio)
+```
+
+### Data Requirements
+
+| Requirement | Duration | Notes |
+|------------|----------|-------|
+| Minimum | 36 months (3 years) | Basic correlation estimate |
+| Preferred | 60+ months (5 years) | Portfolio construction decisions |
+| Updates | Quarterly or semi-annually | Correlations change across regimes |
+
+<Warning>
+"Correlation goes to 1 in a crisis" - diversification fails when you need it most. Update correlations frequently.
+</Warning>
+
+### Limitations
+
+- **Instability Over Time**: Correlations increase during market stress
+- **Linear Relationship Only**: Doesn't capture non-linear dependencies
+- **Outlier Sensitivity**: Extreme events disproportionately influence correlation
+- **Assumes Stationarity**: Historical correlation may not persist
+
+### Alternatives
+
+| Alternative | Description |
+|-------------|-------------|
+| **Rank Correlation (Spearman)** | More robust to outliers, captures monotonic relationships |
+| **Tail Dependence** | Measures correlation specifically during extreme events |
+| **Copulas** | Capture full dependency structure beyond linear correlation |
+| **Rolling Correlation** | Time-varying correlation that adapts to changing relationships |
+
+### Correlation Breakdown in Crises
+
+**Empirical Reality:**
+
+| Market Condition | Average Stock Correlation |
+|------------------|---------------------------|
+| Calm (VIX < 15) | ~0.25 |
+| Normal (VIX 15-25) | ~0.35 |
+| Stress (VIX > 30) | 0.65-0.80 |
+| 2008 Crisis | ~0.85 |
+
+**Key Insight**: Longin and Solnik (2001) documented extreme correlation asymmetry - correlations spike during crashes but not rallies.
+
+<Tip>
+**Practical Guidance**: Stress test portfolios using correlation = 0.8, not historical average. Diversification works in calm markets but fails in crises.
+</Tip>
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Beta" href="/glossary/beta">
+    Correlation with market specifically
+  </Card>
+  <Card title="Standard Deviation" href="/glossary/standard-deviation">
+    Individual asset volatility
+  </Card>
+  <Card title="Drawdown" href="/glossary/drawdown">
+    What happens when correlations spike
+  </Card>
+</CardGroup>

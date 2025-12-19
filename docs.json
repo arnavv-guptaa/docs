@@ -27,6 +27,12 @@
               "methodology/overview",
               "methodology/scoring",
               "methodology/factors",
+              "methodology/value",
+              "methodology/quality",
+              "methodology/momentum",
+              "methodology/defensive",
+              "methodology/size",
+              "methodology/tactical",
               "methodology/risk-management"
             ]
           }
@@ -82,6 +88,32 @@
             "pages": [
               "api-reference/analysis/financial",
               "api-reference/analysis/technical"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Glossary",
+        "groups": [
+          {
+            "group": "Investment Terms",
+            "pages": [
+              "glossary/overview",
+              "glossary/alpha",
+              "glossary/beta",
+              "glossary/sharpe-ratio",
+              "glossary/treynor-ratio",
+              "glossary/information-ratio",
+              "glossary/standard-deviation",
+              "glossary/correlation",
+              "glossary/drawdown",
+              "glossary/diversification",
+              "glossary/factor-investing",
+              "glossary/market-capitalization",
+              "glossary/momentum",
+              "glossary/value-investing",
+              "glossary/volatility",
+              "glossary/portfolio-rebalancing"
             ]
           }
         ]

@@ -1,0 +1,138 @@
+---
+title: 'Factor Investing'
+description: 'Understanding factor investing - systematic approaches to capturing proven return drivers'
+---
+
+Factor investing systematically targets specific stock characteristics (factors) that academic research has shown to predict higher returns over time. It's the bridge between passive indexing and traditional active management.
+
+## Beginner
+
+### What It Means
+
+Instead of picking individual stocks based on hunches, factor investing builds portfolios around proven characteristics that have historically led to better returns. Think of factors as "ingredients" that explain why some stocks outperform.
+
+### The Main Factors
+
+| Factor | What It Targets | Simple Explanation |
+|--------|-----------------|-------------------|
+| **Value** | Cheap stocks | Buy stocks trading below their worth |
+| **Momentum** | Trending stocks | Buy recent winners, avoid recent losers |
+| **Quality** | Strong companies | Buy profitable, stable businesses |
+| **Size** | Smaller companies | Small caps tend to outperform large caps |
+| **Low Volatility** | Stable stocks | Less risky stocks often beat expectations |
+
+### Portfolio Example
+
+Instead of picking individual stocks, you build a portfolio emphasizing companies that are:
+- Undervalued relative to fundamentals (value)
+- Rising in price with positive momentum (momentum)
+- Highly profitable with strong balance sheets (quality)
+
+### Why It Matters
+
+Factor investing provides a middle ground: more systematic than stock picking, but with potential to beat the market unlike pure indexing. Decades of research support these factors across markets and time periods.
+
+---
+
+## Advanced
+
+### Academic Foundation
+
+Factor investing emerged from academic research showing that the market (beta) alone doesn't explain all returns:
+
+| Model | Year | Factors |
+|-------|------|---------|
+| CAPM | 1964 | Market |
+| Fama-French 3-Factor | 1993 | Market, Size, Value |
+| Carhart 4-Factor | 1997 | + Momentum |
+| Fama-French 5-Factor | 2015 | + Profitability, Investment |
+
+### Why Factors May Work
+
+Each factor has economic rationale for its premium:
+
+| Factor | Risk-Based Explanation | Behavioral Explanation |
+|--------|------------------------|------------------------|
+| **Value** | Distress risk, leverage | Overreaction to bad news |
+| **Momentum** | Crash risk, tail risk | Underreaction, herding |
+| **Quality** | Lower returns in recessions? | Neglect, complexity |
+| **Size** | Illiquidity, distress risk | Less analyst coverage |
+| **Low Vol** | Leverage constraints | Lottery preferences |
+
+### Historical Premiums
+
+Long-term annualized premiums (US equities, approximate):
+
+| Factor | Premium | Time Period |
+|--------|---------|-------------|
+| Market (Equity Risk Premium) | 5-7% | 1926-present |
+| Value (HML) | 3-4% | 1926-present |
+| Size (SMB) | 2-3% | 1926-present |
+| Momentum (UMD) | 6-8% | 1927-present |
+| Quality/Profitability | 3-4% | 1963-present |
+
+<Warning>
+Past premiums don't guarantee future results. Value underperformed significantly 2010-2020. Factors can have long periods of poor performance.
+</Warning>
+
+### Implementation Approaches
+
+| Approach | Description | Trade-offs |
+|----------|-------------|------------|
+| **Single-Factor** | Tilt toward one factor | Concentrated, high tracking error |
+| **Multi-Factor** | Combine several factors | Diversified, lower tracking error |
+| **Factor Timing** | Rotate based on conditions | Difficult to execute, may add value |
+| **Integrated** | Score stocks on all factors together | Most efficient, complex |
+
+### Factor Cyclicality
+
+Factors don't always work. Historical drawdowns:
+
+| Factor | Worst Drawdown | Duration |
+|--------|----------------|----------|
+| Value | -60% (vs. growth) | 2007-2020 |
+| Momentum | -50% | 2009 (2 months) |
+| Size | -40% | 1984-1990 |
+
+<Note>
+Factor diversification helps. When value struggles, momentum often works, and vice versa. Multi-factor approaches smooth returns.
+</Note>
+
+### Data Requirements
+
+| Requirement | Details |
+|-------------|---------|
+| Backtest period | 20+ years minimum (full market cycles) |
+| Out-of-sample | Test on different markets/time periods |
+| Transaction costs | Must account for turnover costs |
+| Capacity | Some factors don't scale to large AUM |
+
+### Limitations
+
+- **Crowding**: As factors become popular, premiums may shrink
+- **Implementation Costs**: Turnover, especially for momentum, erodes returns
+- **Factor Timing**: Extremely difficult to time factor rotations
+- **Drawdowns**: Long periods of underperformance test investor patience
+- **Data Mining**: Some "factors" are statistical artifacts
+
+### Parallax Approach
+
+Parallax combines multiple factors in an integrated framework:
+- Value, Quality, Momentum, Defensive factors
+- Factor scores combined at stock level
+- Risk management overlay
+- Sector and position constraints
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Alpha" href="/glossary/alpha">
+    What factors help generate
+  </Card>
+  <Card title="Beta" href="/glossary/beta">
+    The original factor
+  </Card>
+  <Card title="Diversification" href="/glossary/diversification">
+    Factor diversification
+  </Card>
+</CardGroup>

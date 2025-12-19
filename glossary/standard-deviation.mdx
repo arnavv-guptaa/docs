@@ -1,0 +1,137 @@
+---
+title: 'Standard Deviation'
+description: 'Understanding standard deviation - the fundamental measure of investment volatility and risk'
+---
+
+Standard deviation measures how much your portfolio's returns jump around their average. It's the most fundamental measure of investment risk and volatility.
+
+## Beginner
+
+### What It Means
+
+Standard deviation tells you how unpredictable your returns are. Higher standard deviation = more unpredictable returns = more risk. Lower = smoother, more predictable performance.
+
+### Portfolio Example
+
+| Portfolio | Average Return | Std Dev | Typical Range |
+|-----------|---------------|---------|---------------|
+| Portfolio A | 10% | 5% | 5% to 15% |
+| Portfolio B | 10% | 20% | -10% to 30% |
+
+Both have the same average return, but Portfolio B is much riskier - your actual returns could swing wildly.
+
+### The 68-95 Rule
+
+- **68% of the time**: Returns fall within 1 standard deviation of average
+- **95% of the time**: Returns fall within 2 standard deviations of average
+
+### Why It Matters
+
+Standard deviation helps you understand how bumpy the ride will be. If you can't stomach large swings, you want lower standard deviation investments.
+
+---
+
+## Advanced
+
+### Mathematical Definition
+
+```
+Standard Deviation (σ) = √[Σ(Ri - R̄)² / (N-1)]
+
+Where:
+- Ri = Return in period i
+- R̄ = Mean return
+- N = Number of observations
+
+Annualized: σ_annual = σ_period × √(periods per year)
+```
+
+### Historical Context
+
+The use of standard deviation as a risk measure stems from **Harry Markowitz's** 1952 Modern Portfolio Theory. This groundbreaking work established variance (standard deviation squared) as the fundamental measure of investment risk, earning Markowitz the 1990 Nobel Prize.
+
+### What Makes It Useful
+
+- **Risk Quantification**: Provides single number quantifying return uncertainty
+- **Portfolio Optimization**: Essential input for mean-variance optimization
+- **Diversification Benefits**: Portfolio standard deviation is less than weighted average of components due to correlation effects
+- **Statistical Foundation**: Well-understood statistical properties enable robust analysis
+- **Building Block**: Used as denominator in Sharpe Ratio, coefficient of variation, and other metrics
+
+### Data Requirements
+
+| Requirement | Duration | Notes |
+|------------|----------|-------|
+| Minimum | 24 months (2 years) | Rough volatility estimate |
+| Preferred | 36-60 months (3-5 years) | Stable volatility measurement |
+| Standard | 3-5 years of monthly data | Industry norm |
+
+**Frequency Trade-off:**
+- Daily data: More observations but noisier (microstructure effects)
+- Monthly data: Less noisy but fewer observations
+
+<Note>
+Volatility is time-varying and mean-reverting. Consider using rolling windows to capture regime changes.
+</Note>
+
+### Interpretation in Portfolio Context
+
+```
+If portfolio has:
+- Mean return: 10% annually
+- Standard deviation: 15% annually
+
+Then in a given year, we expect:
+- 68% probability: return between -5% and +25% (1 std dev)
+- 95% probability: return between -20% and +40% (2 std dev)
+```
+
+### Limitations
+
+- **Symmetric Treatment**: Treats upside and downside volatility equally; investors prefer upside volatility
+- **Distribution Assumptions**: Most useful for normally distributed returns; real returns have fat tails
+- **Backward-Looking**: Historical volatility may not predict future volatility
+- **Not Intuitive**: Statistical measure that doesn't directly convey economic risk
+
+### Alternatives
+
+| Alternative | Description |
+|-------------|-------------|
+| **Downside Deviation** | Measures only negative return deviations, focusing on harmful risk |
+| **Value at Risk (VaR)** | Probability of losing more than X% over given period |
+| **Maximum Drawdown** | Largest peak-to-trough decline, captures severe loss potential |
+| **MAD** | Mean Absolute Deviation - more robust to outliers |
+
+### Fat Tails and Volatility Clustering
+
+**Intellectual Tradition**: Benoit Mandelbrot (1963) first documented fat tails in financial returns. Robert Engle (1982, Nobel 2003) developed ARCH models for volatility clustering.
+
+**Empirical Reality:**
+
+| Event | Normal Distribution Predicts | Actual Frequency |
+|-------|------------------------------|------------------|
+| 3σ event | Once every 370 observations | 2-3× more frequent |
+| 5σ event | Once every 3.5 million observations | Every few years |
+
+<Warning>
+October 1987 was a 20σ event under normality - essentially "impossible" in theory, but it happened. Don't trust standard deviation confidence intervals for tail risk.
+</Warning>
+
+**Volatility Clustering** - "Volatility begets volatility":
+- High-vol days follow high-vol days
+- Low-vol periods persist
+- After VIX spikes, expect elevated volatility for weeks/months
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Sharpe Ratio" href="/glossary/sharpe-ratio">
+    Uses std dev as denominator
+  </Card>
+  <Card title="Drawdown" href="/glossary/drawdown">
+    Alternative risk measure
+  </Card>
+  <Card title="Correlation" href="/glossary/correlation">
+    Affects portfolio volatility
+  </Card>
+</CardGroup>
