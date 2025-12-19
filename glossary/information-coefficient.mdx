@@ -1,0 +1,151 @@
+---
+title: 'Information Coefficient'
+description: 'Understanding the Information Coefficient - measuring forecasting skill'
+---
+
+The Information Coefficient (IC) measures how good you are at predicting which stocks will outperform. It's the correlation between your predictions and actual outcomes - the purest measure of investment skill.
+
+## Beginner
+
+### What It Means
+
+IC answers: "When I predict a stock will do well, how often is that prediction correct?" It's measured as a correlation, ranging from -1 to +1.
+
+### Portfolio Example
+
+At the start of each quarter, you predict expected returns for 100 stocks. At quarter end, you compare predictions to actual returns.
+
+| IC Value | Interpretation |
+|----------|----------------|
+| 0.00 | No predictive ability (random guessing) |
+| 0.03 | Weak but positive skill |
+| 0.05 | Typical skilled manager |
+| 0.10 | Strong skill (rare) |
+
+### Why It Matters
+
+IC directly measures forecasting skill - the core of active management value. If you can't predict which stocks will outperform, you can't add value. IC tells you if your predictions have any merit.
+
+---
+
+## Advanced
+
+### Mathematical Definition
+
+```
+IC = Correlation(Forecast Returns, Realized Returns)
+
+IC = Cov(f, r) / (σf × σr)
+
+Where:
+- f = Forecasted returns
+- r = Realized returns
+- Range: -1.0 to +1.0
+```
+
+### Realistic IC Values
+
+Most investors overestimate achievable IC:
+
+| Manager Type | Typical IC |
+|--------------|------------|
+| Bottom Decile | -0.02 to +0.01 |
+| Median Manager | 0.02 - 0.04 |
+| Top Quartile | 0.05 - 0.08 |
+| Top Decile | 0.08 - 0.12 |
+
+<Warning>
+An IC of 0.10 is exceptional. Claims of IC above 0.15 should be viewed with extreme skepticism.
+</Warning>
+
+### The Fundamental Law of Active Management
+
+IC connects to expected performance through:
+
+```
+E(IR) = IC × √BR
+
+Where:
+- IR = Information Ratio
+- IC = Information Coefficient
+- BR = Breadth (independent bets per year)
+```
+
+**Example:**
+- IC = 0.05, BR = 100 independent bets
+- E(IR) = 0.05 × √100 = 0.05 × 10 = 0.50
+
+### Why Small IC Matters
+
+Even tiny IC creates value with enough breadth:
+
+| IC | Breadth | Expected IR |
+|----|---------|-------------|
+| 0.02 | 100 | 0.20 |
+| 0.05 | 100 | 0.50 |
+| 0.05 | 400 | 1.00 |
+| 0.10 | 100 | 1.00 |
+
+<Note>
+The law shows two paths to high IR: better skill (higher IC) or more independent bets (higher breadth). Most quant strategies focus on breadth since IC is hard to improve.
+</Note>
+
+### IC Stability
+
+IC is not constant:
+
+| Factor | Effect on IC |
+|--------|--------------|
+| **Market Volatility** | Higher dispersion = higher achievable IC |
+| **Regime Changes** | IC varies across bull/bear markets |
+| **Strategy Crowding** | More users = lower IC |
+| **Information Decay** | Signals lose power over time |
+
+### Measuring IC
+
+| Approach | Description |
+|----------|-------------|
+| **Cross-Sectional** | Rank correlation each period across all stocks |
+| **Time-Series** | Track individual stock forecast accuracy over time |
+| **Quintile Spreads** | Top quintile return minus bottom quintile |
+
+### Data Requirements
+
+| Requirement | Details |
+|-------------|---------|
+| Observations | 100+ independent forecasts minimum |
+| Preferred | 500+ forecasts for stable IC estimate |
+| Time Coverage | Multiple periods to confirm consistency |
+| Cross-Sectional | 50-100 stocks per period typical |
+
+### Limitations
+
+| Limitation | Description |
+|------------|-------------|
+| **Hard to Measure** | Requires detailed forecast data |
+| **Time-Varying** | IC changes across market conditions |
+| **Implementation Gap** | Forecast IC differs from realized portfolio IC |
+| **Correlation Effects** | High correlations reduce effective breadth |
+
+### IC vs. Hit Ratio
+
+| Metric | Measures | Considers Magnitude? |
+|--------|----------|----------------------|
+| **Hit Ratio** | Frequency of correct direction | No |
+| **IC** | Correlation with outcomes | Yes |
+
+IC is more comprehensive because it accounts for both direction and magnitude of predictions.
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Information Ratio" href="/glossary/information-ratio">
+    IC helps determine IR
+  </Card>
+  <Card title="Hit Ratio" href="/glossary/hit-ratio">
+    Related but simpler measure
+  </Card>
+  <Card title="Alpha" href="/glossary/alpha">
+    What IC enables
+  </Card>
+</CardGroup>

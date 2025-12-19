@@ -43,7 +43,7 @@ Without rebalancing, a 60/40 portfolio could become 80/20 after a bull market - 
 | Approach | How It Works | Pros | Cons |
 |----------|--------------|------|------|
 | **Calendar** | Rebalance on fixed schedule (monthly, quarterly, annually) | Simple, predictable | May trade unnecessarily or miss large drifts |
-| **Threshold** | Rebalance when allocation drifts beyond bands (e.g., ±5%) | Trades only when needed | Requires monitoring |
+| **Threshold** | Rebalance when allocation drifts beyond bands (e.g., 5%) | Trades only when needed | Requires monitoring |
 | **Hybrid** | Check on calendar, trade only if beyond threshold | Best of both | Slightly more complex |
 
 ### Rebalancing Frequency Trade-offs
@@ -91,14 +91,14 @@ Common threshold approaches:
 
 | Method | Example | Description |
 |--------|---------|-------------|
-| **Absolute** | ±5% | Rebalance if >5 percentage points from target |
-| **Relative** | ±25% | Rebalance if >25% away from target weight |
+| **Absolute** | 5% | Rebalance if more than 5 percentage points from target |
+| **Relative** | 25% | Rebalance if more than 25% away from target weight |
 | **Volatility-Adjusted** | Varies | Tighter bands for more volatile assets |
 
 ```
 Example (60% stock target):
-- Absolute ±5%: Rebalance below 55% or above 65%
-- Relative ±25%: Rebalance below 45% or above 75%
+- Absolute 5%: Rebalance below 55% or above 65%
+- Relative 25%: Rebalance below 45% or above 75%
 ```
 
 ### Costs of Rebalancing
@@ -113,7 +113,7 @@ Example (60% stock target):
 ### Rebalancing in Practice
 
 **Considerations:**
-- Use threshold bands (±3-5%) rather than rigid calendar
+- Use threshold bands (3-5%) rather than rigid calendar
 - Rebalance within tax-advantaged accounts first
 - Use new contributions to rebalance passively
 - Consider tax-loss harvesting opportunities
@@ -130,7 +130,7 @@ Beyond financial benefits, rebalancing provides:
 
 | Situation | Consideration |
 |-----------|---------------|
-| Small drifts (<2%) | Transaction costs may exceed benefit |
+| Small drifts (under 2%) | Transaction costs may exceed benefit |
 | Short-term holdings | Tax implications may outweigh benefits |
 | Strong trends | May want to let winners run |
 | High transaction costs | Threshold should be wider |

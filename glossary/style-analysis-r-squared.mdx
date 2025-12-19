@@ -1,0 +1,147 @@
+---
+title: 'Style Analysis R-Squared'
+description: 'Understanding R-squared in style analysis - measuring how much factor exposures explain returns'
+---
+
+Style Analysis R-squared measures how much of a portfolio's performance can be explained by systematic factors like market, value, size, and momentum. It reveals whether returns come from factor exposures or genuine stock selection.
+
+## Beginner
+
+### What It Means
+
+R-squared tells you what percentage of your portfolio's returns are explained by known factors. Higher R-squared means your returns mostly come from factor exposures, not unique stock picking.
+
+### Portfolio Examples
+
+| Portfolio | R-Squared | Interpretation |
+|-----------|-----------|----------------|
+| Index Fund | 99% | Almost entirely explained by market factor |
+| "Active" Fund A | 95% | Closet indexer - paying active fees for passive exposure |
+| Active Fund B | 70% | Mix of factor exposure and stock selection |
+| Hedge Fund | 40% | Mostly unique strategies, less factor-driven |
+
+### Why It Matters
+
+R-squared helps identify "closet indexers" - funds charging active fees but delivering passive-like returns. If 95% of returns are explained by factors you could get cheaply through ETFs, why pay active management fees?
+
+---
+
+## Advanced
+
+### Mathematical Definition
+
+```
+R-squared = 1 - (SS_residual / SS_total)
+          = Variance explained by factors / Total return variance
+
+From regression:
+Rp = α + Σ(βi × Fi) + ε
+
+R-squared = 1 - Var(ε) / Var(Rp)
+```
+
+### Interpreting R-Squared with Alpha
+
+| R-Squared | Alpha | Interpretation |
+|-----------|-------|----------------|
+| High | Low | Closet indexer - consider cheaper alternatives |
+| Low | High | Genuine skill creating value |
+| Low | Low | Active bets not adding value |
+| High | High | Skilled factor timing (rare) |
+
+### Factor Models Used
+
+Common models for style analysis:
+
+| Model | Factors Included |
+|-------|------------------|
+| **CAPM** | Market only |
+| **Fama-French 3** | Market, Size, Value |
+| **Carhart 4** | + Momentum |
+| **Fama-French 5** | + Profitability, Investment |
+
+<Note>
+R-squared depends on which factors you include. Adding more factors typically increases R-squared. Use a consistent model for fair comparisons.
+</Note>
+
+### Typical R-Squared Values
+
+| Fund Type | Typical R-Squared |
+|-----------|-------------------|
+| Index Funds | 98-99% |
+| Enhanced Index | 95-98% |
+| Large-Cap Active | 85-95% |
+| Small-Cap Active | 75-90% |
+| Long/Short Equity | 50-80% |
+| Market Neutral | 10-40% |
+
+### Detecting Closet Indexers
+
+Warning signs of closet indexing:
+
+| Metric | Concern Level |
+|--------|---------------|
+| R-squared above 95% | High concern |
+| Tracking error under 2% | High concern |
+| Holdings overlap above 80% | High concern |
+| Active share under 20% | High concern |
+
+<Warning>
+If a fund has R-squared above 90%, you're likely paying active fees for returns you could replicate with cheap factor ETFs.
+</Warning>
+
+### R-Squared vs. Active Share
+
+| Metric | Based On | Measures |
+|--------|----------|----------|
+| **R-Squared** | Returns | How much return variance factors explain |
+| **Active Share** | Holdings | How different holdings are from benchmark |
+
+Both together give a complete picture:
+
+| R-Squared | Active Share | Manager Type |
+|-----------|--------------|--------------|
+| High | Low | Closet indexer |
+| High | High | Factor bettor |
+| Low | Low | Diversified stock picker |
+| Low | High | Concentrated stock picker |
+
+### Practical Applications
+
+**Due Diligence Process:**
+1. Run style regression on manager returns
+2. If R-squared above 90%: Question if active fees justified
+3. Examine factor loadings for style consistency
+4. Compare R-squared over rolling windows to detect style drift
+5. Combine with active share analysis
+
+### Style Drift Detection
+
+Changes in R-squared over time may indicate:
+- Strategy changes
+- Manager turnover
+- Capacity constraints forcing index-like positions
+- Deliberate shift in investment approach
+
+### Data Requirements
+
+| Requirement | Details |
+|-------------|---------|
+| Minimum | 36 months for stable estimate |
+| Preferred | 60+ months |
+| Factor Data | Need factor return series |
+| Model Choice | Results depend on factors included |
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Alpha" href="/glossary/alpha">
+    What remains after factor adjustment
+  </Card>
+  <Card title="Beta" href="/glossary/beta">
+    Key factor exposure
+  </Card>
+  <Card title="Factor Investing" href="/glossary/factor-investing">
+    The factors being measured
+  </Card>
+</CardGroup>

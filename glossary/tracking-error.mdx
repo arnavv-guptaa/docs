@@ -1,0 +1,150 @@
+---
+title: 'Tracking Error'
+description: 'Understanding tracking error - measuring how closely a portfolio follows its benchmark'
+---
+
+Tracking error measures how much a portfolio's returns deviate from its benchmark. It quantifies the "active risk" taken by deviating from the index.
+
+## Beginner
+
+### What It Means
+
+Tracking error tells you how differently your portfolio behaves compared to its benchmark. Low tracking error means your portfolio closely mirrors the benchmark. High tracking error means you're making big bets away from the index.
+
+### Portfolio Example
+
+| Portfolio | Tracking Error | Interpretation |
+|-----------|----------------|----------------|
+| Index Fund | 0.1% | Almost identical to benchmark |
+| Enhanced Index | 1-2% | Small active bets |
+| Active Fund | 4-6% | Significant active management |
+| Concentrated | 8%+ | Very different from benchmark |
+
+### Why It Matters
+
+Tracking error helps you understand:
+- How "active" your manager really is
+- Whether you're paying active fees for passive-like returns
+- The range of likely performance vs. benchmark
+
+---
+
+## Advanced
+
+### Mathematical Definition
+
+```
+Tracking Error = Standard Deviation of (Portfolio Return - Benchmark Return)
+
+TE = σ(Rp - Rb)
+
+Where:
+- Rp = Portfolio return
+- Rb = Benchmark return
+```
+
+### Interpreting Tracking Error
+
+With 4% tracking error, about 68% of the time your portfolio will perform within plus or minus 4% of the benchmark annually.
+
+| Tracking Error | Active Risk Level |
+|----------------|-------------------|
+| 0-1% | Passive/Index |
+| 1-3% | Enhanced index |
+| 3-6% | Moderate active |
+| 6-10% | High active |
+| 10%+ | Very concentrated |
+
+### Ex-Ante vs. Ex-Post
+
+| Type | Definition | Use |
+|------|------------|-----|
+| **Ex-Ante** | Predicted future tracking error | Risk budgeting, portfolio construction |
+| **Ex-Post** | Historical realized tracking error | Performance evaluation |
+
+<Note>
+Ex-ante tracking error is estimated from holdings and factor exposures. Ex-post is calculated from actual return differences. They often differ significantly.
+</Note>
+
+### Sources of Tracking Error
+
+| Source | Description |
+|--------|-------------|
+| **Stock Selection** | Different weights vs. benchmark |
+| **Sector Bets** | Over/underweight sectors |
+| **Factor Tilts** | Value, momentum, size exposures |
+| **Cash Drag** | Holding cash when benchmark is fully invested |
+| **Timing** | Different rebalancing timing |
+
+### Tracking Error and Information Ratio
+
+```
+Information Ratio = Alpha / Tracking Error
+
+High IR = Efficient use of active risk
+Low IR = Taking risk without commensurate return
+```
+
+| IR | Interpretation |
+|----|----------------|
+| Below 0.3 | Weak active management |
+| 0.3 - 0.5 | Median manager |
+| 0.5 - 0.75 | Top quartile |
+| Above 0.75 | Top decile |
+
+### Tracking Error Budgeting
+
+Institutional investors often set tracking error budgets:
+
+```
+Example:
+- Total TE budget: 4%
+- Stock selection: 3%
+- Sector bets: 2%
+- Factor tilts: 1%
+
+Note: These don't add linearly due to correlations
+```
+
+### Closet Indexing
+
+<Warning>
+**Closet Indexing**: Funds with low tracking error (under 2%) but charging active management fees. You're paying for active management but getting near-index returns.
+</Warning>
+
+**Warning Signs:**
+- Tracking error under 2%
+- R-squared above 0.95
+- High benchmark correlation
+- Many holdings similar to index
+
+### Tracking Error vs. Total Risk
+
+| Metric | Measures | Reference Point |
+|--------|----------|-----------------|
+| **Standard Deviation** | Total volatility | None (absolute) |
+| **Tracking Error** | Active volatility | Benchmark (relative) |
+
+A portfolio can have low tracking error but high total risk if the benchmark itself is volatile.
+
+### Data Requirements
+
+| Requirement | Details |
+|-------------|---------|
+| Minimum | 24 months for basic estimate |
+| Preferred | 36-60 months for stable measurement |
+| Frequency | Monthly returns typical |
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Information Ratio" href="/glossary/information-ratio">
+    Alpha per unit of tracking error
+  </Card>
+  <Card title="Alpha" href="/glossary/alpha">
+    The return tracking error enables
+  </Card>
+  <Card title="Beta" href="/glossary/beta">
+    Related but different risk measure
+  </Card>
+</CardGroup>

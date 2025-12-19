@@ -113,7 +113,12 @@
               "glossary/momentum",
               "glossary/value-investing",
               "glossary/volatility",
-              "glossary/portfolio-rebalancing"
+              "glossary/portfolio-rebalancing",
+              "glossary/risk-adjusted-returns",
+              "glossary/tracking-error",
+              "glossary/hit-ratio",
+              "glossary/information-coefficient",
+              "glossary/style-analysis-r-squared"
             ]
           }
         ]

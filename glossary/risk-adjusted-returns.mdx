@@ -1,0 +1,132 @@
+---
+title: 'Risk-Adjusted Returns'
+description: 'Understanding risk-adjusted returns - evaluating performance relative to risk taken'
+---
+
+Risk-adjusted returns measure investment performance relative to the risk taken to achieve those returns. A 15% return with 20% volatility may be worse than 10% return with 5% volatility.
+
+## Beginner
+
+### What It Means
+
+Raw returns don't tell the whole story. Risk-adjusted returns answer the question: "How much return did I get for each unit of risk I took?" Higher risk-adjusted returns mean more efficient use of risk.
+
+### Portfolio Example
+
+| Portfolio | Return | Volatility | Risk-Adjusted? |
+|-----------|--------|------------|----------------|
+| Portfolio A | 15% | 20% | Lower |
+| Portfolio B | 12% | 8% | Higher |
+
+Portfolio B is actually better - it generated nearly as much return with far less risk. You could leverage Portfolio B to match Portfolio A's risk and get higher returns.
+
+### Why It Matters
+
+Comparing raw returns is misleading. A hedge fund returning 20% with 40% volatility isn't necessarily better than an index fund returning 10% with 15% volatility. Risk-adjusted metrics reveal true performance quality.
+
+---
+
+## Advanced
+
+### Key Risk-Adjusted Metrics
+
+| Metric | Formula | Best For |
+|--------|---------|----------|
+| **Sharpe Ratio** | (Return - Rf) / Volatility | General comparison |
+| **Sortino Ratio** | (Return - Rf) / Downside Dev | Downside-focused |
+| **Treynor Ratio** | (Return - Rf) / Beta | Diversified portfolios |
+| **Information Ratio** | Alpha / Tracking Error | Active managers |
+| **Calmar Ratio** | Return / Max Drawdown | Drawdown-sensitive |
+
+### Sharpe Ratio
+
+The most common risk-adjusted measure:
+
+```
+Sharpe Ratio = (Rp - Rf) / σp
+
+Where:
+- Rp = Portfolio return
+- Rf = Risk-free rate
+- σp = Portfolio volatility
+```
+
+| Sharpe | Interpretation |
+|--------|----------------|
+| Below 0.5 | Below average |
+| 0.5 - 1.0 | Good |
+| 1.0 - 1.5 | Very good |
+| Above 1.5 | Excellent (rare) |
+
+### Sortino Ratio
+
+Focuses only on downside risk:
+
+```
+Sortino Ratio = (Rp - Rf) / Downside Deviation
+
+Downside Deviation = Only negative returns count
+```
+
+<Note>
+Sortino is often preferred because investors don't mind upside volatility - only downside hurts. A stock that jumps 10% isn't "risky" in any meaningful sense.
+</Note>
+
+### Calmar Ratio
+
+Uses maximum drawdown as the risk measure:
+
+```
+Calmar Ratio = Annual Return / |Maximum Drawdown|
+```
+
+| Calmar | Interpretation |
+|--------|----------------|
+| Below 0.5 | Poor |
+| 0.5 - 1.0 | Acceptable |
+| 1.0 - 2.0 | Good |
+| Above 2.0 | Excellent |
+
+### Comparing Metrics
+
+| Metric | Risk Measure | Strengths | Weaknesses |
+|--------|--------------|-----------|------------|
+| **Sharpe** | Total volatility | Simple, universal | Penalizes upside |
+| **Sortino** | Downside only | More intuitive | Fewer data points |
+| **Calmar** | Max drawdown | Captures tail risk | Single worst event |
+| **Information** | Tracking error | Active management focus | Benchmark dependent |
+
+### Practical Application
+
+**When to use each metric:**
+
+- **Sharpe**: Comparing any strategies against each other
+- **Sortino**: When you care specifically about losses
+- **Calmar**: When drawdowns are your primary concern
+- **Information Ratio**: Evaluating active managers vs. benchmark
+- **Treynor**: Comparing well-diversified portfolios
+
+### Limitations
+
+- **Backward-Looking**: Past risk-adjusted returns don't guarantee future performance
+- **Distribution Assumptions**: Most assume normal returns (reality has fat tails)
+- **Time Period Sensitive**: Results vary significantly by measurement period
+- **Gaming**: Some strategies artificially inflate ratios (selling options, smoothing)
+
+<Warning>
+A high Sharpe Ratio from selling options or illiquid strategies may mask hidden tail risks. Always understand the source of risk-adjusted returns.
+</Warning>
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Sharpe Ratio" href="/glossary/sharpe-ratio">
+    Most common measure
+  </Card>
+  <Card title="Volatility" href="/glossary/volatility">
+    The denominator in most metrics
+  </Card>
+  <Card title="Drawdown" href="/glossary/drawdown">
+    Used in Calmar Ratio
+  </Card>
+</CardGroup>

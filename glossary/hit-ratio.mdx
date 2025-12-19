@@ -1,0 +1,136 @@
+---
+title: 'Hit Ratio'
+description: 'Understanding hit ratio - measuring the frequency of outperformance'
+---
+
+Hit ratio measures what percentage of the time your portfolio outperformed its benchmark. It's like a batting average in baseball - how often do you beat the market?
+
+## Beginner
+
+### What It Means
+
+Hit ratio is simple: out of all the periods measured, what fraction of the time did your portfolio beat the benchmark?
+
+### Portfolio Example
+
+Over 12 months, your portfolio beat the S&P 500 in 8 months and underperformed in 4 months.
+
+**Hit Ratio = 8/12 = 67%**
+
+You outperformed two-thirds of the time.
+
+### Interpretation
+
+| Hit Ratio | Interpretation |
+|-----------|----------------|
+| 50% | Random / no skill (coin flip) |
+| 55-60% | Some consistency |
+| 60-65% | Good consistency |
+| 65-70% | Very consistent |
+| Above 70% | Exceptional (rare) |
+
+### Why It Matters
+
+Hit ratio shows consistency. You can have high returns but low hit ratio (few big wins, many small losses) or high hit ratio but moderate returns (many small wins). Both patterns can work, but they feel very different to live through.
+
+---
+
+## Advanced
+
+### Mathematical Definition
+
+```
+Hit Ratio = (Periods where Rp > Rb) / Total Periods
+
+Where:
+- Rp = Portfolio return in period
+- Rb = Benchmark return in period
+```
+
+### Hit Ratio vs. Magnitude
+
+**Critical Insight**: Hit ratio ignores the size of wins and losses.
+
+| Strategy | Hit Ratio | Avg Win | Avg Loss | Net Result |
+|----------|-----------|---------|----------|------------|
+| Strategy A | 70% | +0.5% | -1.5% | Negative |
+| Strategy B | 40% | +3.0% | -1.0% | Positive |
+
+Strategy B is better despite lower hit ratio because wins are much larger than losses.
+
+### Strategy Profiles
+
+Different strategies have characteristic hit ratios:
+
+| Strategy Type | Typical Hit Ratio | Profile |
+|---------------|-------------------|---------|
+| **Momentum** | 45-55% | Few large wins, small losses |
+| **Mean Reversion** | 60-70% | Many small wins, occasional large loss |
+| **Value** | 50-60% | Moderate wins and losses |
+| **Trend Following** | 35-45% | Large wins, many small losses |
+
+### Relationship to Information Ratio
+
+```
+High IR can come from:
+1. High hit ratio with moderate-sized wins
+2. Low hit ratio with very large wins
+3. Combination of both
+
+IR ≈ (2 × Hit Ratio - 1) × Win/Loss Magnitude Ratio
+```
+
+### Psychological Impact
+
+<Note>
+Hit ratio matters for investor psychology. A strategy with 40% hit ratio may be profitable but feels like constant failure. A 65% hit ratio strategy feels successful even if total returns are similar.
+</Note>
+
+**Behavioral Considerations:**
+- Low hit ratio strategies are harder to stick with
+- Long losing streaks erode confidence
+- Investors often abandon good strategies at the worst time
+
+### Statistical Significance
+
+Hit ratio estimates require sufficient data:
+
+| Hit Ratio | Periods Needed | For 95% Confidence |
+|-----------|----------------|---------------------|
+| 55% | 100+ | Distinguish from random |
+| 60% | 50+ | Reasonably confident |
+| 70% | 25+ | Clearly non-random |
+
+<Warning>
+Short-term hit ratios are noisy. A 70% hit ratio over 10 months could easily be luck. You need years of data for reliable estimates.
+</Warning>
+
+### Data Requirements
+
+| Requirement | Details |
+|-------------|---------|
+| Minimum | 24 months for basic estimate |
+| Preferred | 60+ months for stable measurement |
+| Consideration | More periods needed when hit ratio is near 50% |
+
+### Combining with Other Metrics
+
+| Metric | What It Adds |
+|--------|--------------|
+| **Gain/Loss Ratio** | Average win size / Average loss size |
+| **Profit Factor** | Gross profits / Gross losses |
+| **Information Ratio** | Incorporates both frequency and magnitude |
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Information Ratio" href="/glossary/information-ratio">
+    Combines frequency and magnitude
+  </Card>
+  <Card title="Alpha" href="/glossary/alpha">
+    What hit ratio helps generate
+  </Card>
+  <Card title="Information Coefficient" href="/glossary/information-coefficient">
+    Related skill measure
+  </Card>
+</CardGroup>
