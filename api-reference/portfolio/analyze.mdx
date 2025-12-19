@@ -1,0 +1,236 @@
+---
+title: 'Analyze Portfolio'
+openapi: 'POST /v1/portfolio/analyze'
+---
+
+## How It Works
+
+This endpoint uses **async job processing** for handling large portfolios:
+
+1. **Submit Job**: POST your portfolio data to `/v1/portfolio/analyze`
+2. **Receive Job ID**: Get a job ID and polling URL immediately
+3. **Poll for Status**: Check `/v1/jobs/{job_id}` until status is `completed`
+4. **Get Results**: The completed job response contains the full analysis
+
+<Note>
+Processing typically takes 60-120 seconds depending on the date range and number of holdings.
+</Note>
+
+## Request Body
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `portfolio` | array | Yes | - | List of holdings (see format below) |
+| `start_date` | string | No | First rebalance date | Analysis start date (YYYY-MM-DD) |
+| `end_date` | string | No | Yesterday | Analysis end date (YYYY-MM-DD) |
+| `base_currency` | string | No | `USD` | Base currency (USD, SGD, EUR, etc.) |
+| `benchmark` | string | No | `ACWI` | Benchmark for comparison (e.g., ACWI, SPY) |
+| `initial_value` | number | No | `10000` | Starting portfolio value |
+| `include_transaction_costs` | boolean | No | `false` | Apply market-specific transaction costs |
+| `transaction_cost_config` | object | No | Default rates | Custom transaction cost rates by market |
+| `fields` | array | No | All fields | Select specific response fields |
+
+## Portfolio Holdings Format
+
+Each item in the `portfolio` array:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `date` | string | Yes | Rebalance date (YYYY-MM-DD) |
+| `symbol` | string | Yes | Stock symbol (e.g., AAPL.O for Apple Inc) |
+| `weight` | number | Yes | Portfolio weight as decimal (0.25 = 25%) |
+
+<Warning>
+Weights should sum to 1.0 for each date. They will be normalized if not.
+</Warning>
+
+## Field Selection
+
+Use the optional `fields` parameter to return only specific data sections. If omitted, all fields are returned.
+
+```json
+{
+  "portfolio": [...],
+  "fields": ["portfolio_summary", "performance_metrics", "latest_holdings"]
+}
+```
+
+## Response Fields
+
+The completed analysis includes:
+
+| Field | Description |
+|-------|-------------|
+| `portfolio_summary` | Final value, total return, P&L breakdown, transaction costs |
+| `turnover_analysis` | Turnover metrics, rebalance frequency, costs by market |
+| `performance_metrics` | Sharpe, Sortino, VaR, volatility, drawdown |
+| `rolling_metrics` | 30/60/90-day rolling Sharpe, beta, correlation |
+| `drawdown_analysis` | Drawdown episodes and recovery times |
+| `portfolio_scores` | Quant factor scores (value, quality, momentum) |
+| `latest_holdings` | Current positions with company info |
+| `transactions` | All buy/sell trades |
+| `market_allocation` | Market weights over time |
+| `sector_allocation` | Sector weights over time |
+| `currency_allocation` | Currency weights over time |
+| `company_contribution` | P&L attribution by company |
+| `sector_contribution` | P&L attribution by sector |
+| `market_contribution` | P&L attribution by market |
+| `time_period_returns` | MTD, YTD, 1Y, inception returns |
+| `daily_summary` | Equity curve with benchmark comparison |
+
+## Example Response
+
+When the job completes, `GET /v1/jobs/{job_id}` returns:
+
+```json
+{
+  "job_id": "port-9730dcc9-7a06-495c-85a9-4a405d2140e4",
+  "job_type": "portfolio_analysis",
+  "status": "completed",
+  "result": {
+    "success": true,
+    "result": {
+      "portfolio_parameters": {
+        "start_date": "2025-07-01",
+        "end_date": "2025-07-31",
+        "base_currency": "USD",
+        "benchmark": "ACWI",
+        "initial_value": 10000.0,
+        "include_transaction_costs": false
+      },
+      "portfolio_summary": {
+        "final_value": 9890.37,
+        "total_return": -0.0110,
+        "total_price_pl": 122.79,
+        "total_fx_pl": -232.32,
+        "total_pl": -109.63,
+        "total_transaction_cost": 0.0,
+        "include_transaction_costs": false
+      },
+      "turnover_analysis": {
+        "summary": {
+          "days_in_period": 31,
+          "num_rebalances": 0,
+          "annualized_turnover_pct": 0.0,
+          "total_transaction_cost": 0.0,
+          "include_transaction_costs": false
+        },
+        "by_market": {
+          "India": { "total_turnover": 0.0, "transaction_cost": 0.0 },
+          "Japan": { "total_turnover": 0.0, "transaction_cost": 0.0 },
+          "Taiwan": { "total_turnover": 0.0, "transaction_cost": 0.0 },
+          "United States": { "total_turnover": 0.0, "transaction_cost": 0.0 }
+        }
+      },
+      "performance_metrics": {
+        "portfolio": {
+          "total_return": -0.0110,
+          "annualized_return": -0.1217,
+          "annualized_volatility": 0.1335,
+          "max_drawdown": -0.0383,
+          "sharpe_ratio": -0.71,
+          "sortino_ratio": -1.67,
+          "var_95": -0.0093,
+          "win_rate": 0.26
+        },
+        "benchmark": {
+          "total_return": 0.0111,
+          "sharpe_ratio": 1.28,
+          "max_drawdown": -0.0147
+        },
+        "relative": {
+          "beta": 1.52,
+          "alpha_annualized": -0.32,
+          "correlation": 0.67,
+          "information_ratio": -1.67,
+          "tracking_error": 0.103
+        }
+      },
+      "portfolio_scores": {
+        "value": 42,
+        "quality": 65,
+        "momentum": 85,
+        "defensive": 90,
+        "tactical": 37,
+        "total": 71
+      },
+      "latest_holdings": [
+        {
+          "ric": "2330.TW",
+          "weight": 0.295,
+          "ending_value": 2918.49,
+          "market": "Taiwan",
+          "sector": "Technology",
+          "recommendation": "STRONG BUY"
+        },
+        {
+          "ric": "RELI.NS",
+          "weight": 0.275,
+          "ending_value": 2722.05,
+          "market": "India",
+          "sector": "Energy",
+          "recommendation": "HOLD"
+        },
+        {
+          "ric": "7203.T",
+          "weight": 0.224,
+          "ending_value": 2219.77,
+          "market": "Japan",
+          "sector": "Consumer Cyclicals",
+          "recommendation": "HOLD"
+        },
+        {
+          "ric": "AAPL.O",
+          "weight": 0.205,
+          "ending_value": 2030.06,
+          "market": "United States",
+          "sector": "Technology",
+          "recommendation": "BUY"
+        }
+      ],
+      "daily_summary": [
+        {
+          "date": "2025-07-01",
+          "portfolio_value": 10000.0,
+          "daily_return": 0.0,
+          "cumulative_return": 0.0
+        },
+        {
+          "date": "2025-07-31",
+          "portfolio_value": 9890.37,
+          "daily_return": -0.0097,
+          "cumulative_return": -0.0110
+        }
+      ]
+    }
+  }
+}
+```
+
+<Note>
+Response shown is abbreviated. Full response includes all fields listed above, plus detailed timeseries for allocations, drawdowns, rolling metrics, and more.
+</Note>
+
+## Example: Polling for Results
+
+```javascript
+const jobId = response.job_id;
+const checkUrl = `https://parallax-api.onrender.com/v1/jobs/${jobId}`;
+
+// Poll every 3 seconds
+const interval = setInterval(async () => {
+  const status = await fetch(checkUrl, {
+    headers: { 'Authorization': `Bearer ${API_KEY}` }
+  }).then(r => r.json());
+
+  if (status.status === 'completed') {
+    clearInterval(interval);
+    console.log('Analysis:', status.result);
+  } else if (status.status === 'failed') {
+    clearInterval(interval);
+    console.error('Failed:', status.error);
+  } else {
+    console.log(`Progress: ${status.progress?.percent}%`);
+  }
+}, 3000);
+```

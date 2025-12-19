@@ -1,16 +1,13 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
+    "title": "Parallax API",
+    "description": "Financial data and portfolio analytics API. Analyze portfolios with multi-currency support, rebalancing, and comprehensive metrics.",
     "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://parallax-api.onrender.com"
     }
   ],
   "security": [
@@ -19,36 +16,113 @@
     }
   ],
   "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
+    "/v1/portfolio/analyze": {
+      "post": {
+        "summary": "Analyze Portfolio",
+        "description": "Analyze a portfolio with multi-currency support, rebalancing, and comprehensive metrics. This endpoint uses async job processing - submit your request, receive a job ID, then poll for results.",
+        "operationId": "analyzePortfolio",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PortfolioAnalysisRequest"
+              },
+              "example": {
+                "start_date": "2024-01-01",
+                "end_date": "2024-11-01",
+                "base_currency": "USD",
+                "benchmark": "ACWI",
+                "initial_value": 10000,
+                "portfolio": [
+                  {"date": "2024-01-01", "symbol": "AAPL.O", "weight": 0.25},
+                  {"date": "2024-01-01", "symbol": "MSFT.O", "weight": 0.25},
+                  {"date": "2024-01-01", "symbol": "GOOGL.O", "weight": 0.25},
+                  {"date": "2024-01-01", "symbol": "AMZN.O", "weight": 0.25}
+                ]
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "Job created successfully. Poll the check_url for results.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
+                  "$ref": "#/components/schemas/JobCreatedResponse"
+                },
+                "example": {
+                  "job_id": "port-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+                  "status": "pending",
+                  "check_url": "/v1/jobs/port-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+                  "estimated_duration_seconds": 90,
+                  "message": "Portfolio analysis job created",
+                  "portfolio_summary": {
+                    "positions": 4,
+                    "start_date": "2024-01-01",
+                    "end_date": "2024-11-01"
                   }
                 }
               }
             }
           },
-          "400": {
-            "description": "Unexpected error",
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "detail": "Invalid or missing API key"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error - Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/jobs/{job_id}": {
+      "get": {
+        "summary": "Get Job Status",
+        "description": "Check the status of an async job. Poll this endpoint until status is 'completed' or 'failed'.",
+        "operationId": "getJobStatus",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "description": "The job ID returned from the analyze endpoint",
+            "schema": {
+              "type": "string"
+            },
+            "example": "port-a3522a92-87ed-4be0-a912-ad56ed6a8806"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job status retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobStatusResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -56,35 +130,9 @@
                 }
               }
             }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
           },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "unexpected error",
+          "404": {
+            "description": "Job not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -96,28 +144,61 @@
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
+    "/v1/stock-report": {
+      "post": {
+        "summary": "Generate Stock Report",
+        "description": "Generate a comprehensive stock report including financial analysis, valuation metrics, and AI-generated insights. This endpoint uses async job processing - submit your request, receive a job ID, then poll for results.",
+        "operationId": "generateStockReport",
+        "tags": ["Stock Reports"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StockReportRequest"
+              },
+              "example": {
+                "symbol": "AAPL.O",
+                "force": false
+              }
             }
           }
-        ],
+        },
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
+          "202": {
+            "description": "Job created successfully. Poll the check_url for results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StockReportJobResponse"
+                },
+                "example": {
+                  "job_id": "stock-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+                  "status": "pending",
+                  "symbol": "AAPL.O",
+                  "force": false,
+                  "check_url": "/v1/jobs/stock-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+                  "estimated_duration_seconds": 600,
+                  "message": "Stock report generation started for AAPL.O. Poll the check_url to get results."
+                }
+              }
+            }
           },
           "400": {
-            "description": "unexpected error",
+            "description": "Invalid symbol",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "detail": "Invalid symbol 'INVALID': No company data found for this symbol."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
             "content": {
               "application/json": {
                 "schema": {
@@ -125,92 +206,560 @@
                 }
               }
             }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
           }
         }
       }
     }
   },
   "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      }
-    },
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
-        "scheme": "bearer"
+        "scheme": "bearer",
+        "description": "API key passed as Bearer token"
+      }
+    },
+    "schemas": {
+      "StockReportRequest": {
+        "type": "object",
+        "required": ["symbol"],
+        "description": "Request body for stock report generation",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "description": "Stock symbol (e.g., AAPL.O for Apple Inc)",
+            "example": "AAPL.O"
+          },
+          "force": {
+            "type": "boolean",
+            "default": false,
+            "description": "Force regeneration even if recent report exists",
+            "example": false
+          }
+        }
+      },
+      "StockReportJobResponse": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "description": "Unique job identifier"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending"],
+            "description": "Initial job status"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Stock symbol being processed"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Whether force regeneration was requested"
+          },
+          "check_url": {
+            "type": "string",
+            "description": "URL to poll for job status"
+          },
+          "estimated_duration_seconds": {
+            "type": "integer",
+            "description": "Estimated processing time in seconds"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable status message"
+          }
+        }
+      },
+      "StockReportResult": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Stock symbol"
+          },
+          "pdf_url": {
+            "type": "string",
+            "nullable": true,
+            "description": "URL to download PDF report"
+          },
+          "html_url": {
+            "type": "string",
+            "nullable": true,
+            "description": "URL to view HTML report"
+          },
+          "json_url": {
+            "type": "string",
+            "nullable": true,
+            "description": "URL to download JSON data"
+          }
+        }
+      },
+      "PortfolioHolding": {
+        "type": "object",
+        "required": ["date", "symbol", "weight"],
+        "description": "A single portfolio holding entry for a rebalance date",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Rebalance date in YYYY-MM-DD format",
+            "example": "2024-01-01"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Stock symbol (e.g., AAPL.O for Apple Inc)",
+            "example": "AAPL.O"
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Portfolio weight as decimal (0.25 = 25%)",
+            "example": 0.25
+          }
+        }
+      },
+      "PortfolioAnalysisRequest": {
+        "type": "object",
+        "required": ["portfolio"],
+        "description": "Request body for portfolio analysis",
+        "properties": {
+          "portfolio": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PortfolioHolding"
+            },
+            "description": "List of holdings with date, symbol, and weight. Weights should sum to 1.0 for each rebalance date. Multiple dates supported for rebalancing.",
+            "minItems": 1
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Analysis start date (YYYY-MM-DD). If not provided, defaults to first rebalance date in portfolio.",
+            "example": "2024-01-01"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Analysis end date (YYYY-MM-DD). If not provided, defaults to yesterday. Future dates are auto-capped to yesterday.",
+            "example": "2024-11-01"
+          },
+          "base_currency": {
+            "type": "string",
+            "default": "USD",
+            "description": "Base currency for portfolio valuation. Supports USD, SGD, EUR, GBP, JPY, etc.",
+            "example": "USD"
+          },
+          "benchmark": {
+            "type": "string",
+            "default": "ACWI",
+            "description": "Benchmark for comparison (e.g., ACWI, SPY)",
+            "example": "ACWI"
+          },
+          "initial_value": {
+            "type": "number",
+            "default": 10000,
+            "description": "Initial portfolio value in base currency. Used to calculate absolute P&L and position sizes.",
+            "example": 10000
+          },
+          "include_transaction_costs": {
+            "type": "boolean",
+            "default": false,
+            "description": "Apply market-specific transaction costs during rebalancing",
+            "example": false
+          },
+          "transaction_cost_config": {
+            "type": "object",
+            "nullable": true,
+            "description": "Custom transaction cost rates by market. Format: {'market_name': {'buy': rate, 'sell': rate}}. If not provided, uses default rates.",
+            "example": {
+              "Singapore": {"buy": 0.14, "sell": 0.14},
+              "United States": {"buy": 0.10, "sell": 0.10}
+            }
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "portfolio_parameters",
+                "portfolio_input",
+                "data_quality",
+                "portfolio_summary",
+                "turnover_analysis",
+                "performance_metrics",
+                "rolling_metrics",
+                "drawdown_analysis",
+                "portfolio_scores",
+                "concentration_metrics",
+                "transactions",
+                "company_info",
+                "latest_holdings",
+                "market_allocation",
+                "sector_allocation",
+                "currency_allocation",
+                "company_contribution",
+                "sector_contribution",
+                "market_contribution",
+                "time_period_returns",
+                "monthly_returns",
+                "annual_returns",
+                "benchmark_prices",
+                "daily_summary"
+              ]
+            },
+            "description": "Optional field selection. If omitted, all fields are returned. Use this to reduce response size.",
+            "example": ["portfolio_summary", "performance_metrics", "latest_holdings"]
+          }
+        }
+      },
+      "JobCreatedResponse": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "description": "Unique job identifier"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending"],
+            "description": "Initial job status"
+          },
+          "check_url": {
+            "type": "string",
+            "description": "URL to poll for job status"
+          },
+          "estimated_duration_seconds": {
+            "type": "integer",
+            "description": "Estimated processing time in seconds"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable status message"
+          },
+          "portfolio_summary": {
+            "type": "object",
+            "properties": {
+              "positions": {
+                "type": "integer",
+                "description": "Number of positions in portfolio"
+              },
+              "start_date": {
+                "type": "string",
+                "description": "Analysis start date"
+              },
+              "end_date": {
+                "type": "string",
+                "description": "Analysis end date"
+              }
+            }
+          }
+        }
+      },
+      "JobStatusResponse": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "description": "Job identifier"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "processing", "completed", "failed"],
+            "description": "Current job status"
+          },
+          "progress": {
+            "type": "object",
+            "description": "Progress information (when processing)",
+            "properties": {
+              "step": {
+                "type": "string",
+                "description": "Current processing step"
+              },
+              "percent": {
+                "type": "integer",
+                "description": "Completion percentage (0-100)"
+              },
+              "message": {
+                "type": "string",
+                "description": "Progress message"
+              }
+            }
+          },
+          "result": {
+            "$ref": "#/components/schemas/PortfolioAnalysisResult",
+            "description": "Analysis result (when completed)"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message (when failed)"
+          }
+        }
+      },
+      "PortfolioAnalysisResult": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "result": {
+            "type": "object",
+            "properties": {
+              "portfolio_parameters": {
+                "type": "object",
+                "description": "Echoed portfolio configuration",
+                "properties": {
+                  "start_date": { "type": "string" },
+                  "end_date": { "type": "string" },
+                  "base_currency": { "type": "string" },
+                  "benchmark": { "type": "string" },
+                  "initial_value": { "type": "number" },
+                  "include_transaction_costs": { "type": "boolean" },
+                  "transaction_costs_applied": { "type": "object", "nullable": true }
+                }
+              },
+              "data_quality": {
+                "type": "object",
+                "description": "Data coverage and missing RICs",
+                "properties": {
+                  "total_rics_requested": { "type": "integer" },
+                  "rics_found_in_database": { "type": "integer" },
+                  "missing_rics": { "type": "array", "items": { "type": "string" } },
+                  "missing_rics_count": { "type": "integer" },
+                  "data_completeness_pct": { "type": "number" }
+                }
+              },
+              "portfolio_summary": {
+                "type": "object",
+                "description": "High-level P&L summary",
+                "properties": {
+                  "final_value": { "type": "number", "description": "Final portfolio value" },
+                  "total_return": { "type": "number", "description": "Total return as decimal" },
+                  "total_price_pl": { "type": "number", "description": "P&L from price changes" },
+                  "total_fx_pl": { "type": "number", "description": "P&L from FX changes" },
+                  "total_pl": { "type": "number", "description": "Total P&L" },
+                  "total_transaction_cost": { "type": "number", "description": "Total transaction costs incurred" },
+                  "transaction_cost_pct_of_initial": { "type": "number", "description": "Transaction costs as % of initial value" },
+                  "include_transaction_costs": { "type": "boolean", "description": "Whether transaction costs were applied" }
+                }
+              },
+              "turnover_analysis": {
+                "type": "object",
+                "description": "Portfolio turnover and transaction cost analysis",
+                "properties": {
+                  "summary": {
+                    "type": "object",
+                    "properties": {
+                      "days_in_period": { "type": "integer" },
+                      "num_rebalances": { "type": "integer" },
+                      "annualized_turnover_pct": { "type": "number" },
+                      "total_transaction_cost": { "type": "number" },
+                      "annualized_cost_pct": { "type": "number" },
+                      "total_buy_value": { "type": "number" },
+                      "total_sell_value": { "type": "number" },
+                      "include_transaction_costs": { "type": "boolean" }
+                    }
+                  },
+                  "by_rebalance": { "type": "array", "description": "Turnover breakdown by rebalance date" },
+                  "by_market": { "type": "object", "description": "Turnover breakdown by market" }
+                }
+              },
+              "performance_metrics": {
+                "type": "object",
+                "description": "Comprehensive risk-return metrics",
+                "properties": {
+                  "portfolio": {
+                    "type": "object",
+                    "properties": {
+                      "total_return": { "type": "number" },
+                      "annualized_return": { "type": "number" },
+                      "annualized_volatility": { "type": "number" },
+                      "max_drawdown": { "type": "number" },
+                      "sharpe_ratio": { "type": "number" },
+                      "sortino_ratio": { "type": "number" },
+                      "calmar_ratio": { "type": "number" },
+                      "win_rate": { "type": "number" },
+                      "var_95": { "type": "number" },
+                      "var_99": { "type": "number" }
+                    }
+                  },
+                  "benchmark": {
+                    "type": "object",
+                    "properties": {
+                      "total_return": { "type": "number" },
+                      "annualized_return": { "type": "number" },
+                      "sharpe_ratio": { "type": "number" },
+                      "max_drawdown": { "type": "number" }
+                    }
+                  },
+                  "relative": {
+                    "type": "object",
+                    "properties": {
+                      "beta": { "type": "number" },
+                      "alpha_annualized": { "type": "number" },
+                      "correlation": { "type": "number" },
+                      "information_ratio": { "type": "number" },
+                      "tracking_error": { "type": "number" },
+                      "excess_return": { "type": "number" }
+                    }
+                  }
+                }
+              },
+              "rolling_metrics": {
+                "type": "object",
+                "description": "30/60/90-day rolling metrics with timeseries"
+              },
+              "drawdown_analysis": {
+                "type": "object",
+                "description": "Complete drawdown analysis with episodes"
+              },
+              "portfolio_scores": {
+                "type": "object",
+                "description": "Quant factor scores",
+                "properties": {
+                  "value": { "type": "number" },
+                  "quality": { "type": "number" },
+                  "momentum": { "type": "number" },
+                  "defensive": { "type": "number" },
+                  "tactical": { "type": "number" },
+                  "total": { "type": "number" },
+                  "coverage": { "type": "number" }
+                }
+              },
+              "concentration_metrics": {
+                "type": "object",
+                "description": "Portfolio concentration analysis"
+              },
+              "transactions": {
+                "type": "array",
+                "description": "All buy/sell transactions",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "date": { "type": "string" },
+                    "ric": { "type": "string" },
+                    "transaction_qty": { "type": "number" },
+                    "transaction_value": { "type": "number" },
+                    "transaction_type": { "type": "string", "enum": ["BUY", "SELL"] }
+                  }
+                }
+              },
+              "latest_holdings": {
+                "type": "array",
+                "description": "Current portfolio positions",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ric": { "type": "string" },
+                    "name": { "type": "string" },
+                    "quantity": { "type": "number" },
+                    "weight": { "type": "number" },
+                    "ending_value": { "type": "number" },
+                    "market": { "type": "string" },
+                    "sector": { "type": "string" }
+                  }
+                }
+              },
+              "market_allocation": {
+                "type": "array",
+                "description": "Market allocation over time"
+              },
+              "sector_allocation": {
+                "type": "array",
+                "description": "Sector allocation over time"
+              },
+              "currency_allocation": {
+                "type": "array",
+                "description": "Currency allocation over time"
+              },
+              "company_contribution": {
+                "type": "array",
+                "description": "P&L contribution by company"
+              },
+              "sector_contribution": {
+                "type": "array",
+                "description": "P&L contribution by sector"
+              },
+              "market_contribution": {
+                "type": "array",
+                "description": "P&L contribution by market"
+              },
+              "time_period_returns": {
+                "type": "object",
+                "description": "Returns for various lookback periods (MTD, YTD, 1Y, etc.)"
+              },
+              "monthly_returns": {
+                "type": "array",
+                "description": "Monthly calendar returns"
+              },
+              "annual_returns": {
+                "type": "array",
+                "description": "Annual calendar returns"
+              },
+              "benchmark_prices": {
+                "type": "array",
+                "description": "Benchmark price timeseries"
+              },
+              "daily_summary": {
+                "type": "array",
+                "description": "Daily portfolio values (equity curve)",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "date": { "type": "string" },
+                    "portfolio_value": { "type": "number" },
+                    "daily_return": { "type": "number" },
+                    "cumulative_return": { "type": "number" },
+                    "benchmark_value": { "type": "number" },
+                    "benchmark_daily_return": { "type": "number" },
+                    "benchmark_cumulative_return": { "type": "number" }
+                  }
+                }
+              }
+            }
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "loc": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "msg": { "type": "string" },
+                "type": { "type": "string" }
+              }
+            }
+          }
+        }
       }
     }
   }

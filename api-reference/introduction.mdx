@@ -1,33 +1,64 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'Parallax API - Financial data and portfolio analytics'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Base URL
 
-## Welcome
+All API requests should be made to:
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
-
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+```
+https://parallax-api.onrender.com
+```
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API endpoints require a Bearer token in the Authorization header:
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+```bash
+Authorization: Bearer YOUR_API_KEY
 ```
+
+<Warning>
+Keep your API key secure. Do not expose it in client-side code or public repositories.
+</Warning>
+
+## Async Job Processing
+
+Several endpoints (like Portfolio Analysis) use async job processing for long-running operations:
+
+1. **Submit Request** - POST your data to the endpoint
+2. **Receive Job ID** - Get a `job_id` and `check_url` immediately
+3. **Poll for Status** - GET the `check_url` until status is `completed`
+4. **Get Results** - The completed response contains your data
+
+```javascript
+// 1. Submit
+const { job_id, check_url } = await fetch('/v1/portfolio/analyze', {
+  method: 'POST',
+  headers: { 'Authorization': `Bearer ${API_KEY}` },
+  body: JSON.stringify(payload)
+}).then(r => r.json());
+
+// 2. Poll
+let result;
+while (!result) {
+  const status = await fetch(check_url).then(r => r.json());
+  if (status.status === 'completed') result = status.result;
+  else await new Promise(r => setTimeout(r, 3000));
+}
+```
+
+## Response Codes
+
+| Code | Description |
+|------|-------------|
+| 200 | Success |
+| 401 | Unauthorized - Invalid or missing API key |
+| 404 | Not found |
+| 422 | Validation error - Check request body |
+| 500 | Server error |
+
+## Rate Limits
+
+Contact support for rate limit information based on your plan.

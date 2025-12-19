@@ -1,0 +1,112 @@
+---
+title: 'Generate Stock Report'
+openapi: 'POST /v1/stock-report'
+---
+
+## How It Works
+
+This endpoint uses **async job processing** for generating comprehensive stock reports:
+
+1. **Submit Request**: POST the stock symbol to `/v1/stock-report`
+2. **Receive Job ID**: Get a job ID and polling URL immediately
+3. **Poll for Status**: Check `/v1/jobs/{job_id}` until status is `completed`
+4. **Get Report URLs**: The completed job contains URLs to PDF, HTML, and JSON reports
+
+<Note>
+Report generation typically takes 5-10 minutes. Reports include financial analysis, valuation metrics, AI-generated insights, and more.
+</Note>
+
+## Request Body
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `symbol` | string | Yes | - | Stock symbol (e.g., AAPL.O for Apple Inc) |
+| `force` | boolean | No | `false` | Force regeneration even if recent report exists |
+
+<Warning>
+If `force` is `false` and a recent report exists (generated within the last 30 days), the cached report URLs will be returned immediately.
+</Warning>
+
+## Response (202 Accepted)
+
+When the job is created:
+
+```json
+{
+  "job_id": "stock-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+  "status": "pending",
+  "symbol": "AAPL.O",
+  "force": false,
+  "check_url": "/v1/jobs/stock-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+  "estimated_duration_seconds": 600,
+  "message": "Stock report generation started for AAPL.O. Poll the check_url to get results."
+}
+```
+
+## Completed Response
+
+When the job completes, `GET /v1/jobs/{job_id}` returns:
+
+```json
+{
+  "job_id": "stock-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+  "job_type": "stock_report",
+  "status": "completed",
+  "result": {
+    "success": true,
+    "symbol": "AAPL.O",
+    "pdf_url": "https://storage.example.com/reports/AAPL.O/report.pdf",
+    "html_url": "https://storage.example.com/reports/AAPL.O/report.html",
+    "json_url": "https://storage.example.com/reports/AAPL.O/report.json"
+  }
+}
+```
+
+## Example: Polling for Results
+
+```javascript
+const response = await fetch('https://parallax-api.onrender.com/v1/stock-report', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${API_KEY}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ symbol: 'AAPL.O' })
+});
+
+const { job_id } = await response.json();
+
+// Poll every 10 seconds (reports take ~15 minutes)
+const interval = setInterval(async () => {
+  const status = await fetch(
+    `https://parallax-api.onrender.com/v1/jobs/${job_id}`,
+    { headers: { 'Authorization': `Bearer ${API_KEY}` } }
+  ).then(r => r.json());
+
+  if (status.status === 'completed') {
+    clearInterval(interval);
+    console.log('PDF:', status.result.pdf_url);
+    console.log('HTML:', status.result.html_url);
+    console.log('JSON:', status.result.json_url);
+  } else if (status.status === 'failed') {
+    clearInterval(interval);
+    console.error('Failed:', status.error);
+  } else {
+    console.log(`Status: ${status.status}, Progress: ${status.progress}`);
+  }
+}, 10000);
+```
+
+## Error Responses
+
+| Status | Description |
+|--------|-------------|
+| 400 | Invalid symbol - no company data found |
+| 401 | Invalid or missing API key |
+| 500 | Internal server error |
+
+```json
+{
+  "detail": "Invalid symbol 'INVALID': No company data found for this symbol."
+}
+```

@@ -1,0 +1,69 @@
+---
+title: 'Get Job Status'
+openapi: 'GET /v1/jobs/{job_id}'
+---
+
+Poll this endpoint to check the status of any async job (portfolio analysis, stock reports, etc.).
+
+## Job Status Values
+
+| Status | Description |
+|--------|-------------|
+| `pending` | Job queued, not yet started |
+| `processing` | Job running, check `progress` for details |
+| `completed` | Job finished, results in `result` field |
+| `failed` | Job failed, error message in `error` field |
+
+## Progress Information
+
+While processing, the response includes progress details:
+
+```json
+{
+  "job_id": "port-xxx",
+  "status": "processing",
+  "progress": {
+    "step": "Processing portfolio",
+    "percent": 40,
+    "message": "Calculating daily positions and P&L..."
+  }
+}
+```
+
+## Completed Response
+
+When status is `completed`, the results are in the `result` field. The structure depends on the job type:
+
+**Portfolio Analysis:**
+```json
+{
+  "job_id": "port-xxx",
+  "status": "completed",
+  "result": {
+    "success": true,
+    "result": {
+      "portfolio_summary": { ... },
+      "performance_metrics": { ... }
+    }
+  }
+}
+```
+
+**Stock Report:**
+```json
+{
+  "job_id": "stock-xxx",
+  "status": "completed",
+  "result": {
+    "success": true,
+    "symbol": "AAPL.O",
+    "pdf_url": "https://...",
+    "html_url": "https://...",
+    "json_url": "https://..."
+  }
+}
+```
+
+<Note>
+Jobs expire after 30 minutes. Retrieve results promptly after completion.
+</Note>
