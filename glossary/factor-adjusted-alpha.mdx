@@ -1,0 +1,125 @@
+---
+title: 'Factor-Adjusted Alpha'
+description: 'Understanding factor-adjusted alpha - measuring true skill after removing factor exposures'
+---
+
+Factor-adjusted alpha is the return you generated that cannot be explained by known investment factors like market, value, size, or momentum. It isolates genuine stock-picking skill from factor exposures.
+
+## Beginner
+
+### What It Means
+
+Regular alpha can be misleading - a "value fund" might show high alpha just from value stock exposure, not manager skill. Factor-adjusted alpha removes all known factor effects to reveal true skill.
+
+### Portfolio Example
+
+- Your portfolio returned 16% this year
+- S&P 500 returned 10% (6% apparent excess return)
+- But your portfolio has heavy value exposure, and value beat growth by 4%
+- **Factor-Adjusted Alpha = 16% - (10% market + 4% value) = 2%**
+
+Your real skill added 2%, not the apparent 6%.
+
+### Why It Matters
+
+Factor-adjusted alpha reveals whether a manager has genuine stock-picking ability or is simply riding factor exposures that could be obtained cheaply through factor ETFs.
+
+---
+
+## Advanced
+
+### Mathematical Definition
+
+```
+Factor-Adjusted Alpha (α) = Rp - [Rf + Σ(βi × Fi)]
+
+Fama-French Five-Factor Model:
+α = Rp - [Rf + βM(RM-Rf) + βSMB×SMB + βHML×HML + βRMW×RMW + βCMA×CMA]
+
+Where:
+- RM-Rf = Market risk premium
+- SMB = Small Minus Big (size)
+- HML = High Minus Low (value)
+- RMW = Robust Minus Weak (profitability)
+- CMA = Conservative Minus Aggressive (investment)
+```
+
+### Comparison Example
+
+Two portfolios both returned 15% vs. market's 10%:
+
+| Portfolio | Jensen's Alpha | Factor Exposures | Fama-French Alpha |
+|-----------|----------------|------------------|-------------------|
+| Value Fund | 5% | High value, high size | 1.5% |
+| Stock Picker | 5% | Neutral all factors | 4.8% |
+
+The Stock Picker has genuine skill; the Value Fund mostly rode factor exposures.
+
+### Common Factor Models
+
+| Model | Factors | Use Case |
+|-------|---------|----------|
+| **CAPM** | Market | Basic alpha |
+| **Fama-French 3** | Market, Size, Value | Traditional |
+| **Carhart 4** | + Momentum | Include trends |
+| **Fama-French 5** | + Profitability, Investment | Current standard |
+| **Custom** | Industry-specific factors | Specialized analysis |
+
+### Historical Context
+
+**Eugene Fama and Kenneth French** (1993) developed the three-factor model showing that size and value explain returns beyond market beta. They expanded to five factors in 2015. This revolutionized how we evaluate active management.
+
+### What It Reveals
+
+| Finding | Implication |
+|---------|-------------|
+| High factor-adjusted alpha | Genuine skill, justifies fees |
+| Low factor-adjusted alpha | Factor exposure, not skill |
+| Negative factor-adjusted alpha | Destroying value vs. factors |
+
+### Data Requirements
+
+| Requirement | Details |
+|-------------|---------|
+| Minimum | 36 months for basic estimate |
+| Preferred | 60+ months for stable estimates |
+| Factor Data | Need factor portfolio returns |
+| Statistical Test | t-statistic should exceed 2.0 |
+
+<Warning>
+Factor loadings (betas) are time-varying. Use rolling estimation and be cautious about conclusions from short periods.
+</Warning>
+
+### Limitations
+
+| Limitation | Description |
+|------------|-------------|
+| **Model Dependency** | Different factor models give different alphas |
+| **Missing Factors** | If true factors not in model, alpha still contaminated |
+| **Data Intensive** | Requires factor return data and regression |
+| **Time-Varying** | Factor exposures change over time |
+
+### Modern Extensions
+
+Beyond Fama-French, sophisticated analysis includes:
+
+- **Betting Against Beta (BAB)**: Low-beta stock premium
+- **Quality Minus Junk (QMJ)**: Quality factor
+- **Liquidity Factor**: Compensation for illiquidity
+- **Momentum**: Trend persistence
+
+Managers are now evaluated against 8-10 factor models.
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Alpha" href="/glossary/alpha">
+    Basic excess return measure
+  </Card>
+  <Card title="Factor Investing" href="/glossary/factor-investing">
+    The factors being adjusted for
+  </Card>
+  <Card title="Style Analysis R-Squared" href="/glossary/style-analysis-r-squared">
+    Related analysis technique
+  </Card>
+</CardGroup>

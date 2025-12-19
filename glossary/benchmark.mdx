@@ -1,0 +1,145 @@
+---
+title: 'Benchmark'
+description: 'Understanding benchmarks - the standards for measuring investment performance'
+---
+
+A benchmark is a standard against which investment performance is measured. Choosing the right benchmark is critical - the wrong benchmark makes performance comparisons meaningless.
+
+## Beginner
+
+### What It Means
+
+A benchmark is your measuring stick. It answers: "Compared to what?" When you say your portfolio returned 12%, the natural question is whether that's good or bad. A benchmark provides context.
+
+### Common Benchmarks
+
+| Asset Class | Common Benchmarks |
+|-------------|-------------------|
+| US Large-Cap Stocks | S&P 500 |
+| US Total Market | Russell 3000, Wilshire 5000 |
+| US Small-Cap | Russell 2000 |
+| International Developed | MSCI EAFE |
+| Emerging Markets | MSCI Emerging Markets |
+| US Bonds | Bloomberg US Aggregate |
+| 60/40 Portfolio | 60% S&P 500 / 40% Bloomberg Agg |
+
+### Portfolio Example
+
+Your US large-cap portfolio returned 12% this year. How did you do?
+
+| Benchmark | Return | Your Performance |
+|-----------|--------|------------------|
+| S&P 500 | 10% | Beat by 2% |
+| Russell 1000 | 11% | Beat by 1% |
+| Nasdaq | 15% | Underperformed by 3% |
+
+The benchmark you choose changes the story entirely.
+
+### Why It Matters
+
+Without a benchmark, you can't evaluate performance. A 15% return sounds great, but not if the market returned 25%. A 5% return sounds weak, but not if the market lost 10%.
+
+---
+
+## Advanced
+
+### Benchmark Characteristics
+
+A good benchmark should be:
+
+| Characteristic | Description |
+|----------------|-------------|
+| **Investable** | Can actually buy the benchmark |
+| **Measurable** | Returns can be calculated |
+| **Appropriate** | Matches the investment mandate |
+| **Unambiguous** | Clearly defined constituents |
+| **Specified in Advance** | Not changed after the fact |
+| **Reflective of Opportunities** | Represents available investments |
+
+### Benchmark Mismatch
+
+<Warning>
+**Benchmark mismatch** is comparing a portfolio to an inappropriate benchmark. A small-cap value fund shouldn't be compared to the S&P 500 - it should be compared to a small-cap value index.
+</Warning>
+
+**Common Mismatches:**
+- Comparing global funds to US-only benchmarks
+- Comparing concentrated portfolios to broad indices
+- Comparing multi-asset portfolios to equity-only benchmarks
+
+### Index Construction Methods
+
+| Method | Description | Examples |
+|--------|-------------|----------|
+| **Market-Cap Weighted** | Larger companies = bigger weight | S&P 500, MSCI |
+| **Equal Weighted** | All stocks weighted equally | S&P 500 Equal Weight |
+| **Price Weighted** | Higher price = bigger weight | Dow Jones |
+| **Factor Weighted** | Weighted by factor scores | Smart beta indices |
+| **Fundamentally Weighted** | Weighted by earnings, sales | FTSE RAFI |
+
+### Custom Benchmarks
+
+When no standard index fits, create a custom benchmark:
+
+```
+Example Custom Benchmark:
+- 50% S&P 500
+- 30% MSCI EAFE
+- 20% Bloomberg Aggregate
+
+This matches a global balanced portfolio better than any single index.
+```
+
+### Benchmark-Relative Metrics
+
+| Metric | Formula | What It Measures |
+|--------|---------|------------------|
+| **Active Return** | Portfolio - Benchmark | Raw outperformance |
+| **Tracking Error** | Std Dev of Active Return | Consistency of difference |
+| **Information Ratio** | Active Return / TE | Risk-adjusted outperformance |
+| **Beta** | Sensitivity to benchmark | Market exposure |
+
+### Benchmark Hugging vs. High Active Share
+
+| Behavior | Active Share | Tracking Error | Fee Appropriateness |
+|----------|--------------|----------------|---------------------|
+| Closet Indexer | Low | Low | Overpaying |
+| True Active | High | Higher | Appropriate if skilled |
+| Index Fund | Very Low | Very Low | Appropriate |
+
+### Gaming Benchmarks
+
+Managers may choose easy-to-beat benchmarks:
+
+| Tactic | Example |
+|--------|---------|
+| **Cash Drag** | Compare equity fund to cash-heavy benchmark |
+| **Style Mismatch** | Growth fund vs. broad market |
+| **Survivorship** | Compare to indices with failed stocks removed |
+
+<Note>
+Always verify that the benchmark is truly appropriate for the strategy. Outperformance vs. the wrong benchmark is meaningless.
+</Note>
+
+### Peer Benchmarking
+
+Alternative to index benchmarks:
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| Index Benchmark | Clear, investable | May not match strategy |
+| Peer Group | Compares similar strategies | Survivorship bias, varying strategies |
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Alpha" href="/glossary/alpha">
+    Excess return vs. benchmark
+  </Card>
+  <Card title="Tracking Error" href="/glossary/tracking-error">
+    Deviation from benchmark
+  </Card>
+  <Card title="Information Ratio" href="/glossary/information-ratio">
+    Risk-adjusted benchmark beating
+  </Card>
+</CardGroup>

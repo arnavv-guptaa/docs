@@ -1,0 +1,163 @@
+---
+title: 'Quantitative Investing'
+description: 'Understanding quantitative investing - data-driven, systematic approaches to investment'
+---
+
+Quantitative investing uses mathematical models, statistical analysis, and systematic rules to make investment decisions. It replaces subjective judgment with data-driven processes.
+
+## Beginner
+
+### What It Means
+
+Quantitative (or "quant") investing uses computers and data to make investment decisions instead of gut feelings or qualitative analysis. The rules are explicit, testable, and consistently applied.
+
+### How It Works
+
+1. **Identify patterns** in historical data
+2. **Build models** that capture those patterns
+3. **Test rigorously** on out-of-sample data
+4. **Implement systematically** without emotion
+5. **Monitor and refine** continuously
+
+### Quant vs. Traditional
+
+| Aspect | Quant | Traditional |
+|--------|-------|-------------|
+| Decision Making | Rules-based, algorithmic | Judgment-based, intuitive |
+| Data | Massive datasets, many signals | Company-specific research |
+| Holdings | Hundreds to thousands | Typically 30-100 |
+| Emotion | Removed by design | Human element |
+| Scalability | High | Limited |
+
+### Why It Matters
+
+Quant investing removes emotional biases (fear, greed, overconfidence) and enables processing of far more information than humans can handle manually. It brings scientific rigor to investment management.
+
+---
+
+## Advanced
+
+### Quant Strategy Types
+
+| Type | Description | Example |
+|------|-------------|---------|
+| **Factor-Based** | Target proven return drivers | Value, momentum, quality |
+| **Statistical Arbitrage** | Exploit price relationships | Pairs trading |
+| **Machine Learning** | Pattern recognition | Neural networks |
+| **High-Frequency** | Speed-based strategies | Market making |
+| **Risk Parity** | Allocate by risk contribution | Bridgewater All Weather |
+
+### The Quant Process
+
+```
+1. Hypothesis Generation
+   - Academic research
+   - Market observations
+   - Economic theory
+
+2. Data Collection
+   - Price data
+   - Fundamental data
+   - Alternative data
+
+3. Signal Construction
+   - Factor definitions
+   - Composite scores
+   - Timing signals
+
+4. Backtesting
+   - Historical simulation
+   - Out-of-sample testing
+   - Robustness checks
+
+5. Portfolio Construction
+   - Optimization
+   - Risk constraints
+   - Transaction costs
+
+6. Execution
+   - Algorithmic trading
+   - Market impact minimization
+
+7. Monitoring
+   - Performance attribution
+   - Model decay detection
+```
+
+### Data Sources
+
+| Data Type | Examples | Use |
+|-----------|----------|-----|
+| **Market Data** | Prices, volumes, order book | Trading signals |
+| **Fundamental** | Financials, estimates | Value, quality factors |
+| **Alternative** | Satellite, sentiment, web | Unique insights |
+| **Macro** | GDP, rates, inflation | Regime detection |
+
+### Backtesting Pitfalls
+
+<Warning>
+Backtesting can be misleading. Common errors:
+
+- **Overfitting**: Finding patterns that don't persist
+- **Look-Ahead Bias**: Using data not available at decision time
+- **Survivorship Bias**: Testing only on stocks that survived
+- **Transaction Costs**: Ignoring realistic trading costs
+</Warning>
+
+### Machine Learning in Quant
+
+| Technique | Application |
+|-----------|-------------|
+| **Regression** | Return prediction |
+| **Classification** | Buy/sell signals |
+| **Clustering** | Regime detection |
+| **NLP** | Sentiment analysis |
+| **Neural Networks** | Complex pattern recognition |
+
+<Note>
+Machine learning requires even more caution about overfitting. More complex models are easier to overfit to historical noise.
+</Note>
+
+### Quant vs. Discretionary
+
+| Factor | Quant | Discretionary |
+|--------|-------|---------------|
+| **Capacity** | Higher | Lower |
+| **Consistency** | Very high | Variable |
+| **Adaptability** | Slower | Faster |
+| **Transparency** | High | Lower |
+| **Crowding Risk** | Higher | Lower |
+
+### Challenges
+
+| Challenge | Description |
+|-----------|-------------|
+| **Alpha Decay** | Signals lose power as they become known |
+| **Crowding** | Too many quants trading same signals |
+| **Regime Changes** | Models built on past may not work in future |
+| **Data Quality** | Garbage in, garbage out |
+| **Black Swan Events** | Models fail in unprecedented conditions |
+
+### Parallax Approach
+
+Parallax combines quantitative methods with investment insight:
+
+- Factor-based stock selection
+- Systematic risk management
+- Transparent, rules-based process
+- Continuous model monitoring
+- Multi-factor integration
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Factor Investing" href="/glossary/factor-investing">
+    Core quant approach
+  </Card>
+  <Card title="Systematic Strategy" href="/glossary/systematic-strategy">
+    Rules-based investing
+  </Card>
+  <Card title="Alpha" href="/glossary/alpha">
+    What quants seek to generate
+  </Card>
+</CardGroup>

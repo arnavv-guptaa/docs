@@ -1,0 +1,160 @@
+---
+title: 'Systematic Strategy'
+description: 'Understanding systematic strategies - rules-based approaches to investing'
+---
+
+A systematic strategy is a rules-based investment approach where decisions follow predetermined criteria. If conditions A, B, and C are met, action X is taken - no discretion, no emotion.
+
+## Beginner
+
+### What It Means
+
+Systematic strategies operate on explicit rules. Every decision - what to buy, when to sell, how much to hold - follows predefined logic that a computer can execute.
+
+### Simple Example
+
+```
+Systematic Value Strategy:
+1. Every quarter, rank all stocks by P/E ratio
+2. Buy the 50 cheapest stocks
+3. Sell any stock that rises above median P/E
+4. Equal weight all positions
+```
+
+No judgment calls. No "this time is different." Just follow the rules.
+
+### Systematic vs. Discretionary
+
+| Aspect | Systematic | Discretionary |
+|--------|------------|---------------|
+| Decisions | Rules-based | Judgment-based |
+| Emotion | Removed | Present |
+| Consistency | Very high | Variable |
+| Backtesting | Easy | Difficult |
+| Adaptability | Slower | Faster |
+
+### Why It Matters
+
+Systematic strategies eliminate behavioral biases that hurt returns: panic selling, greed buying, overconfidence, and inconsistency. They enforce discipline when emotions would otherwise take over.
+
+---
+
+## Advanced
+
+### Types of Systematic Strategies
+
+| Type | Description | Example |
+|------|-------------|---------|
+| **Factor-Based** | Target return drivers | Value, momentum |
+| **Trend Following** | Follow price trends | Managed futures |
+| **Mean Reversion** | Bet on return to normal | Pairs trading |
+| **Risk Parity** | Allocate by risk | Equal risk contribution |
+| **Rules-Based Indexing** | Enhanced indexing | Smart beta |
+
+### Building a Systematic Strategy
+
+```
+1. Define Investment Universe
+   - Which securities to consider
+   - Liquidity and size filters
+
+2. Specify Signal Generation
+   - What data to use
+   - How to calculate signals
+   - Ranking methodology
+
+3. Set Portfolio Construction Rules
+   - Position sizing
+   - Sector constraints
+   - Risk limits
+
+4. Establish Rebalancing Rules
+   - Frequency
+   - Threshold triggers
+   - Transaction cost considerations
+
+5. Define Risk Management
+   - Stop-loss rules
+   - Maximum position sizes
+   - Correlation limits
+```
+
+### Benefits of Systematic Approach
+
+| Benefit | Description |
+|---------|-------------|
+| **Discipline** | Rules prevent emotional decisions |
+| **Consistency** | Same process every time |
+| **Scalability** | Can manage large amounts |
+| **Transparency** | Clear reasoning for every trade |
+| **Backtesting** | Can test before risking capital |
+| **Diversification** | Can hold many positions |
+
+### Challenges
+
+| Challenge | Description |
+|-----------|-------------|
+| **Overfitting** | Rules that worked historically may not persist |
+| **Crowding** | Many systematic investors use similar rules |
+| **Regime Changes** | Rules may fail in new market conditions |
+| **Model Decay** | Signals lose power over time |
+| **Black Swans** | Unprecedented events break models |
+
+<Warning>
+Past performance of backtested strategies often overstates future performance. Always stress test for scenarios not in historical data.
+</Warning>
+
+### Systematic vs. Algorithmic vs. Quant
+
+| Term | Meaning |
+|------|---------|
+| **Systematic** | Rules-based decisions (any speed) |
+| **Algorithmic** | Computer-executed (often fast) |
+| **Quantitative** | Data-driven, mathematical |
+
+These overlap significantly but aren't identical. A strategy can be systematic without being high-frequency algorithmic.
+
+### Rebalancing Approaches
+
+| Approach | Description | Trade-off |
+|----------|-------------|-----------|
+| **Calendar** | Fixed schedule (monthly, quarterly) | Simple but may miss signals |
+| **Signal-Based** | When signals change significantly | Responsive but higher turnover |
+| **Threshold** | When positions drift beyond bands | Balances responsiveness and costs |
+
+### Risk Management in Systematic Strategies
+
+| Technique | Description |
+|-----------|-------------|
+| **Position Limits** | Maximum weight per holding |
+| **Sector Limits** | Maximum weight per sector |
+| **Volatility Targeting** | Adjust exposure to target vol |
+| **Stop-Losses** | Exit rules on losses |
+| **Correlation Monitoring** | Avoid concentrated bets |
+
+### Performance Characteristics
+
+Systematic strategies often have:
+
+- Lower volatility than concentrated stock picking
+- More consistent (but perhaps smaller) alpha
+- Capacity constraints as assets grow
+- Factor exposure embedded in returns
+
+<Note>
+Pure systematic strategies may underperform during transitions or unprecedented events, but outperform over full cycles by avoiding behavioral errors.
+</Note>
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Quantitative Investing" href="/glossary/quantitative-investing">
+    Data-driven approach
+  </Card>
+  <Card title="Factor Investing" href="/glossary/factor-investing">
+    Common systematic approach
+  </Card>
+  <Card title="Portfolio Rebalancing" href="/glossary/portfolio-rebalancing">
+    Key systematic process
+  </Card>
+</CardGroup>
