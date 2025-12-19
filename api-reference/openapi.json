@@ -144,6 +144,117 @@
         }
       }
     },
+    "/v1/technical-analysis": {
+      "post": {
+        "summary": "Technical Analysis",
+        "description": "Get AI-powered technical analysis including trend analysis, momentum indicators (RSI, MACD), support/resistance levels, volume analysis, and volatility assessment. This endpoint uses async job processing - submit your request, receive a job ID, then poll for results.",
+        "operationId": "technicalAnalysis",
+        "tags": ["Analysis"],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Stock symbol (e.g., AAPL.O for Apple Inc)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL.O"
+          },
+          {
+            "name": "force",
+            "in": "query",
+            "required": false,
+            "description": "Force regeneration even if cached analysis exists",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Job created successfully. Poll the check_url for results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TechnicalAnalysisJobResponse"
+                },
+                "example": {
+                  "job_id": "tech-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+                  "status": "pending",
+                  "symbol": "AAPL.O",
+                  "force": false,
+                  "check_url": "/v1/jobs/tech-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+                  "estimated_duration_seconds": 30,
+                  "message": "Technical analysis started for AAPL.O."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/financial-analysis": {
+      "post": {
+        "summary": "Financial Analysis",
+        "description": "Get comprehensive AI-powered financial analysis using Krishna Palepu's framework. Includes business strategy, accounting quality, financial performance, and investment recommendation. Analysis typically takes 2-5 minutes.",
+        "operationId": "financialAnalysis",
+        "tags": ["Analysis"],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Stock symbol (e.g., AAPL.O for Apple Inc)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL.O"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Job created successfully. Poll the check_url for results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancialAnalysisJobResponse"
+                },
+                "example": {
+                  "job_id": "fin-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+                  "status": "pending",
+                  "symbol": "AAPL.O",
+                  "check_url": "/v1/jobs/fin-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+                  "estimated_duration_seconds": 180,
+                  "message": "Financial analysis started for AAPL.O."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/stock-report": {
       "post": {
         "summary": "Generate Stock Report",
@@ -220,6 +331,117 @@
       }
     },
     "schemas": {
+      "TechnicalAnalysisJobResponse": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "description": "Unique job identifier"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending"],
+            "description": "Initial job status"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Stock symbol being analyzed"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Whether force regeneration was requested"
+          },
+          "check_url": {
+            "type": "string",
+            "description": "URL to poll for job status"
+          },
+          "estimated_duration_seconds": {
+            "type": "integer",
+            "description": "Estimated processing time in seconds"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable status message"
+          }
+        }
+      },
+      "TechnicalAnalysisResult": {
+        "type": "object",
+        "properties": {
+          "executive_summary": {
+            "type": "string",
+            "description": "2-3 sentence summary with price, key indicators, and directional bias"
+          },
+          "technical_analysis": {
+            "type": "object",
+            "properties": {
+              "trend_analysis": {
+                "type": "string",
+                "description": "Price vs moving averages and trend direction"
+              },
+              "momentum_indicators": {
+                "type": "string",
+                "description": "RSI, MACD readings and interpretation"
+              },
+              "price_action": {
+                "type": "string",
+                "description": "Support/resistance levels and key price zones"
+              },
+              "volume_analysis": {
+                "type": "string",
+                "description": "Volume patterns and implications"
+              },
+              "volatility_assessment": {
+                "type": "string",
+                "description": "ATR, Bollinger Bands, volatility level"
+              }
+            }
+          },
+          "risk_assessment": {
+            "type": "object",
+            "properties": {
+              "volatility_level": {
+                "type": "string",
+                "description": "Volatility classification"
+              },
+              "risk_factors": {
+                "type": "string",
+                "description": "Key risk levels and stop-loss guidance"
+              }
+            }
+          }
+        }
+      },
+      "FinancialAnalysisJobResponse": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "description": "Unique job identifier"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending"],
+            "description": "Initial job status"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Stock symbol being analyzed"
+          },
+          "check_url": {
+            "type": "string",
+            "description": "URL to poll for job status"
+          },
+          "estimated_duration_seconds": {
+            "type": "integer",
+            "description": "Estimated processing time in seconds"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable status message"
+          }
+        }
+      },
       "StockReportRequest": {
         "type": "object",
         "required": ["symbol"],

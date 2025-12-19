@@ -68,6 +68,13 @@
             "pages": [
               "api-reference/stock/report"
             ]
+          },
+          {
+            "group": "Analysis",
+            "pages": [
+              "api-reference/analysis/financial",
+              "api-reference/analysis/technical"
+            ]
           }
         ]
       }

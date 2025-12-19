@@ -1,0 +1,155 @@
+---
+title: 'Financial Analysis'
+openapi: 'POST /v1/financial-analysis'
+---
+
+## How It Works
+
+This endpoint uses **async job processing** for AI-powered financial analysis:
+
+1. **Submit Request**: POST with stock symbol as query parameter
+2. **Receive Job ID**: Get a job ID and polling URL immediately
+3. **Poll for Status**: Check `/v1/jobs/{job_id}` until status is `completed`
+4. **Get Analysis**: The completed job contains comprehensive financial analysis
+
+<Note>
+Analysis typically takes 2-5 minutes. Uses Krishna Palepu's framework for business strategy, accounting quality, and financial performance analysis.
+</Note>
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | Stock symbol (e.g., AAPL.O for Apple Inc) |
+
+## Response (202 Accepted)
+
+```json
+{
+  "job_id": "fin-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+  "status": "pending",
+  "symbol": "AAPL.O",
+  "check_url": "/v1/jobs/fin-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+  "estimated_duration_seconds": 180,
+  "message": "Financial analysis started for AAPL.O."
+}
+```
+
+## Completed Response
+
+When the job completes, `GET /v1/jobs/{job_id}` returns:
+
+```json
+{
+  "job_id": "fin-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+  "job_type": "financial_analysis",
+  "status": "completed",
+  "result": {
+    "symbol": "AAPL.O",
+    "executiveSummary": {
+      "investmentThesis": "Apple remains a dominant consumer technology franchise...",
+      "keyHighlights": [
+        "ROE of 147% driven by exceptional asset efficiency...",
+        "Services segment growing at 15% CAGR provides recurring revenue...",
+        "Net cash position of $51B provides strategic flexibility..."
+      ],
+      "recommendedAction": "BUY",
+      "confidenceLevel": "HIGH",
+      "targetPriceRange": "$195-220 based on DCF and comparable analysis"
+    },
+    "detailedAnalysis": {
+      "businessStrategy": {
+        "industryPosition": "Market leader in premium smartphones and wearables...",
+        "competitiveAdvantage": "Ecosystem lock-in, brand loyalty, vertical integration...",
+        "businessModel": "Hardware + Services model with high switching costs...",
+        "keyRisks": ["China exposure", "Regulatory scrutiny", "Innovation cycles"]
+      },
+      "accountingQuality": {
+        "earningsQuality": "HIGH",
+        "conservatismLevel": "Conservative revenue recognition policies...",
+        "keyPolicies": ["Revenue recognized at point of sale..."],
+        "accountingRedFlags": []
+      },
+      "financialPerformance": {
+        "profitabilityAnalysis": {
+          "roeDecomposition": "ROE of 147% = 25% margin × 1.1x turnover × 5.4x leverage",
+          "marginAnalysis": "Gross margin stable at 43-44%...",
+          "profitabilityTrends": "Consistent margin expansion over 3 years..."
+        },
+        "liquidityAssessment": {
+          "shortTermLiquidity": "Current ratio of 1.0x, quick ratio 0.9x...",
+          "workingCapitalAnalysis": "Negative working capital driven by payables...",
+          "cashFlowQuality": "Strong FCF conversion of 95%..."
+        },
+        "solvencyAnalysis": {
+          "debtLevel": "Net debt/EBITDA of 0.5x...",
+          "coverageRatios": "Interest coverage >30x...",
+          "financialFlexibility": "High flexibility with $51B net cash..."
+        },
+        "efficiencyMetrics": {
+          "assetUtilization": "Asset turnover of 1.1x...",
+          "operationalEfficiency": "Inventory days of 9, best in class...",
+          "managementEffectiveness": "High ROIC of 56%..."
+        }
+      },
+      "prospectiveAnalysis": {
+        "growthProspects": "Mid-single digit revenue growth expected...",
+        "futureEarnings": "EPS growth of 8-10% driven by buybacks...",
+        "valuationAssessment": "Trading at 28x forward P/E vs 5yr avg 25x...",
+        "scenarioAnalysis": [
+          "Bull: Services acceleration drives 15% upside",
+          "Base: Steady growth, 8% return expected",
+          "Bear: China slowdown, 15% downside risk"
+        ]
+      }
+    }
+  }
+}
+```
+
+<Note>
+Results are cached for 14 days. Subsequent requests for the same symbol will return cached analysis instantly.
+</Note>
+
+## Analysis Framework
+
+The analysis follows Krishna Palepu's framework:
+
+| Section | Description |
+|---------|-------------|
+| **Executive Summary** | Investment thesis, recommendation, target price |
+| **Business Strategy** | Competitive position, moats, business model, risks |
+| **Accounting Quality** | Earnings quality, red flags, policy assessment |
+| **Financial Performance** | Profitability, liquidity, solvency, efficiency |
+| **Prospective Analysis** | Growth prospects, scenarios, valuation |
+
+## Example: Polling for Results
+
+```javascript
+const response = await fetch(
+  'https://parallax-api.onrender.com/v1/financial-analysis?symbol=AAPL.O',
+  {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${API_KEY}` }
+  }
+);
+
+const { job_id } = await response.json();
+
+// Poll every 10 seconds
+const interval = setInterval(async () => {
+  const status = await fetch(
+    `https://parallax-api.onrender.com/v1/jobs/${job_id}`,
+    { headers: { 'Authorization': `Bearer ${API_KEY}` } }
+  ).then(r => r.json());
+
+  if (status.status === 'completed') {
+    clearInterval(interval);
+    console.log('Recommendation:', status.result.executiveSummary.recommendedAction);
+    console.log('Thesis:', status.result.executiveSummary.investmentThesis);
+  } else if (status.status === 'failed') {
+    clearInterval(interval);
+    console.error('Failed:', status.error);
+  }
+}, 10000);
+```

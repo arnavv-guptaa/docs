@@ -1,0 +1,126 @@
+---
+title: 'Technical Analysis'
+openapi: 'POST /v1/technical-analysis'
+---
+
+## How It Works
+
+This endpoint uses **async job processing** for AI-powered technical analysis:
+
+1. **Submit Request**: POST with stock symbol as query parameter
+2. **Receive Job ID**: Get a job ID and polling URL immediately
+3. **Poll for Status**: Check `/v1/jobs/{job_id}` until status is `completed`
+4. **Get Analysis**: The completed job contains comprehensive technical analysis
+
+<Note>
+Analysis typically takes 15-30 seconds. Results are cached daily - subsequent requests return cached analysis instantly.
+</Note>
+
+## Query Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `symbol` | string | Yes | - | Stock symbol (e.g., AAPL.O for Apple Inc) |
+| `force` | boolean | No | `false` | Force regeneration even if cached analysis exists |
+
+<Warning>
+If `force` is `false` and analysis was generated today, the cached result will be returned.
+</Warning>
+
+## Response (202 Accepted)
+
+```json
+{
+  "job_id": "tech-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+  "status": "pending",
+  "symbol": "AAPL.O",
+  "force": false,
+  "check_url": "/v1/jobs/tech-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+  "estimated_duration_seconds": 30,
+  "message": "Technical analysis started for AAPL.O."
+}
+```
+
+## Completed Response
+
+When the job completes, `GET /v1/jobs/{job_id}` returns:
+
+```json
+{
+  "job_id": "tech-a3522a92-87ed-4be0-a912-ad56ed6a8806",
+  "job_type": "technical_analysis",
+  "status": "completed",
+  "result": {
+    "symbol": "AAPL.O",
+    "executive_summary": "AAPL trading at $178.52, down 1.2% from 5-day high. RSI at 52 (neutral), MACD showing bearish crossover. Short-term consolidation within broader uptrend.",
+
+    "technical_analysis": {
+      "trend_analysis": "Price 2.3% above SMA50 ($174.52) and 8.1% above SMA200 ($165.12). 30-day trend bullish with higher lows.",
+
+      "momentum_indicators": "RSI at 52.3 (neutral zone). MACD histogram negative at -0.42, signal line crossover occurred 2 days ago indicating short-term weakness.",
+
+      "price_action": "Trading between support at $175.20 (1.9% below) and resistance at $182.50 (2.2% above). Key breakout level at $183.",
+
+      "volume_analysis": "Volume at 0.85x 30-day average. Declining volume on recent pullback suggests lack of selling conviction.",
+
+      "volatility_assessment": "ATR at 2.1% of price. Trading in middle of Bollinger Bands, indicating normal volatility conditions."
+    },
+
+    "risk_assessment": {
+      "volatility_level": "Moderate volatility with 2.1% daily ATR, typical for large-cap tech.",
+      "risk_factors": "Key stop level at $174.50 (SMA50). Watch for breakdown below $172 which would signal trend reversal."
+    }
+  }
+}
+```
+
+## Response Fields
+
+| Field | Description |
+|-------|-------------|
+| `executive_summary` | 2-3 sentence overview with price, key indicators, and directional bias |
+| `technical_analysis.trend_analysis` | Price vs moving averages, trend direction |
+| `technical_analysis.momentum_indicators` | RSI, MACD readings and interpretation |
+| `technical_analysis.price_action` | Support/resistance levels, key price zones |
+| `technical_analysis.volume_analysis` | Volume patterns and implications |
+| `technical_analysis.volatility_assessment` | ATR, Bollinger Bands, volatility level |
+| `risk_assessment.volatility_level` | Volatility classification |
+| `risk_assessment.risk_factors` | Key risk levels and stop-loss guidance |
+
+## Example: Polling for Results
+
+```javascript
+const response = await fetch(
+  'https://parallax-api.onrender.com/v1/technical-analysis?symbol=AAPL.O',
+  {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${API_KEY}` }
+  }
+);
+
+const { job_id } = await response.json();
+
+// Poll every 5 seconds
+const interval = setInterval(async () => {
+  const status = await fetch(
+    `https://parallax-api.onrender.com/v1/jobs/${job_id}`,
+    { headers: { 'Authorization': `Bearer ${API_KEY}` } }
+  ).then(r => r.json());
+
+  if (status.status === 'completed') {
+    clearInterval(interval);
+    console.log('Summary:', status.result.executive_summary);
+    console.log('Trend:', status.result.technical_analysis.trend_analysis);
+  } else if (status.status === 'failed') {
+    clearInterval(interval);
+    console.error('Failed:', status.error);
+  }
+}, 5000);
+```
+
+## Error Responses
+
+| Status | Description |
+|--------|-------------|
+| 401 | Invalid or missing API key |
+| 500 | Failed to create job |
