@@ -14,7 +14,7 @@
         "tab": "Guides",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Getting Started",
             "pages": [
               "index",
               "quickstart",
@@ -22,27 +22,35 @@
             ]
           },
           {
-            "group": "Customization",
+            "group": "Methodology",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "methodology/overview",
+              "methodology/scoring",
+              "methodology/factors",
+              "methodology/risk-management"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Console",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "console/overview",
+              "console/quickstart",
+              "console/workflow"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Features",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "console/analyzer",
+              "console/builder",
+              "console/screener",
+              "console/news",
+              "console/watchlists"
             ]
           }
         ]

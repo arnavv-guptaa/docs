@@ -1,0 +1,346 @@
+---
+title: 'Portfolio Analyzer'
+description: 'Comprehensive guide to analyzing portfolios with institutional-grade analytics'
+---
+
+**Transform your existing holdings into actionable insights.** The Portfolio Analyzer applies institutional-grade quantitative methods to any portfolio, providing the same level of analysis used by billion-dollar endowments and hedge funds.
+
+Most investment tools focus on picking new stocks. The Portfolio Analyzer starts with what you already own, then reveals hidden risks, optimization opportunities, and performance drivers using rigorous academic methodology.
+
+## Conceptual Foundation
+
+### The Portfolio-First Approach
+
+Traditional investment analysis often examines securities in isolation. Modern Portfolio Theory, developed by Harry Markowitz in 1952, demonstrated that portfolio-level analysis is fundamental—the risk and return of individual holdings matter less than how they work together.
+
+**Key Principles**:
+- **Diversification Benefits**: How holdings correlate affects total portfolio risk
+- **Factor Exposure**: Securities share common risk factors (value, growth, size, quality)
+- **Performance Attribution**: Understanding what drives returns enables better decisions
+- **Optimization Opportunities**: Mathematical methods can improve risk-adjusted returns
+
+## Getting Started
+
+### Uploading Your Portfolio
+
+<Tabs>
+  <Tab title="Supported Formats">
+    - **CSV Files**: Standard comma-separated format
+    - **Excel Files**: .xlsx and .xls formats supported
+    - **Manual Entry**: For smaller portfolios or quick analysis
+    - **Broker Integration**: Direct connection to select platforms (where available)
+  </Tab>
+  <Tab title="Required Fields">
+    **Minimum Requirements**:
+    - Symbol or ticker
+    - Quantity (shares or dollar amount)
+    - Asset type (if not auto-detected)
+
+    **Enhanced Analysis** (recommended):
+    - Purchase price or cost basis
+    - Purchase date
+    - Currency (for international holdings)
+    - Security name or description
+  </Tab>
+</Tabs>
+
+#### Sample Portfolio Format
+
+```csv
+Date,Symbol,Weight
+2023-01-15,AAPL,0.25
+2023-02-20,MSFT,0.20
+2023-03-10,GOOGL,0.15
+2023-01-30,VTI,0.40
+```
+
+### Portfolio Upload Process
+
+<Steps>
+  <Step title="Access the Analyzer">
+    Navigate to the Analyzer tab in your dashboard
+  </Step>
+  <Step title="Choose Upload Method">
+    File upload, manual entry, or broker connection
+  </Step>
+  <Step title="Map Data Fields">
+    Confirm that columns are correctly identified
+  </Step>
+  <Step title="Review Holdings">
+    Verify that securities are properly recognized
+  </Step>
+  <Step title="Initiate Analysis">
+    Click "Analyze Portfolio" to begin processing
+  </Step>
+</Steps>
+
+**Processing Time**: Most portfolios analyze in 30-60 seconds. Complex portfolios with many international holdings may take up to 2 minutes.
+
+## Understanding Your Analysis
+
+### Overview Tab: Portfolio Summary
+
+**Portfolio Metrics Dashboard**
+
+| Metric | Description |
+|--------|-------------|
+| **Total Portfolio Value** | Current market value of all holdings |
+| **Total Return** | Performance since portfolio inception or specified period |
+| **Sharpe Ratio** | Risk-adjusted return measurement |
+| **Volatility** | Portfolio standard deviation |
+| **Beta** | Market sensitivity |
+| **Maximum Drawdown** | Largest peak-to-trough decline |
+| **Parallax Score** | Proprietary composite score (0-100) evaluating overall portfolio quality |
+
+**Asset Allocation Breakdown**:
+- Sector allocation with over/underweights vs. market
+- Geographic distribution
+- Market cap distribution
+- Growth vs. value tilt
+
+### Performance Tab: Return Analysis
+
+#### Time-Period Analysis
+
+**Returns Across Multiple Periods**:
+- 1 Day, 1 Week, 1 Month, 3 Month, 6 Month, 1 Year, 3 Year
+- Comparison to relevant benchmarks (S&P 500, total market, custom)
+- Risk-adjusted performance metrics for each period
+
+#### Performance Attribution
+
+**Understanding What Drives Returns**:
+
+| Component | Description |
+|-----------|-------------|
+| **Security Selection** | How individual stock picks contributed to performance relative to sector averages |
+| **Sector Allocation** | Impact of being overweight or underweight in specific sectors |
+| **Factor Exposure** | Contribution from value, growth, momentum, quality, and size factors |
+| **Currency Impact** | For international holdings, effect of currency movements |
+
+**Example Attribution Analysis**:
+```
+Total Portfolio Return: +12.3% (vs. S&P 500: +8.7%)
+  Security Selection: +2.1%
+  Sector Allocation: +1.8%
+  Factor Tilts: +1.2%
+  Currency/Other: -1.5%
+```
+
+### Risk Tab: Comprehensive Risk Assessment
+
+#### Traditional Risk Metrics
+
+**Volatility Analysis**:
+- Annualized standard deviation
+- Downside deviation (volatility of negative returns)
+- Tracking error vs. benchmark
+
+**Value at Risk (VaR)**: Statistical measure of potential losses over specific time horizons with given confidence levels.
+- 1-day 95% VaR: "95% confident you won't lose more than X% in one day"
+- 1-month 99% VaR: More extreme scenario analysis
+
+#### Advanced Risk Decomposition
+
+**Factor Risk Attribution** - Understanding portfolio risk sources:
+
+| Risk Type | Description |
+|-----------|-------------|
+| **Market Risk** | Systematic risk from overall market movements |
+| **Size Risk** | Exposure to small vs. large-cap stocks |
+| **Value Risk** | Exposure to value vs. growth factors |
+| **Momentum Risk** | Exposure to recent price trends |
+| **Quality Risk** | Exposure to fundamental quality metrics |
+| **Sector Risk** | Concentration risk from sector bets |
+
+#### Stress Testing
+
+**Historical Scenario Analysis** - How would your portfolio have performed during major market events?
+
+- 2008 Financial Crisis
+- COVID-19 Market Crash (March 2020)
+- Dot-com Bubble Burst (2000-2002)
+- European Debt Crisis (2011)
+
+**Agentic Impact Analysis**: Sophisticated scenario analysis powered by multi-agent AI workflow featuring 5-10 specialized agent layers that collaborate to evaluate portfolio impact across different market scenarios.
+
+**Monte Carlo Simulation**: Statistical modeling of potential future outcomes based on historical patterns and correlations.
+
+### Holdings Tab: Individual Security Analysis
+
+**Parallax Scores by Holding** - Each position receives individual factor scores (0-10 scale):
+
+| Factor | Description |
+|--------|-------------|
+| **Value Score** | Based on valuation metrics (P/E, P/B, EV/EBITDA, etc.) |
+| **Quality Score** | Financial strength, profitability, and stability |
+| **Momentum Score** | Price and earnings momentum indicators |
+| **Defensive Score** | Low volatility and stable earnings characteristics |
+| **Size Score** | Market cap factor exposure |
+
+**Position Analysis**:
+- Portfolio weight vs. benchmark weight
+- Contribution to total return
+- Risk contribution to portfolio
+- Liquidity assessment
+- ESG scores (where applicable)
+
+### Factor Exposure Tab: Quantitative Analysis
+
+#### Understanding Factor Loadings
+
+**What Are Factors?** Factors are common characteristics that explain security returns. Academic research has identified several persistent factors that drive investment performance.
+
+**Your Portfolio's Factor Exposure**:
+
+| Factor | Positive Loading | Negative Loading |
+|--------|------------------|------------------|
+| **Size Factor** | Tilted toward smaller companies | Tilted toward larger companies |
+| **Value Factor** | Value-oriented portfolio | Growth-oriented portfolio |
+| **Momentum Factor** | Momentum strategy | Contrarian strategy |
+| **Quality Factor** | Quality-focused | Speculative holdings |
+
+#### Factor Performance Attribution
+
+```
+3-Month Performance Attribution:
+  Market Beta (1.15): +1.8%
+  Value Factor (-0.3): -0.7%
+  Size Factor (0.1): +0.2%
+  Momentum Factor (0.8): +2.1%
+  Quality Factor (0.5): +1.2%
+```
+
+**Interpretation**: Your portfolio benefited from positive momentum and quality exposure but was hurt by slight growth tilt during a value rally.
+
+### Optimization Tab: Improvement Recommendations
+
+#### AI-Powered Insights
+
+**Portfolio Health Check**:
+- Concentration risk assessment
+- Correlation cluster identification
+- Factor balance evaluation
+- Cost efficiency analysis
+
+**Specific Recommendations**:
+
+<AccordionGroup>
+  <Accordion title="Reduce Concentration">
+    "Your top 5 holdings represent 68% of portfolio value. Consider reducing positions in AAPL and MSFT."
+  </Accordion>
+  <Accordion title="Improve Diversification">
+    "Adding international exposure through VEA or emerging markets via VWO could reduce correlation risk."
+  </Accordion>
+  <Accordion title="Factor Balance">
+    "Your portfolio has strong momentum exposure but lacks defensive characteristics. Consider adding utilities or consumer staples."
+  </Accordion>
+  <Accordion title="Tax Efficiency">
+    "Selling XYZ at a loss could offset gains in ABC while maintaining similar factor exposure through DEF."
+  </Accordion>
+</AccordionGroup>
+
+#### Mathematical Optimization
+
+| Method | Description |
+|--------|-------------|
+| **Mean-Variance** | Suggests portfolio weights that maximize expected return for given risk level |
+| **Risk Parity** | Rebalances so each position contributes equally to portfolio risk |
+| **Black-Litterman** | Incorporates your views and confidence levels to adjust optimization |
+
+## Advanced Analysis Features
+
+### Custom Benchmarks
+
+Create personalized benchmarks reflecting your actual investment universe:
+- Combine multiple indices with custom weights
+- Include alternative investments
+- Adjust for currency exposure
+- Account for expense ratios and fees
+
+### Historical Backtesting
+
+**"What If" Analysis**:
+- How would proposed changes have performed historically?
+- Sensitivity analysis for different market conditions
+- Transaction cost impact modeling
+- Tax implications of rebalancing
+
+### ESG Integration
+
+**Environmental, Social, Governance Analysis**:
+- ESG scores for individual holdings
+- Portfolio-level ESG metrics
+- Comparison to ESG benchmarks
+- Impact of ESG considerations on returns and risk
+
+## Common Insights and Actions
+
+| Finding | Action |
+|---------|--------|
+| **High Concentration** (Top 3 holdings = 45%) | Gradually reduce positions, diversify across more holdings |
+| **Factor Imbalance** (Strong momentum, no defensive) | Add defensive sectors or low-volatility ETFs |
+| **Underperforming Holdings** (Low Parallax scores) | Research upgrade alternatives with better factor characteristics |
+| **Geographic Concentration** (95% US) | Add international developed and emerging market exposure |
+
+## AI Chat Assistant for Portfolio Analysis
+
+<Note>
+**AI Technology:** Parallax uses a mixture of different LLMs optimized for specific tasks—from natural language understanding to quantitative analysis—integrated with our proprietary financial data infrastructure and real-time market data.
+</Note>
+
+After analyzing your portfolio, use the AI Chat Assistant to dig deeper into findings, get personalized advice, and explore optimization strategies through natural conversation.
+
+### Sample Queries
+
+**Portfolio-Focused**:
+```
+"Why is my Parallax score only 6.5? What should I fix first?"
+"Explain my factor exposure—why is my Value score so low?"
+"My quality factor is 2.8. Which holdings are dragging it down?"
+```
+
+**Risk and Optimization**:
+```
+"What's my biggest risk right now based on this analysis?"
+"Which holdings should I replace to improve diversification?"
+"How can I increase my defensive factor without losing too much return?"
+```
+
+**Strategy Development**:
+```
+"I want to reduce volatility to 15%. What changes do you suggest?"
+"Create a plan to fix my sector concentration issues"
+"How do I transition this portfolio to be more ESG-friendly?"
+```
+
+<Tip>
+**Pro Tip**: After getting AI recommendations, ask "Create a stock screen to find replacements" or "Build a sample portfolio showing these changes" to move from analysis to action.
+</Tip>
+
+## Best Practices
+
+### Regular Analysis Schedule
+
+| Frequency | Focus |
+|-----------|-------|
+| **Monthly** | Track performance and rebalancing needs |
+| **Quarterly** | Comprehensive analysis including factor exposures |
+| **Annual** | Strategic review - assess alignment with long-term objectives |
+
+### Avoiding Common Pitfalls
+
+- **Over-Optimization**: Don't chase perfection—focus on material improvements
+- **Ignoring Costs**: Factor transaction costs and taxes into decisions
+- **Recency Bias**: Consider long-term patterns, not just recent performance
+- **Analysis Paralysis**: Take action on clear insights rather than endless analysis
+
+---
+
+## Next Steps
+
+After completing your portfolio analysis:
+
+- **[Stock Screener](/console/screener)**: Find replacement securities for underperformers
+- **[AI Portfolio Builder](/console/builder)**: Create optimized versions of your portfolio
+- **[Methodology](/methodology/overview)**: Learn complete optimization workflows and systematic approaches

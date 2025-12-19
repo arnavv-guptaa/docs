@@ -1,0 +1,211 @@
+---
+title: 'Risk Management'
+description: 'Comprehensive risk management framework combining real-time monitoring, stress testing, and advanced controls'
+---
+
+Parallax's risk management framework protects portfolios while optimizing for superior risk-adjusted returns. Our multi-dimensional approach combines real-time monitoring, predictive analytics, and systematic controls to manage both known and emerging risks.
+
+## Multi-Dimensional Risk Framework
+
+While most platforms focus on simple volatility measures, Parallax monitors risk across multiple dimensions:
+
+<CardGroup cols={2}>
+  <Card title="Factor Risk" icon="layer-group">
+    - **Concentration Monitoring**: Prevent overexposure to any single factor
+    - **Interaction Effects**: Track how factors correlate during stress
+    - **Style Drift**: Ensure portfolios maintain intended exposures
+  </Card>
+  <Card title="Market Risk" icon="chart-line">
+    - **Volatility Tracking**: Real-time portfolio volatility measurement
+    - **Beta Management**: Control systematic market risk exposure
+    - **Correlation Analysis**: Monitor changing relationship patterns
+  </Card>
+  <Card title="Concentration Risk" icon="bullseye">
+    - **Position Limits**: Maximum exposure to individual securities
+    - **Sector Concentration**: Industry and geographic exposure controls
+    - **Factor Concentration**: Prevent over-reliance on single factors
+  </Card>
+  <Card title="Liquidity Risk" icon="water">
+    - **Trading Volume**: Ensure adequate liquidity for position changes
+    - **Market Impact**: Estimate costs of portfolio adjustments
+    - **Stress Liquidity**: Model liquidity during market stress periods
+  </Card>
+</CardGroup>
+
+## Real-Time Risk Monitoring
+
+### Live Monitoring
+
+**Real-Time Metrics**:
+- Portfolio volatility and Value-at-Risk (VaR) updated every 15 minutes
+- Factor exposures tracked against targets throughout the day
+- Concentration measures monitored across all dimensions
+- Correlation matrices updated with each market close
+
+**Dynamic Risk Budgeting**:
+- Risk allocation across factors, sectors, and individual positions
+- Active share measurement against benchmarks
+- Tracking error decomposition and analysis
+- Expected shortfall and tail risk measurement
+
+**Market Regime Detection**:
+- Automatic identification of changing market conditions
+- Volatility regime classification (low, normal, high)
+- Factor correlation regime monitoring
+- Crisis period detection and preparation
+
+### Alert Systems
+
+| Alert Type | Threshold |
+|------------|-----------|
+| Position size limit | Typically 5% individual position |
+| Factor drift | ±2% from target |
+| Sector concentration | >20% in single sector |
+| Volatility spike | Above client risk tolerance |
+
+**Early Warning Systems**:
+- Model degradation indicators
+- Unusual correlation patterns
+- Liquidity stress signals
+- Factor momentum reversals
+
+### Risk Reporting
+
+<AccordionGroup>
+  <Accordion title="Daily Risk Reports">
+    - Comprehensive risk dashboard with key metrics
+    - Factor attribution and risk decomposition
+    - Concentration analysis across multiple dimensions
+    - Liquidity analysis and market impact estimates
+  </Accordion>
+  <Accordion title="Weekly Risk Analysis">
+    - Trend analysis of risk metrics over time
+    - Peer comparison and benchmark analysis
+    - Stress testing results and scenario analysis
+    - Performance attribution including risk-adjusted metrics
+  </Accordion>
+  <Accordion title="Monthly Risk Reviews">
+    - Comprehensive portfolio risk assessment
+    - Model performance evaluation and calibration
+    - Risk-return optimization opportunities
+    - Long-term risk trend analysis and projections
+  </Accordion>
+</AccordionGroup>
+
+## Stress Testing and Scenario Analysis
+
+### Historical Scenario Analysis
+
+- Performance simulation during major market events (2008, 2020, etc.)
+- Factor behavior during different crisis types
+- Correlation breakdown analysis during stress periods
+- Recovery pattern analysis and timing
+
+### Forward-Looking Stress Tests
+
+| Test Type | Methodology |
+|-----------|-------------|
+| Monte Carlo simulations | 10,000+ scenarios |
+| Economic scenarios | Recession and expansion modeling |
+| Rate shock scenarios | Interest rate and inflation stress |
+| Black swan events | Geopolitical and tail risk modeling |
+
+### Factor-Specific Stress Tests
+
+- Individual factor breakdown scenarios
+- Factor correlation stress testing
+- Momentum crash and value trap scenarios
+- Quality deterioration and defensive failure tests
+
+## Advanced Risk Controls
+
+### Position-Level Controls
+
+| Control | Typical Limit |
+|---------|---------------|
+| Maximum position size | 3-5% per individual security |
+| Liquidity requirements | Minimum daily volume thresholds |
+| Quality screens | Fundamental filters for deteriorating companies |
+| Correlation limits | Prevent highly correlated clustering |
+
+### Portfolio-Level Controls
+
+| Control | Description |
+|---------|-------------|
+| Volatility targets | Client-specific maximum volatility limits |
+| Factor bounds | Tolerance bands around target exposures |
+| Sector limits | Maximum exposure to industries |
+| Geographic limits | Concentration controls for regions |
+
+### Dynamic Controls
+
+<Note>
+**Regime-Aware Limits**: Tighter controls during high volatility periods
+
+**Correlation-Based Sizing**: Position sizes adjust for correlation changes
+
+**Momentum Controls**: Reduced momentum exposure during reversal risks
+
+**Liquidity-Based Limits**: Position sizes reflect current market liquidity
+</Note>
+
+## Implementation Risk Management
+
+### Transaction Cost Control
+
+- Pre-trade cost analysis and optimization
+- Market impact modeling and minimization
+- Optimal execution timing and sizing
+- Post-trade cost analysis and model improvement
+
+### Rebalancing Risk Management
+
+- Intelligent rebalancing considering multiple factors
+- Tax-aware rebalancing for taxable accounts
+- Market timing considerations for major changes
+- Gradual implementation for large portfolio shifts
+
+## Risk-Return Optimization
+
+### Performance Attribution
+
+| Component | Description |
+|-----------|-------------|
+| Factor contribution | Returns from factor exposures |
+| Security selection | Alpha from individual picks |
+| Market timing | Returns from allocation changes |
+| Implementation | Trading and execution costs |
+
+### Risk Efficiency Analysis
+
+- Identification of unrewarded risks
+- Optimization opportunities for better risk-adjusted returns
+- Factor efficiency measurement and improvement
+- Cost-benefit analysis of risk reduction strategies
+
+### Dynamic Risk Budgeting
+
+- Optimal allocation of risk across different sources
+- Factor risk vs. specific risk trade-offs
+- Active risk vs. tracking error management
+- Risk capacity utilization and optimization
+
+## Technology Infrastructure
+
+### Real-Time Processing
+
+- Sub-second risk calculation updates
+- Integration with market data feeds
+- Automated model recalibration
+- Cloud-based scalability and reliability
+
+### Machine Learning Enhancement
+
+- Pattern recognition for risk factor identification
+- Predictive modeling for risk regime changes
+- Anomaly detection for unusual risk patterns
+- Continuous model improvement and adaptation
+
+<Info>
+**Understanding Risk Metrics**: For detailed explanations of volatility, beta, correlation, tracking error, drawdown, and other risk metrics including mathematical formulas and interpretation guidelines, see the [Parallax API documentation](/api-reference).
+</Info>

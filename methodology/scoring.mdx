@@ -1,0 +1,145 @@
+---
+title: 'Scoring Methodology'
+description: 'How Parallax calculates factor scores, integrates them with ML optimization, and generates investment recommendations'
+---
+
+Our scoring system transforms complex financial data into clear, actionable investment insights. Built on Fama-French factor research and other academic foundations, our models incorporate real-time data and contemporary measures.
+
+## Score Calculation Process
+
+### Individual Factor Scores (0-10 Scale)
+
+Scores represent **rounded percentiles** within the investment universe:
+
+| Score Range | Percentile | Interpretation |
+|-------------|------------|----------------|
+| **8-10** | Top quartile | Strong to exceptional performance |
+| **6-7** | Above median | Moderately attractive |
+| **4-5** | Below median | Neutral to weak |
+| **0-3** | Bottom quartile | Poor to very poor performance |
+
+<Note>
+**Percentile Interpretation**: A Value score of 10 means the stock is in the **top 10% cheapest** relative to fundamentals. A Quality score of 3 means it's in the **bottom 20%** for business quality metrics.
+</Note>
+
+### Overall Parallax Score Integration
+
+The Overall Score uses a **machine learning model** that dynamically adapts to changing market environments:
+
+```
+Overall Score = ML-Optimized Combination of:
+  Value Factor     (10-40% dynamic weight)
+  Quality Factor   (10-40% dynamic weight)
+  Momentum Factor  (10-40% dynamic weight)
+  Defensive Factor (10-40% dynamic weight)
+  Tactical Factor  (10-40% dynamic weight)
+
+Note: Size is NOT included in Overall Score calculation
+```
+
+## ML Optimization Process
+
+<Steps>
+  <Step title="Predict Returns">
+    Models forecast expected returns for each factor based on current market regime
+  </Step>
+  <Step title="Estimate Covariances">
+    Predicts how factors will correlate in the near-term
+  </Step>
+  <Step title="Optimize Weights">
+    Allocates to factors with best risk-adjusted return forecasts
+  </Step>
+  <Step title="Enforce Limits">
+    Each factor weight constrained between 10% (minimum) and 40% (maximum)
+  </Step>
+  <Step title="Periodic Updates">
+    Weights recalculated periodically as market conditions evolve
+  </Step>
+</Steps>
+
+<Tip>
+**Example**: During high-volatility periods, the ML model might increase Defensive factor weight to 35% and reduce Momentum to 15%, automatically adapting your strategy to market conditions.
+</Tip>
+
+## Size Factor Treatment
+
+The Size factor has a unique role in the framework:
+
+| Aspect | Treatment |
+|--------|-----------|
+| **Overall Score** | Size does NOT contribute to individual stock recommendations |
+| **Portfolio Construction** | Size is systematically incorporated during portfolio building |
+| **Liquidity Management** | Ensures adequate trading capacity and minimizes market impact |
+| **Capacity Constraints** | Helps manage strategy scalability and position sizing |
+| **Factor Amplification** | Small-cap exposure can amplify other factor signals |
+
+## Recommendation Generation
+
+Overall scores translate directly into investment recommendations:
+
+| Score Range | Recommendation |
+|-------------|----------------|
+| **8.5-10.0** | STRONG BUY |
+| **6.5-8.4** | BUY |
+| **3.5-6.4** | HOLD |
+| **1.5-3.4** | SELL |
+| **0.0-1.4** | STRONG SELL |
+
+## Score Validation and Quality Control
+
+### Multi-Source Verification
+
+- Cross-validation across fundamental, technical, and alternative data
+- Peer comparison within sector and market cap categories
+- Historical score performance tracking
+- Outlier detection and manual review processes
+
+### Dynamic Adjustment via ML Model
+
+| Adjustment Type | Description |
+|-----------------|-------------|
+| **Market Regime Detection** | Identifies changing market conditions (bull, bear, high-vol, low-vol) |
+| **Adaptive Factor Weights** | ML model adjusts Overall Score weights periodically within 10-40% bounds |
+| **Covariance Forecasting** | Predicts how factors will correlate in current regime |
+| **Return Prediction** | Estimates near-term factor performance based on market environment |
+| **Sector-Specific Adjustments** | Scoring refined for industry-specific characteristics |
+| **Event-Driven Modifications** | Earnings season and corporate action adjustments |
+
+## Performance Attribution
+
+Understanding where returns come from through factor decomposition:
+
+```
+Example 6-Month Performance Attribution:
+Total Return: +8.3%
+  Market Beta (1.1):      +5.2%
+  Value Factor (0.4):     -0.8%
+  Momentum Factor (0.6):  +2.1%
+  Quality Factor (0.5):   +1.4%
+  Size Factor (-0.2):     -0.3%
+  Tactical Factor (0.2):  +0.4%
+  Security Selection:     +0.3%
+```
+
+### Factor Risk Analysis
+
+Understanding portfolio risk sources through factor decomposition:
+
+- **Systematic Risk**: Market and factor exposures
+- **Specific Risk**: Individual security risk
+- **Concentration Risk**: Factor and sector concentrations
+- **Correlation Risk**: How holdings relate during stress periods
+
+## Continuous Improvement Process
+
+<CardGroup cols={3}>
+  <Card title="Monthly Reviews" icon="calendar">
+    Individual factor performance analysis, interaction assessment, and scoring accuracy validation
+  </Card>
+  <Card title="Quarterly Updates" icon="arrows-rotate">
+    Factor weight optimization, new data source integration, and model refinement
+  </Card>
+  <Card title="Annual Review" icon="clipboard-check">
+    Complete framework assessment, academic research updates, and technology enhancements
+  </Card>
+</CardGroup>

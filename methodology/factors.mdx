@@ -1,0 +1,294 @@
+---
+title: 'Factor Deep Dive'
+description: 'Detailed implementation of each factor including metrics, academic foundations, and practical applications'
+---
+
+This guide provides comprehensive coverage of each factor in the Parallax framework, including the specific metrics used, academic foundations, when each factor works best, and implementation considerations.
+
+## Value Factor
+
+### Academic Foundation
+
+Benjamin Graham and David Dodd's "Security Analysis" (1934), Fama-French value premium research (1992).
+
+### Key Metrics
+
+```
+Value Score = Percentile Rank based on:
+  P/E Ratio      - Earnings valuation vs. sector peers
+  P/B Ratio      - Book value relative to peers
+  EV/EBITDA      - Cash flow-based valuation
+  P/S Ratio      - Revenue multiple analysis
+  Dividend Yield - Income component assessment
+
+→ Precision-weighted ensemble of these metrics
+→ Combined into single percentile score (0-10)
+```
+
+### When Value Works
+
+| Market Condition | Value Performance |
+|------------------|-------------------|
+| Market recovery after declines | Strong |
+| Rising interest rate environments | Strong |
+| Economic expansion with improving earnings | Strong |
+| Periods of reduced speculation | Strong |
+
+### Implementation Risks
+
+<Warning>
+**Value Traps**: Cheap stocks that remain cheap or decline further due to fundamental issues.
+
+**Secular Decline**: Industries facing permanent disruption may appear cheap but lack recovery potential.
+
+**Quality Issues**: Low prices may reflect legitimate fundamental problems.
+
+**Timing**: Value can underperform for extended periods (e.g., 2017-2020).
+</Warning>
+
+---
+
+## Quality Factor
+
+### Academic Foundation
+
+Warren Buffett's quality principles, Piotroski F-Score research (2000), Asness, Frazzini, and Pedersen quality factor research (2019).
+
+### Key Metrics
+
+```
+Quality Score = Percentile Rank based on:
+  Profitability        - ROE, ROA, profit margins
+  Financial Strength   - Balance sheet quality metrics
+  Earnings Quality     - Sustainability of reported earnings
+  Business Stability   - Revenue predictability and growth
+  Management Quality   - Capital allocation efficiency
+  Forensic Accounting  - Red flag detection and penalties
+
+→ Precision-weighted ensemble of these metrics
+→ Combined into single percentile score (0-10)
+```
+
+### Forensic Accounting Analysis
+
+Our Quality scoring includes forensic accounting checks:
+
+- Detects earnings manipulation red flags (unusual accruals, revenue recognition issues)
+- Identifies balance sheet warning signs (off-balance sheet items, hidden liabilities)
+- Penalizes scores for accounting irregularities and disclosure quality issues
+- Continuous monitoring of financial statement quality
+
+### Quality Advantages
+
+<Tip>
+**Defensive Characteristics**: Outperforms during market stress
+
+**Consistency**: More predictable performance patterns
+
+**Compounding**: Quality characteristics tend to persist over time
+
+**Risk Reduction**: Lower volatility and drawdown periods
+</Tip>
+
+---
+
+## Momentum Factor
+
+### Academic Foundation
+
+Jegadeesh and Titman momentum research (1993), behavioral finance herding and under-reaction research.
+
+### Key Metrics
+
+```
+Momentum Score = Percentile Rank based on:
+  6-Month Price Return   - Recent performance trajectory
+  12-Month Price Return  - Longer-term trend strength
+  Earnings Revisions     - Analyst estimate changes
+  Revenue Growth         - Sales momentum analysis
+  Relative Strength      - Peer comparison metrics
+
+→ Precision-weighted ensemble of these metrics
+→ Combined into single percentile score (0-10)
+```
+
+### Implementation Challenges
+
+| Challenge | Description |
+|-----------|-------------|
+| **Reversal Risk** | Strong trends can reverse quickly, especially in stress periods |
+| **Volatility** | Higher volatility than other factors |
+| **Crowding** | Popular momentum trades can become overcrowded |
+| **Transaction Costs** | Higher turnover increases implementation costs |
+
+---
+
+## Defensive Factor
+
+### Academic Foundation
+
+Low volatility anomaly research (Baker, Bradley, Wurgler 2011), minimum variance portfolio theory.
+
+### Key Metrics
+
+```
+Defensive Score = Percentile Rank based on:
+  Low Volatility        - Historical price stability
+  Low Beta              - Market sensitivity measurement
+  Earnings Stability    - Consistency of financial results
+  Dividend Quality      - Payment history and sustainability
+  Business Defensiveness - Recession resistance
+
+→ Precision-weighted ensemble of these metrics
+→ Combined into single percentile score (0-10)
+```
+
+### Defensive Benefits
+
+<Note>
+**Downside Protection**: Outperforms during market declines
+
+**Risk-Adjusted Returns**: Often superior Sharpe ratios over full cycles
+
+**Stability**: Lower volatility and more predictable outcomes
+
+**Crisis Performance**: Valuable during uncertain periods
+</Note>
+
+---
+
+## Size Factor
+
+### Academic Foundation
+
+Banz small firm effect (1981), Fama-French size factor inclusion (1992), international evidence across global markets.
+
+### Updated Role
+
+The size factor has evolved from a standalone return premium to a **signal amplifier** that enhances other factor effectiveness:
+
+| Role | Description |
+|------|-------------|
+| **Attention Gaps** | Smaller companies receive less analyst coverage |
+| **Uninformed Flows** | Passive funds typically prefer large/mega-cap stocks |
+| **Factor Interaction** | Size amplifies value, momentum, and quality signals |
+| **Market Inefficiencies** | Less efficient pricing in smaller company segments |
+
+### Implementation Considerations
+
+<Warning>
+**Higher Volatility**: Small-cap stocks typically more volatile
+
+**Liquidity Risk**: Lower liquidity impacts trading costs
+
+**Quality Variation**: Wide range of quality among small companies
+
+**Economic Sensitivity**: Greater exposure to economic cycles
+</Warning>
+
+<Note>
+**Important**: Size is NOT included in the Overall Score calculation. It is accounted for during portfolio construction to manage liquidity, capacity, and factor amplification.
+</Note>
+
+---
+
+## Tactical Factor
+
+### Academic Foundation
+
+The Tactical factor captures **short-term opportunities arising from temporary supply-demand imbalances and liquidity dislocations**:
+
+- Kyle Model (1985): Informed trader behavior and price impact
+- Glosten-Milgrom Model (1985): Market maker pricing and informed trading probability
+- Campbell, Grossman & Wang (1993): Non-fundamental trading and return reversals
+
+### Signal Categories
+
+<AccordionGroup>
+  <Accordion title="Flow-Based Signals">
+    - **Institutional Flow Analysis**: Fund flows creating mechanical pressure
+    - **Insider Trading Patterns**: Corporate insider activity indicating information advantages
+    - **Smart Money Tracking**: Following institutional trades with superior information
+    - **Forced Selling Events**: Margin calls and liquidations creating opportunities
+  </Accordion>
+
+  <Accordion title="Technical Dislocations">
+    - **Gap Analysis**: Price gaps that may over/under-react to information
+    - **Volume Anomalies**: Unusual volume indicating informed or forced trading
+    - **Relative Strength Divergences**: Temporary dislocations vs. sector/market
+    - **Options Flow**: Large positions indicating directional bets or hedging
+  </Accordion>
+
+  <Accordion title="Event-Driven Patterns">
+    - **Earnings Reactions**: Post-announcement drift and overreaction patterns
+    - **Index Changes**: Addition/removal creating predictable flows
+    - **Corporate Actions**: Spin-offs and mergers generating forced trading
+    - **Calendar Effects**: End-of-period and rebalancing patterns
+  </Accordion>
+</AccordionGroup>
+
+### Tactical Implementation Process
+
+<Steps>
+  <Step title="Signal Identification">
+    Continuous scanning of volume, price, and flow patterns with ML models identifying anomalous trading behavior
+  </Step>
+  <Step title="Signal Validation">
+    Backtesting across multiple time periods, out-of-sample testing, and decay analysis to understand signal half-life
+  </Step>
+  <Step title="Execution">
+    Optimal entry/exit timing, transaction cost minimization, and risk-adjusted position sizing
+  </Step>
+</Steps>
+
+---
+
+## Factor Interactions and Combinations
+
+### Complementary Factors
+
+<CardGroup cols={2}>
+  <Card title="Value + Quality" icon="plus">
+    High-quality companies trading at reasonable prices reduce value trap risk while maintaining value exposure
+  </Card>
+  <Card title="Quality + Momentum" icon="plus">
+    Strong companies with positive trends often exhibit sustained outperformance
+  </Card>
+  <Card title="Defensive + Value" icon="plus">
+    Low-volatility stocks with value screening provide attractive risk-adjusted returns
+  </Card>
+</CardGroup>
+
+### Market Cycle Relationships
+
+| Market Phase | Favored Factors |
+|--------------|-----------------|
+| **Early Bull Market** | Momentum and Size often outperform |
+| **Mid-Bull Market** | Quality and growth factors typically strong |
+| **Late Bull Market** | Defensive factors gain importance |
+| **Bear Market** | Defensive and Quality provide protection |
+
+### Economic Cycle Patterns
+
+| Economic Phase | Favored Factors |
+|----------------|-----------------|
+| **Recession** | Defensive and Quality outperform |
+| **Early Recovery** | Value and small-cap often lead |
+| **Growth Phase** | Momentum and Quality excel |
+| **Late Cycle** | Defensive positioning becomes important |
+
+## Practical Application
+
+### Using Factor Scores
+
+**Individual Security Analysis**:
+- Review factor scores (0-10 scale) for each holding
+- Identify factor concentrations and gaps in portfolio
+- Compare scores to sector and market averages
+- Track score changes over time for trend identification
+
+**Portfolio-Level Factor Analysis**:
+- Aggregate individual scores to portfolio level
+- Identify unintended factor bets and concentrations
+- Assess factor balance and diversification effectiveness
+- Monitor factor drift over time
