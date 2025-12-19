@@ -1,94 +1,156 @@
 ---
 title: 'Development'
-description: 'Preview changes locally to update your docs'
+description: 'Integrate Parallax analytics into your applications'
 ---
 
-<Info>
-  **Prerequisites**:
-  - Node.js version 19 or higher
-  - A docs repository with a `docs.json` file
-</Info>
+Build Parallax's institutional-grade analytics directly into your applications using our REST API.
 
-Follow these steps to install and run Mintlify on your operating system.
+## Getting Started
 
 <Steps>
-<Step title="Install the Mintlify CLI">
+  <Step title="Get Your API Key">
+    Contact [parallax@chicago.global](mailto:parallax@chicago.global) to request API access and receive your credentials.
+  </Step>
 
-```bash
-npm i -g mint
-```
-</Step>
+  <Step title="Make Your First Request">
+    Test your connection with a simple authenticated request:
 
-<Step title="Preview locally">
+    ```bash
+    curl -X GET "https://parallax-api.onrender.com/v1/health" \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+  </Step>
 
-Navigate to your docs directory where your `docs.json` file is located, and run the following command:
-
-```bash
-mint dev
-```
-
-A local preview of your documentation will be available at `http://localhost:3000`.
-
-</Step>
+  <Step title="Explore the API">
+    Review our [API Reference](/api-reference/introduction) for complete endpoint documentation.
+  </Step>
 </Steps>
 
-## Custom ports
+## Core Capabilities
 
-By default, Mintlify uses port 3000. You can customize the port Mintlify runs on by using the `--port` flag. For example, to run Mintlify on port 3333, use this command:
+<CardGroup cols={2}>
+  <Card title="Portfolio Analysis" icon="chart-pie" href="/api-reference/portfolio/analyze">
+    Submit portfolios for comprehensive factor analysis, risk metrics, and AI-powered recommendations.
+  </Card>
+  <Card title="Stock Reports" icon="file-lines" href="/api-reference/stock/report">
+    Generate detailed reports on individual securities with factor scores and analysis.
+  </Card>
+  <Card title="Financial Analysis" icon="magnifying-glass-dollar" href="/api-reference/analysis/financial">
+    Access fundamental data and financial metrics for securities.
+  </Card>
+  <Card title="Technical Analysis" icon="chart-line" href="/api-reference/analysis/technical">
+    Retrieve technical indicators and price-based signals.
+  </Card>
+</CardGroup>
 
-```bash
-mint dev --port 3333
-```
+## Authentication
 
-If you attempt to run Mintlify on a port that's already in use, it will use the next available port:
-
-```md
-Port 3000 is already in use. Trying 3001 instead.
-```
-
-## Mintlify versions
-
-Please note that each CLI release is associated with a specific version of Mintlify. If your local preview does not align with the production version, please update the CLI:
-
-```bash
-npm mint update
-```
-
-## Validating links
-
-The CLI can assist with validating links in your documentation. To identify any broken links, use the following command:
+All API requests require a Bearer token:
 
 ```bash
-mint broken-links
+Authorization: Bearer YOUR_API_KEY
 ```
 
-## Deployment
+<Warning>
+Keep your API key secure. Never expose it in client-side code or public repositories.
+</Warning>
 
-If the deployment is successful, you should see the following:
+## Async Job Processing
 
-<Frame>
-  <img src="/images/checks-passed.png" alt="Screenshot of a deployment confirmation message that says All checks have passed." style={{ borderRadius: '0.5rem' }} />
-</Frame>
+Long-running operations like portfolio analysis use async processing:
 
-## Code formatting
+```javascript
+// 1. Submit the request
+const response = await fetch('https://parallax-api.onrender.com/v1/portfolio/analyze', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${API_KEY}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    holdings: [
+      { ticker: 'AAPL', weight: 0.25 },
+      { ticker: 'MSFT', weight: 0.25 },
+      { ticker: 'GOOGL', weight: 0.25 },
+      { ticker: 'AMZN', weight: 0.25 }
+    ]
+  })
+});
 
-We suggest using extensions on your IDE to recognize and format MDX. If you're a VSCode user, consider the [MDX VSCode extension](https://marketplace.visualstudio.com/items?itemName=unifiedjs.vscode-mdx) for syntax highlighting, and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) for code formatting.
+const { job_id, check_url } = await response.json();
 
-## Troubleshooting
+// 2. Poll for completion
+let result;
+while (!result) {
+  const status = await fetch(check_url, {
+    headers: { 'Authorization': `Bearer ${API_KEY}` }
+  }).then(r => r.json());
+
+  if (status.status === 'completed') {
+    result = status.result;
+  } else if (status.status === 'failed') {
+    throw new Error(status.error);
+  } else {
+    await new Promise(r => setTimeout(r, 3000)); // Wait 3 seconds
+  }
+}
+
+// 3. Use the results
+console.log(result.factor_scores);
+console.log(result.risk_metrics);
+```
+
+## Response Codes
+
+| Code | Description |
+|------|-------------|
+| 200 | Success |
+| 401 | Unauthorized - Invalid or missing API key |
+| 404 | Not found |
+| 422 | Validation error - Check request body |
+| 500 | Server error |
+
+## Example Use Cases
 
 <AccordionGroup>
-  <Accordion title='Error: Could not load the "sharp" module using the darwin-arm64 runtime'>
+  <Accordion title="Portfolio Monitoring Dashboard">
+    Build a dashboard that tracks portfolio factor exposures over time:
 
-    This may be due to an outdated version of node. Try the following:
-    1. Remove the currently-installed version of the CLI: `npm remove -g mint`
-    2. Upgrade to Node v19 or higher.
-    3. Reinstall the CLI: `npm i -g mint`
+    1. Store portfolio holdings in your database
+    2. Call `/v1/portfolio/analyze` daily or on-demand
+    3. Track changes in factor scores and risk metrics
+    4. Alert when exposures drift beyond thresholds
   </Accordion>
 
-  <Accordion title="Issue: Encountering an unknown error">
-  
-    Solution: Go to the root of your device and delete the `~/.mintlify` folder. Then run `mint dev` again.
+  <Accordion title="Client Reporting">
+    Generate white-labeled reports for clients:
+
+    1. Fetch portfolio analysis via API
+    2. Combine with your branding and commentary
+    3. Export as PDF or embed in client portal
+  </Accordion>
+
+  <Accordion title="Investment Screening">
+    Integrate factor scores into your stock selection process:
+
+    1. Screen universe with your criteria
+    2. Fetch Parallax scores for candidates
+    3. Rank by multi-factor composite score
+    4. Apply to portfolio construction
   </Accordion>
 </AccordionGroup>
 
-Curious about what changed in the latest CLI version? Check out the [CLI changelog](https://www.npmjs.com/package/mintlify?activeTab=versions).
+## Rate Limits
+
+Contact [parallax@chicago.global](mailto:parallax@chicago.global) for rate limit information based on your plan.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="book" href="/api-reference/introduction">
+    Complete endpoint documentation with examples.
+  </Card>
+  <Card title="Methodology" icon="microscope" href="/methodology/overview">
+    Understand the analytics behind the API.
+  </Card>
+</CardGroup>

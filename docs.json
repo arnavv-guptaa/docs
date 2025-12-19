@@ -1,11 +1,11 @@
-{
+  {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
+  "theme": "willow",
   "name": "Parallax API",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#2563EB",
+    "light": "#3B82F6",
+    "dark": "#1D4ED8"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -20,19 +20,34 @@
               "quickstart",
               "development"
             ]
-          },
+          }
+        ]
+      },
+      {
+        "tab": "Methodology",
+        "groups": [
           {
-            "group": "Methodology",
+            "group": "Overview",
             "pages": [
               "methodology/overview",
               "methodology/scoring",
-              "methodology/factors",
+              "methodology/factors"
+            ]
+          },
+          {
+            "group": "Factors",
+            "pages": [
               "methodology/value",
               "methodology/quality",
               "methodology/momentum",
               "methodology/defensive",
               "methodology/size",
-              "methodology/tactical",
+              "methodology/tactical"
+            ]
+          },
+          {
+            "group": "Risk",
+            "pages": [
               "methodology/risk-management"
             ]
           }
@@ -133,13 +148,13 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "Console",
+          "href": "https://parallax.chicago.global",
+          "icon": "desktop"
         },
         {
           "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
+          "href": "https://parallax.chicago.global/insights",
           "icon": "newspaper"
         }
       ]
@@ -153,13 +168,13 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:parallax@chicago.global"
       }
     ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "href": "https://parallax.chicago.global"
     }
   },
   "contextual": {
