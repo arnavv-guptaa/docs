@@ -50,6 +50,12 @@
             "pages": [
               "methodology/risk-management"
             ]
+          },
+          {
+            "group": "Compliance",
+            "pages": [
+              "methodology/shariah-screening"
+            ]
           }
         ]
       },
@@ -140,6 +146,15 @@
               "glossary/quantitative-investing",
               "glossary/return",
               "glossary/systematic-strategy"
+            ]
+          },
+          {
+            "group": "Islamic Finance",
+            "pages": [
+              "glossary/shariah",
+              "glossary/halal-investing",
+              "glossary/riba",
+              "glossary/purification"
             ]
           }
         ]
