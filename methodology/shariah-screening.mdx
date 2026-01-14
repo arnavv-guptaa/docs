@@ -55,29 +55,29 @@ Our screening covers global equities across all major markets, subject to public
 
 Our screening methodology is not straightforward—it requires significant manual effort, cross-referencing multiple data sources, and scholarly judgment. This deliberate complexity ensures robust compliance while making the process difficult to replicate superficially.
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         SHARIAH SCREENING PROCESS                           │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   Layer 1              Layer 2              Layer 3              Layer 4    │
-│  ┌─────────┐         ┌─────────┐         ┌─────────┐         ┌─────────┐   │
-│  │  QUANT  │         │  QUAL   │         │   AI    │         │ SCHOLAR │   │
-│  │ FILTERS │   ───►  │RESEARCH │   ───►  │SYNTHESIS│   ───►  │OVERSIGHT│   │
-│  └─────────┘         └─────────┘         └─────────┘         └─────────┘   │
-│                                                                             │
-│  • Debt ratios       • Business          • LLM analysis      • Final       │
-│  • Cash ratios         activity          • Web search          ruling      │
-│  • Interest            review            • Cross-reference   • Edge cases  │
-│    income            • Segment           • Flag issues       • Annual      │
-│  • Revenue             analysis          • Prioritize          audit       │
-│    thresholds        • News                review                          │
-│                        monitoring                                          │
-│                                                                             │
-│  ════════════════════════════════════════════════════════════════════════  │
-│   Automated            Manual              AI-Assisted          Human       │
-│   Weekly               Ongoing             Continuous           Quarterly   │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    A[30,000+ Securities] --> B[Layer 1: Quant Filters]
+    B --> C[Layer 2: Qual Research]
+    C --> D[Layer 3: AI Synthesis]
+    D --> E[Layer 4: Scholar Oversight]
+    E --> F[Shariah-Compliant Universe]
+
+    B --- B1[Automated · Weekly<br/>Debt ratios · Cash ratios<br/>Interest income · Revenue thresholds]
+    C --- C1[Manual · Ongoing<br/>Business activity review<br/>Segment analysis · News monitoring]
+    D --- D1[AI-Assisted · Continuous<br/>LLM analysis · Web search<br/>Cross-reference · Flag issues]
+    E --- E1[Human · Quarterly<br/>Final ruling · Edge cases<br/>Annual audit]
+
+    style A fill:#f0f0f0,stroke:#666
+    style B fill:#e8f4ea,stroke:#2d6a4f
+    style C fill:#e8f4ea,stroke:#2d6a4f
+    style D fill:#e8f4ea,stroke:#2d6a4f
+    style E fill:#e8f4ea,stroke:#2d6a4f
+    style F fill:#d4edda,stroke:#155724
+    style B1 fill:#fff,stroke:#ccc
+    style C1 fill:#fff,stroke:#ccc
+    style D1 fill:#fff,stroke:#ccc
+    style E1 fill:#fff,stroke:#ccc
 ```
 
 ### Layer 1: Quantitative Screens (Automated)
