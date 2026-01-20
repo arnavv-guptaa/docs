@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://parallax-api.onrender.com"
+      "url": "https://api.chicago.global"
     }
   ],
   "security": [
@@ -208,7 +208,7 @@
     "/v1/financial-analysis": {
       "post": {
         "summary": "Financial Analysis",
-        "description": "Get comprehensive AI-powered financial analysis using Krishna Palepu's framework. Includes business strategy, accounting quality, financial performance, and investment recommendation. Analysis typically takes 2-5 minutes.",
+        "description": "Get comprehensive AI-powered financial analysis including business strategy, accounting quality, financial performance, and investment recommendation. Analysis typically takes 2-5 minutes.",
         "operationId": "financialAnalysis",
         "tags": ["Analysis"],
         "parameters": [

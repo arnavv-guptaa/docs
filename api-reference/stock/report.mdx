@@ -65,7 +65,7 @@ When the job completes, `GET /v1/jobs/{job_id}` returns:
 ## Example: Polling for Results
 
 ```javascript
-const response = await fetch('https://parallax-api.onrender.com/v1/stock-report', {
+const response = await fetch('https://api.chicago.global/v1/stock-report', {
   method: 'POST',
   headers: {
     'Authorization': `Bearer ${API_KEY}`,
@@ -79,7 +79,7 @@ const { job_id } = await response.json();
 // Poll every 10 seconds (reports take ~15 minutes)
 const interval = setInterval(async () => {
   const status = await fetch(
-    `https://parallax-api.onrender.com/v1/jobs/${job_id}`,
+    `https://api.chicago.global/v1/jobs/${job_id}`,
     { headers: { 'Authorization': `Bearer ${API_KEY}` } }
   ).then(r => r.json());
 
