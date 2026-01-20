@@ -91,7 +91,7 @@ When the job completes, `GET /v1/jobs/{job_id}` returns:
 
 ```javascript
 const response = await fetch(
-  'https://parallax-api.onrender.com/v1/technical-analysis?symbol=AAPL.O',
+  'https://api.chicago.global/v1/technical-analysis?symbol=AAPL.O',
   {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${API_KEY}` }
@@ -103,7 +103,7 @@ const { job_id } = await response.json();
 // Poll every 5 seconds
 const interval = setInterval(async () => {
   const status = await fetch(
-    `https://parallax-api.onrender.com/v1/jobs/${job_id}`,
+    `https://api.chicago.global/v1/jobs/${job_id}`,
     { headers: { 'Authorization': `Bearer ${API_KEY}` } }
   ).then(r => r.json());
 

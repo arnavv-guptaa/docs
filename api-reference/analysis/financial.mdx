@@ -13,7 +13,7 @@ This endpoint uses **async job processing** for AI-powered financial analysis:
 4. **Get Analysis**: The completed job contains comprehensive financial analysis
 
 <Note>
-Analysis typically takes 2-5 minutes. Uses Krishna Palepu's framework for business strategy, accounting quality, and financial performance analysis.
+Analysis typically takes 2-5 minutes. Provides comprehensive business strategy, accounting quality, and financial performance analysis.
 </Note>
 
 ## Query Parameters
@@ -113,7 +113,7 @@ Results are cached for 14 days. Subsequent requests for the same symbol will ret
 
 ## Analysis Framework
 
-The analysis follows Krishna Palepu's framework:
+The analysis covers the following areas:
 
 | Section | Description |
 |---------|-------------|
@@ -127,7 +127,7 @@ The analysis follows Krishna Palepu's framework:
 
 ```javascript
 const response = await fetch(
-  'https://parallax-api.onrender.com/v1/financial-analysis?symbol=AAPL.O',
+  'https://api.chicago.global/v1/financial-analysis?symbol=AAPL.O',
   {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${API_KEY}` }
@@ -139,7 +139,7 @@ const { job_id } = await response.json();
 // Poll every 10 seconds
 const interval = setInterval(async () => {
   const status = await fetch(
-    `https://parallax-api.onrender.com/v1/jobs/${job_id}`,
+    `https://api.chicago.global/v1/jobs/${job_id}`,
     { headers: { 'Authorization': `Bearer ${API_KEY}` } }
   ).then(r => r.json());
 
