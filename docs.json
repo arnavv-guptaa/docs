@@ -110,6 +110,12 @@
               "api-reference/analysis/financial",
               "api-reference/analysis/technical"
             ]
+          },
+          {
+            "group": "Macro Reports",
+            "pages": [
+              "api-reference/macro/report"
+            ]
           }
         ]
       },

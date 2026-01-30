@@ -320,6 +320,163 @@
           }
         }
       }
+    },
+    "/v1/macro-report": {
+      "get": {
+        "summary": "Get Macro Report",
+        "description": "Fetch macro economic report for a specific market. Returns report metadata and optionally the full report content. This is a synchronous endpoint - results are returned immediately.",
+        "operationId": "getMacroReport",
+        "tags": ["Macro Reports"],
+        "parameters": [
+          {
+            "name": "market",
+            "in": "query",
+            "required": true,
+            "description": "Market name (e.g., 'United States', 'Japan', 'Germany')",
+            "schema": {
+              "type": "string"
+            },
+            "example": "United States"
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "description": "Response format: 'json' or 'pdf'",
+            "schema": {
+              "type": "string",
+              "enum": ["json", "pdf"],
+              "default": "json"
+            }
+          },
+          {
+            "name": "include_content",
+            "in": "query",
+            "required": false,
+            "description": "For JSON format: embed the full report content in the response",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "description": "Report date in YYYY-MM-DD format. Omit to get the latest report.",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example": "2024-01-15"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Macro report retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MacroReportResponse"
+                },
+                "examples": {
+                  "json_format": {
+                    "summary": "JSON format response",
+                    "value": {
+                      "success": true,
+                      "market": "United States",
+                      "report_date": "2024-01-15",
+                      "format": "json",
+                      "file_url": "https://storage.example.com/reports/us-2024-01-15.json",
+                      "content": null
+                    }
+                  },
+                  "pdf_format": {
+                    "summary": "PDF format response",
+                    "value": {
+                      "success": true,
+                      "market": "United States",
+                      "report_date": "2024-01-15",
+                      "format": "pdf",
+                      "pdf_url": "https://storage.example.com/reports/us-2024-01-15.pdf"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid format or date parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "detail": "format must be 'json' or 'pdf'"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Market not found or no report available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "detail": "No macro report found for market 'Atlantis'"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/macro-report/markets": {
+      "get": {
+        "summary": "List Macro Report Markets",
+        "description": "Get a list of all markets with available macro reports.",
+        "operationId": "listMacroMarkets",
+        "tags": ["Macro Reports"],
+        "responses": {
+          "200": {
+            "description": "List of available markets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MacroMarketsResponse"
+                },
+                "example": {
+                  "success": true,
+                  "markets": ["China", "Germany", "Japan", "United States"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -980,6 +1137,60 @@
                 "type": { "type": "string" }
               }
             }
+          }
+        }
+      },
+      "MacroReportResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the request was successful"
+          },
+          "market": {
+            "type": "string",
+            "description": "Market name"
+          },
+          "report_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Report date"
+          },
+          "format": {
+            "type": "string",
+            "enum": ["json", "pdf"],
+            "description": "Response format"
+          },
+          "file_url": {
+            "type": "string",
+            "nullable": true,
+            "description": "URL to JSON report file (when format=json)"
+          },
+          "content": {
+            "type": "object",
+            "nullable": true,
+            "description": "Full report content (when format=json and include_content=true)"
+          },
+          "pdf_url": {
+            "type": "string",
+            "nullable": true,
+            "description": "URL to PDF report file (when format=pdf)"
+          }
+        }
+      },
+      "MacroMarketsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the request was successful"
+          },
+          "markets": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of available market names"
           }
         }
       }
