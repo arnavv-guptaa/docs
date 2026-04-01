@@ -1,0 +1,94 @@
+---
+title: 'Score Analysis'
+openapi: 'POST /v1/score-analysis'
+---
+
+Generate an AI-powered narrative analysis of a stock's Parallax factor scores, interpreting what the scores mean in the current market context.
+
+## How It Works
+
+This endpoint uses **async job processing**:
+
+1. **Submit Request**: POST with a stock symbol
+2. **Receive Job ID**: Get a job ID and polling URL immediately
+3. **Poll for Status**: Check `/v1/jobs/{job_id}` until status is `completed`
+4. **Get Analysis**: The completed job contains a narrative interpretation of the stock's scores
+
+<Note>
+Analysis typically takes 30-60 seconds.
+</Note>
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | Stock symbol (e.g., `AAPL`, `MSFT`) |
+
+## Response (202 Accepted)
+
+```json
+{
+  "job_id": "stock-c96e0635-3459-47cd-9f52-ef0ab04d00ee",
+  "status": "pending",
+  "symbol": "AAPL.O",
+  "check_url": "/v1/jobs/stock-c96e0635-3459-47cd-9f52-ef0ab04d00ee",
+  "estimated_duration_seconds": 60,
+  "message": "Score analysis started for AAPL.O."
+}
+```
+
+## Completed Response
+
+When the job completes, `GET /v1/jobs/{job_id}` returns:
+
+```json
+{
+  "job_id": "stock-c96e0635-...",
+  "status": "completed",
+  "result": {
+    "symbol": "AAPL.O",
+    "analysis": "Apple stands as a fortress of quality in turbulent markets, ranking at the 50th percentile for business fundamentals while its defensive characteristics shine at the 86th percentile — a profile that resonates powerfully amid Middle East conflicts driving energy volatility and Fed hawkishness. The company's valuation remains stretched at the 52nd percentile, yet this premium feels justified as AI capital expenditure cycles and geopolitical uncertainty favor companies with Apple's cash-generative moats and supply chain resilience. Tactically, the 66th percentile momentum score suggests near-term outperformance potential as investors seek quality havens, though the 24% distance from recent highs reflects broader market caution around growth multiples in a higher-for-longer rate environment."
+  }
+}
+```
+
+## Result Fields
+
+| Field | Description |
+|-------|-------------|
+| `symbol` | Resolved RIC |
+| `analysis` | AI-generated narrative interpreting the stock's factor scores in current market context |
+
+## Example
+
+```bash
+curl -X POST "https://api.chicago.global/v1/score-analysis?symbol=AAPL" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript
+const response = await fetch(
+  'https://api.chicago.global/v1/score-analysis?symbol=AAPL',
+  {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${API_KEY}` }
+  }
+);
+
+const { job_id, check_url } = await response.json();
+
+const interval = setInterval(async () => {
+  const status = await fetch(
+    `https://api.chicago.global${check_url}`,
+    { headers: { 'Authorization': `Bearer ${API_KEY}` } }
+  ).then(r => r.json());
+
+  if (status.status === 'completed') {
+    clearInterval(interval);
+    console.log(status.result.analysis);
+  } else if (status.status === 'failed') {
+    clearInterval(interval);
+    console.error('Failed:', status.error);
+  }
+}, 5000);
+```

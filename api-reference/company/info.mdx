@@ -1,0 +1,67 @@
+---
+title: 'Company Info'
+openapi: 'GET /v1/company-info'
+---
+
+Get comprehensive company information including description, sector, market data, latest price, and Parallax factor scores.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | Stock symbol (e.g., `AAPL`, `0700.HK`). Comma-separated for multiple. |
+
+## Response
+
+```json
+{
+  "activity": "Active",
+  "change": "7.16",
+  "changepercent": "2.9",
+  "close": "253.79",
+  "currency": "USD",
+  "defensive": "9.5",
+  "description": "Apple Inc. designs, manufactures and markets smartphones, personal computers, tablets, wearables and accessories, and sells a variety of related services...",
+  "exchange": "Nasdaq",
+  "exchangecode": "NAS",
+  "high": "254.28",
+  "industry": "Phones & Handheld Devices",
+  "low": "247.10",
+  "market": "United States",
+  "momentum": "7.5",
+  "mktcap": "3731400000000",
+  "name": "Apple Inc",
+  "open": "247.49",
+  "quality": "10.0",
+  "recommendation": "HOLD",
+  "ric": "AAPL.O",
+  "sector": "Technology",
+  "tactical": "7.0",
+  "total": "6.0",
+  "value": "2.0",
+  "volume": "62000000"
+}
+```
+
+## Key Fields
+
+| Field | Description |
+|-------|-------------|
+| `ric` | Reuters Instrument Code |
+| `name` | Company name |
+| `description` | Business description |
+| `sector` / `industry` | Sector and industry classification |
+| `market` | Country/market |
+| `exchange` | Stock exchange |
+| `close` / `change` / `changepercent` | Latest price data |
+| `mktcap` | Market capitalization |
+| `value` / `quality` / `momentum` / `defensive` / `tactical` | Parallax factor scores (0-10) |
+| `total` | Composite Parallax score |
+| `recommendation` | `STRONG BUY`, `BUY`, `HOLD`, `SELL`, `STRONG SELL` |
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/company-info?symbol=AAPL" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

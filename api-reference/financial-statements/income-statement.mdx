@@ -1,0 +1,108 @@
+---
+title: 'Income Statement'
+openapi: 'GET /v1/income-statement'
+---
+
+Retrieve income statement data for a given stock symbol. Returns line items from revenue through to EPS, sourced from LSEG Datastream.
+
+## Query Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `symbol` | string | Yes | — | Stock symbol (e.g., `AAPL.O`, `0700.HK`). Ticker shorthand like `AAPL` is also accepted and will be resolved automatically. |
+| `limit` | integer | No | `4` | Number of periods to return |
+| `freq` | integer | No | `1` | `1` for Annual, `2` for Quarterly |
+
+## Response
+
+Returns an array of period objects, each containing the full income statement breakdown:
+
+```json
+[
+  {
+    "ric": "AAPL.O",
+    "perenddt": "2025-09-27",
+    "stmtdt": "2025-09-27",
+    "sourcedt": "2025-10-31",
+    "pertypecode": 1,
+    "currency": "USD",
+    "unitsconvtocode": "M",
+    "revenue": 416161000000,
+    "other_revenue_total": null,
+    "total_revenue": 416161000000,
+    "cost_of_revenue_total": 220960000000,
+    "gross_profit": 195201000000,
+    "sga_expenses_total": 27601000000,
+    "research_development": 34550000000,
+    "depreciation_amortization": null,
+    "interest_expense_net_operating": null,
+    "interest_investment_income_operating": null,
+    "interest_expense_income_net_operating": null,
+    "interest_exp_inc_net_operating_total": null,
+    "unusual_expense_income": null,
+    "other_operating_expenses_total": null,
+    "total_operating_expense": 283111000000,
+    "operating_income": 133050000000,
+    "interest_expense_net_non_operating": null,
+    "interest_investment_income_non_operating": null,
+    "interest_income_exp_net_non_operating": null,
+    "interest_inc_exp_net_non_op_total": null,
+    "gain_loss_on_sale_of_assets": null,
+    "other_net": -321000000,
+    "net_income_before_taxes": 132729000000,
+    "provision_for_income_taxes": 21205000000,
+    "net_income_after_taxes": 111524000000,
+    "minority_interest": null,
+    "equity_in_affiliates": null,
+    "us_gaap_adjustment": null,
+    "net_income_before_extra_items": 111524000000,
+    "accounting_change": null,
+    "discontinued_operations": null,
+    "extraordinary_item": 486000000,
+    "tax_on_extraordinary_items": null,
+    "total_extraordinary_items": 486000000,
+    "net_income": 112010000000,
+    "basic_weighted_average_shares": 14948500000,
+    "basic_eps_excluding_extraordinary_items": 7.46055,
+    "basic_eps_including_extraordinary_items": 7.49306
+  }
+]
+```
+
+<Note>
+All monetary values are in the company's reporting currency. The `currency` field indicates which currency. Fields with `null` values are not applicable for the given company.
+</Note>
+
+## Key Fields
+
+| Field | Description |
+|-------|-------------|
+| `perenddt` | Period end date |
+| `pertypecode` | `1` for Annual, `2` for Quarterly |
+| `unitsconvtocode` | Unit scale (e.g., `M` for millions) |
+| `revenue` | Net sales / revenue |
+| `gross_profit` | Revenue minus cost of revenue |
+| `total_operating_expense` | Total operating costs |
+| `operating_income` | Gross profit minus operating expenses |
+| `net_income_before_taxes` | Pre-tax earnings |
+| `net_income` | Bottom line earnings |
+| `basic_eps_excluding_extraordinary_items` | Earnings per share (excluding extraordinary items) |
+| `basic_eps_including_extraordinary_items` | Earnings per share (including extraordinary items) |
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/income-statement?symbol=AAPL.O&limit=4&freq=1" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript
+const response = await fetch(
+  'https://api.chicago.global/v1/income-statement?symbol=AAPL.O&limit=4&freq=1',
+  { headers: { 'Authorization': `Bearer ${API_KEY}` } }
+);
+
+const periods = await response.json();
+console.log(`Revenue: ${periods[0].revenue}`);
+console.log(`Net Income: ${periods[0].net_income}`);
+```

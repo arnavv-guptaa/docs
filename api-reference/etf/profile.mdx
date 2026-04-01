@@ -1,0 +1,63 @@
+---
+title: 'ETF Profile'
+openapi: 'GET /v1/etf/profile'
+---
+
+Get a comprehensive profile for an ETF including metadata, latest price, market cap, and Parallax factor scores.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | ETF symbol (e.g., `SPY`, `QQQ`, `ACWI`). Comma-separated for multiple. |
+
+## Response
+
+```json
+{
+  "symbol": "SPY.P",
+  "name": "STATE STREET SPDR S&P 500 ETF TRUST",
+  "activity": "ACTIVE",
+  "market": "UNITED STATES",
+  "exchange": "NYSE ARCA",
+  "exchangecode": "ARC",
+  "currency": "USD",
+  "close": 650.34,
+  "change_percent": 2.91,
+  "change": 18.37,
+  "volume": 152534130,
+  "mktcap": 650068323282,
+  "num_shares": 999582116,
+  "value": 4.0,
+  "quality": 8.0,
+  "momentum": 6.0,
+  "defensive": 8.0,
+  "tactical": 6.0,
+  "total": 5.9,
+  "recommendation": "HOLD",
+  "holdings_covered": 495,
+  "weight_covered": 98.37
+}
+```
+
+## Key Fields
+
+| Field | Description |
+|-------|-------------|
+| `symbol` | Resolved primary RIC |
+| `name` | ETF name |
+| `close` | Latest closing price |
+| `change_percent` | Daily price change (%) |
+| `mktcap` | Total market capitalization |
+| `value` / `quality` / `momentum` / `defensive` / `tactical` | Parallax factor scores (0-10) |
+| `total` | Composite Parallax score |
+| `recommendation` | `STRONG BUY`, `BUY`, `HOLD`, `SELL`, `STRONG SELL` |
+| `holdings_covered` | Number of holdings with Parallax scores |
+| `weight_covered` | % of ETF weight covered by scored holdings |
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/etf/profile?symbol=SPY" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

@@ -1,0 +1,60 @@
+---
+title: 'Daily Price'
+openapi: 'GET /v1/daily-price'
+---
+
+Get historical daily OHLCV price data for a stock.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | Stock symbol (e.g., `AAPL`, `MSFT`). Comma-separated for multiple. |
+| `start_date` | string | No | Start date (YYYY-MM-DD). Defaults to 1 year ago. |
+| `end_date` | string | No | End date (YYYY-MM-DD). Defaults to latest available. |
+
+## Response
+
+Returns an array of daily price records:
+
+```json
+[
+  {
+    "ric": "AAPL.O",
+    "date": "2025-12-01",
+    "open": 278.01,
+    "high": 283.42,
+    "low": 276.14,
+    "close": 283.10,
+    "volume": 46587723,
+    "changepercent": 1.52
+  },
+  {
+    "ric": "AAPL.O",
+    "date": "2025-12-02",
+    "open": 283.00,
+    "high": 287.40,
+    "low": 282.63,
+    "close": 286.19,
+    "volume": 53669532,
+    "changepercent": 1.09
+  }
+]
+```
+
+## Key Fields
+
+| Field | Description |
+|-------|-------------|
+| `ric` | Resolved RIC |
+| `date` | Trading date |
+| `open` / `high` / `low` / `close` | OHLC prices in the stock's trading currency |
+| `volume` | Daily trading volume |
+| `changepercent` | Percentage price change from previous close |
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/daily-price?symbol=AAPL&start_date=2025-12-01&end_date=2025-12-31" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

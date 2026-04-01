@@ -1,0 +1,46 @@
+---
+title: 'Validate ETF Symbol'
+openapi: 'GET /v1/etf/validate'
+---
+
+Check if an ETF symbol is valid and get its resolved primary RIC.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | ETF symbol to validate (e.g., `SPY`, `QQQ`) |
+
+## Response
+
+**Valid symbol:**
+
+```json
+{
+  "valid": true,
+  "symbol": "SPY",
+  "primary_symbol": "SPY.P"
+}
+```
+
+**Invalid symbol:**
+
+```json
+{
+  "valid": false,
+  "symbol": "FAKE123",
+  "primary_symbol": null,
+  "error": "ETF symbol 'FAKE123' not found in IDENTIFIERS"
+}
+```
+
+<Note>
+This endpoint always returns 200, even for invalid symbols. Check the `valid` field to determine if the symbol was found.
+</Note>
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/etf/validate?symbol=QQQ" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

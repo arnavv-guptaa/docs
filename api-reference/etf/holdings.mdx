@@ -1,0 +1,76 @@
+---
+title: 'ETF Holdings'
+openapi: 'GET /v1/etf/holdings'
+---
+
+Get the top holdings of an ETF with their weights and Parallax factor scores.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | ETF symbol (e.g., `SPY`, `QQQ`). Comma-separated for multiple. |
+| `limit` | integer | No | Maximum number of holdings to return (default: `50`) |
+
+## Response
+
+Returns an array of holdings sorted by weight (descending):
+
+```json
+[
+  {
+    "symbol": "NVDA.O",
+    "weight": 7.31,
+    "reweight": 7.43,
+    "value": 2.5,
+    "quality": 10.0,
+    "momentum": 10.0,
+    "defensive": 7.0,
+    "tactical": 7.0,
+    "total": 7.9,
+    "recommendation": "BUY"
+  },
+  {
+    "symbol": "AAPL.O",
+    "weight": 6.63,
+    "reweight": 6.74,
+    "value": 2.0,
+    "quality": 10.0,
+    "momentum": 7.5,
+    "defensive": 9.5,
+    "tactical": 7.0,
+    "total": 6.0,
+    "recommendation": "HOLD"
+  },
+  {
+    "symbol": "MSFT.O",
+    "weight": 4.96,
+    "reweight": 5.04,
+    "value": 2.0,
+    "quality": 10.0,
+    "momentum": 5.0,
+    "defensive": 9.0,
+    "tactical": 5.0,
+    "total": 5.2,
+    "recommendation": "HOLD"
+  }
+]
+```
+
+## Key Fields
+
+| Field | Description |
+|-------|-------------|
+| `symbol` | Holding RIC |
+| `weight` | Holding weight in the ETF (%) |
+| `reweight` | Normalized weight across scored holdings only (%) |
+| `value` / `quality` / `momentum` / `defensive` / `tactical` | Parallax factor scores (0-10) |
+| `total` | Composite Parallax score |
+| `recommendation` | `STRONG BUY`, `BUY`, `HOLD`, `SELL`, `STRONG SELL` |
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/etf/holdings?symbol=SPY&limit=10" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

@@ -1,0 +1,74 @@
+---
+title: 'ETF Search'
+openapi: 'GET /v1/etf/search'
+---
+
+Search and filter ETFs by name, market, currency, score, and recommendation.
+
+## Query Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `query` | string | No | — | Search ETF name (partial match, e.g., `S&P`, `Vanguard`) |
+| `market` | string | No | — | Filter by market (e.g., `UNITED STATES`, `UNITED KINGDOM`) |
+| `currency` | string | No | — | Filter by currency (e.g., `USD`, `EUR`) |
+| `min_score` | number | No | — | Minimum total Parallax score |
+| `max_score` | number | No | — | Maximum total Parallax score |
+| `recommendation` | string | No | — | Filter by recommendation (e.g., `BUY`, `STRONG BUY`) |
+| `activity` | string | No | `ACTIVE` | Activity filter |
+| `limit` | integer | No | `20` | Max results (1-100) |
+
+## Response
+
+Returns an array of matching ETFs:
+
+```json
+[
+  {
+    "symbol": "ZPDE.F",
+    "name": "STST SPDR S&P U S EN.SEL SECT.UCITS ETF",
+    "activity": "ACTIVE",
+    "market": "GERMANY",
+    "exchange": "XETRA",
+    "currency": "EUR",
+    "value": 6.0,
+    "quality": 7.0,
+    "momentum": 9.0,
+    "defensive": 8.0,
+    "tactical": 10.0,
+    "total": 8.8,
+    "recommendation": "STRONG BUY"
+  },
+  {
+    "symbol": "XEG.TO",
+    "name": "ISHARES S&P/TSX CAPPED EN.IDX.ETF",
+    "activity": "ACTIVE",
+    "market": "CANADA",
+    "exchange": "Toronto",
+    "currency": "CAD",
+    "value": 7.0,
+    "quality": 8.0,
+    "momentum": 7.0,
+    "defensive": 7.0,
+    "tactical": 9.0,
+    "total": 8.6,
+    "recommendation": "STRONG BUY"
+  }
+]
+```
+
+## Examples
+
+```bash
+# Search by name
+curl "https://api.chicago.global/v1/etf/search?query=Vanguard&limit=10" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+
+# Filter by market and minimum score
+curl "https://api.chicago.global/v1/etf/search?market=UNITED%20STATES&min_score=8&limit=10" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+
+# Find strong buy ETFs in USD
+curl "https://api.chicago.global/v1/etf/search?currency=USD&recommendation=STRONG%20BUY&limit=20" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

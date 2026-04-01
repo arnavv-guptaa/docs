@@ -1,0 +1,193 @@
+---
+title: 'Portfolio Report'
+openapi: 'POST /v1/portfolioreport'
+---
+
+Generate a PDF or HTML portfolio report from the output of the `/v1/portfolio/analyze` endpoint.
+
+## How It Works
+
+This endpoint uses **async job processing**:
+
+1. **Run Analysis First**: POST your portfolio to `/v1/portfolio/analyze` and wait for completion
+2. **Submit Report Request**: POST the analysis result to `/v1/portfolioreport`
+3. **Receive Job ID**: Get a job ID and polling URL immediately
+4. **Poll for Status**: Check `/v1/jobs/{job_id}` until status is `completed`
+5. **Get Report URLs**: The completed job contains download URLs for the generated report
+
+<Note>
+Report generation typically takes 30-60 seconds. Report URLs expire after 24 hours.
+</Note>
+
+## Request Body
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `portfolio_data` | object | Yes | — | The complete result from the `/v1/portfolio/analyze` endpoint |
+| `format` | string | No | `pdf` | Output format: `pdf`, `html`, or `both` |
+
+```json
+{
+  "portfolio_data": { ... },
+  "format": "pdf"
+}
+```
+
+<Warning>
+The `portfolio_data` field must contain the full analysis result object — the `result` field from a completed `/v1/portfolio/analyze` job.
+</Warning>
+
+## Response (202 Accepted)
+
+```json
+{
+  "job_id": "port-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "status": "pending",
+  "format": "pdf",
+  "check_url": "/v1/jobs/port-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "estimated_duration_seconds": 60,
+  "message": "Portfolio report generation started. Poll the check_url to get results."
+}
+```
+
+## Completed Response
+
+When the job completes, `GET /v1/jobs/{job_id}` returns:
+
+```json
+{
+  "job_id": "port-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "status": "completed",
+  "result": {
+    "success": true,
+    "report_id": "f3a1b2c3",
+    "pdf_url": "https://your-supabase-url.supabase.co/storage/v1/object/public/portfolio-reports/pdf/2026/04/01/f3a1b2c3-report.pdf",
+    "html_url": null,
+    "expires_at": "2026-04-02T12:00:00"
+  }
+}
+```
+
+## Result Fields
+
+| Field | Description |
+|-------|-------------|
+| `success` | Whether the report was generated successfully |
+| `report_id` | Unique identifier for this report |
+| `pdf_url` | Download URL for the PDF report (if format is `pdf` or `both`) |
+| `html_url` | Download URL for the HTML report (if format is `html` or `both`) |
+| `expires_at` | ISO 8601 timestamp when the report URLs expire (24 hours) |
+
+## Report Contents
+
+The generated report includes:
+
+| Page | Contents |
+|------|----------|
+| **Executive Summary** | Key metrics, portfolio value vs benchmark chart, factor scores, investment thesis |
+| **Performance Analysis** | Portfolio vs benchmark comparison table, period returns (YTD, 1W, 1M, 3M, 6M, 1Y, 3Y, 5Y) |
+| **Charts & Visuals** | Growth of $100 chart, drawdown analysis, rolling Sharpe ratio |
+| **Allocations** | Sector allocation pie chart, market allocation pie chart, top holdings bar chart |
+| **Returns** | Monthly returns heatmap, annual returns comparison |
+
+## Example: Full Workflow
+
+```javascript
+// Step 1: Run portfolio analysis
+const analyzeResponse = await fetch('https://api.chicago.global/v1/portfolio/analyze', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${API_KEY}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    portfolio: [
+      { date: '2024-01-01', symbol: 'AAPL.O', weight: 0.25 },
+      { date: '2024-01-01', symbol: 'MSFT.O', weight: 0.25 },
+      { date: '2024-01-01', symbol: '2330.TW', weight: 0.25 },
+      { date: '2024-01-01', symbol: '7203.T', weight: 0.25 }
+    ],
+    start_date: '2024-01-01',
+    end_date: '2024-12-31',
+    benchmark: 'ACWI'
+  })
+});
+
+const { job_id: analyzeJobId } = await analyzeResponse.json();
+
+// Step 2: Wait for analysis to complete
+let analysisResult;
+while (true) {
+  const status = await fetch(
+    `https://api.chicago.global/v1/jobs/${analyzeJobId}`,
+    { headers: { 'Authorization': `Bearer ${API_KEY}` } }
+  ).then(r => r.json());
+
+  if (status.status === 'completed') {
+    analysisResult = status.result;
+    break;
+  } else if (status.status === 'failed') {
+    throw new Error(status.error);
+  }
+  await new Promise(r => setTimeout(r, 3000));
+}
+
+// Step 3: Generate report from analysis result
+const reportResponse = await fetch('https://api.chicago.global/v1/portfolioreport', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${API_KEY}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    portfolio_data: analysisResult,
+    format: 'pdf'
+  })
+});
+
+const { job_id: reportJobId, check_url } = await reportResponse.json();
+
+// Step 4: Wait for report and get download URL
+const interval = setInterval(async () => {
+  const status = await fetch(
+    `https://api.chicago.global${check_url}`,
+    { headers: { 'Authorization': `Bearer ${API_KEY}` } }
+  ).then(r => r.json());
+
+  if (status.status === 'completed') {
+    clearInterval(interval);
+    console.log('PDF URL:', status.result.pdf_url);
+    console.log('Expires:', status.result.expires_at);
+  } else if (status.status === 'failed') {
+    clearInterval(interval);
+    console.error('Failed:', status.error);
+  }
+}, 3000);
+```
+
+```bash
+# Step 1: Start analysis
+ANALYZE_JOB=$(curl -s -X POST "https://api.chicago.global/v1/portfolio/analyze" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "portfolio": [
+      {"date": "2024-01-01", "symbol": "AAPL.O", "weight": 0.5},
+      {"date": "2024-01-01", "symbol": "MSFT.O", "weight": 0.5}
+    ],
+    "start_date": "2024-01-01",
+    "end_date": "2024-12-31"
+  }')
+
+JOB_ID=$(echo $ANALYZE_JOB | jq -r '.job_id')
+
+# Step 2: Poll until complete, then get result
+RESULT=$(curl -s "https://api.chicago.global/v1/jobs/$JOB_ID" \
+  -H "Authorization: Bearer YOUR_API_KEY" | jq '.result')
+
+# Step 3: Generate report
+curl -X POST "https://api.chicago.global/v1/portfolioreport" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d "{\"portfolio_data\": $RESULT, \"format\": \"pdf\"}"
+```

@@ -1,0 +1,105 @@
+---
+title: 'News Analysis'
+openapi: 'POST /v1/news-analysis'
+---
+
+Generate an AI-powered news analysis for a stock. Scans recent news and produces a concise summary with key takeaways.
+
+## How It Works
+
+This endpoint uses **async job processing**:
+
+1. **Submit Request**: POST with a stock symbol
+2. **Receive Job ID**: Get a job ID and polling URL immediately
+3. **Poll for Status**: Check `/v1/jobs/{job_id}` until status is `completed`
+4. **Get Analysis**: The completed job contains a structured news summary
+
+<Note>
+Analysis typically takes 30-90 seconds depending on the volume of recent news.
+</Note>
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | Stock symbol (e.g., `AAPL`, `MSFT`) |
+
+## Response (202 Accepted)
+
+```json
+{
+  "job_id": "stock-e1f4199f-9cd3-4175-9158-e3310b88f54b",
+  "status": "pending",
+  "symbol": "AAPL.O",
+  "limit": 10,
+  "check_url": "/v1/jobs/stock-e1f4199f-9cd3-4175-9158-e3310b88f54b",
+  "estimated_duration_seconds": 90,
+  "message": "News analysis started for AAPL.O."
+}
+```
+
+## Completed Response
+
+When the job completes, `GET /v1/jobs/{job_id}` returns:
+
+```json
+{
+  "job_id": "stock-e1f4199f-...",
+  "status": "completed",
+  "result": {
+    "title": "Apple's Q1 2026 Earnings Beat Masks Supply Chain Headwinds - 29/01/2026",
+    "bullet1": "Apple delivered record Q1 2026 revenue of $143.8bn (+16% YoY) with EPS of $2.84 (+19% YoY), driven by iPhone revenue surging 23% to $85.3bn and Services hitting $30bn (+14% YoY)...",
+    "bullet2": "Management warned of significant supply constraints ahead, particularly in 3-nanometer chip manufacturing and memory components where AI-driven demand is inflating prices industry-wide...",
+    "bullet3": "The company returned $32bn to shareholders through $25bn in buybacks and $3.9bn in dividends, while raising its quarterly dividend to $0.26 per share. With gross margins holding at 48.2% and operating cash flow generating $54bn...",
+    "symbol": "AAPL.O"
+  }
+}
+```
+
+## Result Fields
+
+| Field | Description |
+|-------|-------------|
+| `title` | Headline summarizing the key news theme and date |
+| `bullet1` | First key takeaway — typically the main event or result |
+| `bullet2` | Second key takeaway — risks, challenges, or forward-looking concerns |
+| `bullet3` | Third key takeaway — financial position, shareholder returns, or investment stance |
+| `symbol` | Resolved RIC |
+
+## Example
+
+```bash
+curl -X POST "https://api.chicago.global/v1/news-analysis?symbol=AAPL" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript
+const response = await fetch(
+  'https://api.chicago.global/v1/news-analysis?symbol=AAPL',
+  {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${API_KEY}` }
+  }
+);
+
+const { job_id, check_url } = await response.json();
+
+const interval = setInterval(async () => {
+  const status = await fetch(
+    `https://api.chicago.global${check_url}`,
+    { headers: { 'Authorization': `Bearer ${API_KEY}` } }
+  ).then(r => r.json());
+
+  if (status.status === 'completed') {
+    clearInterval(interval);
+    const { title, bullet1, bullet2, bullet3 } = status.result;
+    console.log(title);
+    console.log(`1. ${bullet1}`);
+    console.log(`2. ${bullet2}`);
+    console.log(`3. ${bullet3}`);
+  } else if (status.status === 'failed') {
+    clearInterval(interval);
+    console.error('Failed:', status.error);
+  }
+}, 5000);
+```

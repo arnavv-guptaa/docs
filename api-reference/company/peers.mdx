@@ -1,0 +1,83 @@
+---
+title: 'Peers'
+openapi: 'GET /v1/peers'
+---
+
+Get a list of peer companies for a given stock, including valuation metrics, performance, and Parallax scores.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | Stock symbol (e.g., `AAPL`, `MSFT`) |
+
+## Response
+
+Returns an array of peer companies (including the target stock):
+
+```json
+[
+  {
+    "ric": "AAPL.O",
+    "company_name": "Apple Inc",
+    "market": "United States",
+    "mtd": 0.0,
+    "ytd": -6.35,
+    "pe": 32.12,
+    "ev_ebitda": 24.56,
+    "roe": 170.68,
+    "de": 1.35,
+    "mktcap_b": 3731.4,
+    "recommendation": "HOLD",
+    "value": 2.0,
+    "quality": 10.0,
+    "momentum": 7.5,
+    "defensive": 9.5,
+    "tactical": 7.0,
+    "total": 6.0
+  },
+  {
+    "ric": "QCOM.O",
+    "company_name": "Qualcomm Inc",
+    "market": "United States",
+    "mtd": 0.0,
+    "ytd": -25.55,
+    "pe": 26.26,
+    "ev_ebitda": 10.2,
+    "roe": 23.34,
+    "de": 0.7,
+    "mktcap_b": 137.41,
+    "recommendation": "HOLD",
+    "value": 4.5,
+    "quality": 10.0,
+    "momentum": 4.5,
+    "defensive": 8.5,
+    "tactical": 6.5,
+    "total": 6.3
+  }
+]
+```
+
+## Key Fields
+
+| Field | Description |
+|-------|-------------|
+| `ric` | Reuters Instrument Code |
+| `company_name` | Company name |
+| `market` | Country/market |
+| `mtd` / `ytd` | Month-to-date and year-to-date returns (%) |
+| `pe` | Price-to-earnings ratio |
+| `ev_ebitda` | Enterprise value to EBITDA |
+| `roe` | Return on equity (%) |
+| `de` | Debt-to-equity ratio |
+| `mktcap_b` | Market cap in billions (USD) |
+| `value` / `quality` / `momentum` / `defensive` / `tactical` | Parallax factor scores (0-10) |
+| `total` | Composite Parallax score |
+| `recommendation` | `STRONG BUY`, `BUY`, `HOLD`, `SELL`, `STRONG SELL` |
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/peers?symbol=AAPL" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

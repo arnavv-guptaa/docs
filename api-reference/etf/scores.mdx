@@ -1,0 +1,54 @@
+---
+title: 'ETF Scores'
+openapi: 'GET /v1/etf/scores'
+---
+
+Get Parallax factor scores for an ETF, calculated as weighted averages across its holdings.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | ETF symbol (e.g., `SPY`, `QQQ`). Comma-separated for multiple. |
+
+## Response
+
+```json
+{
+  "symbol": "SPY.P",
+  "value": 4.0,
+  "quality": 8.0,
+  "momentum": 6.0,
+  "defensive": 8.0,
+  "tactical": 6.0,
+  "total": 5.9,
+  "recommendation": "HOLD",
+  "holdings_covered": 495,
+  "weight_covered": 98.37
+}
+```
+
+## Key Fields
+
+| Field | Description |
+|-------|-------------|
+| `value` | Value factor score (0-10) |
+| `quality` | Quality factor score (0-10) |
+| `momentum` | Momentum factor score (0-10) |
+| `defensive` | Defensive factor score (0-10) |
+| `tactical` | Tactical factor score (0-10) |
+| `total` | Composite score (0-10) |
+| `recommendation` | Overall recommendation based on composite score |
+| `holdings_covered` | Number of ETF holdings that have Parallax scores |
+| `weight_covered` | Percentage of ETF weight covered by scored holdings |
+
+<Note>
+Scores are weighted averages based on each holding's weight in the ETF. ETFs with low `weight_covered` may have less reliable scores.
+</Note>
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/etf/scores?symbol=QQQ" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

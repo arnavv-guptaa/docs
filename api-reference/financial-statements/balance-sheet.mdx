@@ -1,0 +1,112 @@
+---
+title: 'Balance Sheet'
+openapi: 'GET /v1/balance-sheet'
+---
+
+Retrieve balance sheet data for a given stock symbol. Returns assets, liabilities, and equity line items sourced from LSEG Datastream.
+
+## Query Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `symbol` | string | Yes | — | Stock symbol (e.g., `AAPL.O`, `0700.HK`). Ticker shorthand like `AAPL` is also accepted and will be resolved automatically. |
+| `limit` | integer | No | `4` | Number of periods to return |
+| `freq` | integer | No | `1` | `1` for Annual, `2` for Quarterly |
+
+## Response
+
+Returns an array of period objects with the full balance sheet breakdown:
+
+```json
+[
+  {
+    "ric": "AAPL.O",
+    "perenddt": "2025-09-27",
+    "stmtdt": "2025-09-27",
+    "sourcedt": "2025-10-31",
+    "pertypecode": 1,
+    "currency": "USD",
+    "unitsconvtocode": "M",
+    "cash_and_short_term_investments": 54697000000,
+    "accounts_receivable_trade_net": 39777000000,
+    "total_receivables_net": 72957000000,
+    "total_inventory": 5718000000,
+    "prepaid_expenses": null,
+    "other_current_assets_total": 14585000000,
+    "total_current_assets": 147957000000,
+    "property_plant_equipment_total_gross": 137053000000,
+    "property_plant_equipment_total_net": 61039000000,
+    "goodwill_net": null,
+    "intangibles_net": null,
+    "long_term_investments": 77723000000,
+    "note_receivable_long_term": null,
+    "other_long_term_assets_total": 72522000000,
+    "total_assets": 359241000000,
+    "accounts_payable": 69860000000,
+    "payable_accrued": null,
+    "accrued_expenses": 10498000000,
+    "notes_payable_short_term_debt": 7979000000,
+    "current_portion_of_lt_debt_capital_leases": 12888000000,
+    "other_current_liabilities_total": 64406000000,
+    "total_current_liabilities": 165631000000,
+    "total_long_term_debt": 79020000000,
+    "total_debt": 99887000000,
+    "deferred_income_tax": null,
+    "minority_interest": null,
+    "other_liabilities_total": 40857000000,
+    "total_liabilities": 285508000000,
+    "redeemable_preferred_stock_total": null,
+    "preferred_stock_non_redeemable_net": null,
+    "common_stock_total": 147730,
+    "additional_paid_in_capital": 93567852270,
+    "retained_earnings_accumulated_deficit": -14264000000,
+    "treasury_stock_common": null,
+    "esop_debt_guarantee": null,
+    "unrealized_gain_loss": null,
+    "other_equity_total": -5571000000,
+    "total_equity": 73733000000,
+    "total_liabilities_and_shareholders_equity": 359241000000,
+    "total_common_shares_outstanding": 14773260000
+  }
+]
+```
+
+<Note>
+All monetary values are in the company's reporting currency. The `currency` field indicates which currency. Fields with `null` values are not applicable for the given company.
+</Note>
+
+## Key Fields
+
+| Field | Description |
+|-------|-------------|
+| `perenddt` | Period end date |
+| `pertypecode` | `1` for Annual, `2` for Quarterly |
+| `cash_and_short_term_investments` | Cash, cash equivalents, and short-term investments |
+| `total_receivables_net` | Total receivables net of allowances |
+| `total_current_assets` | Total short-term assets |
+| `property_plant_equipment_total_net` | PP&E net of depreciation |
+| `total_assets` | Total assets |
+| `total_current_liabilities` | Total short-term liabilities |
+| `total_long_term_debt` | Long-term borrowings |
+| `total_debt` | Total debt (short-term + long-term) |
+| `total_liabilities` | Total liabilities |
+| `total_equity` | Shareholders' equity |
+| `total_common_shares_outstanding` | Shares outstanding |
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/balance-sheet?symbol=AAPL.O&limit=4&freq=1" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript
+const response = await fetch(
+  'https://api.chicago.global/v1/balance-sheet?symbol=AAPL.O&limit=4&freq=1',
+  { headers: { 'Authorization': `Bearer ${API_KEY}` } }
+);
+
+const periods = await response.json();
+console.log(`Total Assets: ${periods[0].total_assets}`);
+console.log(`Total Equity: ${periods[0].total_equity}`);
+```

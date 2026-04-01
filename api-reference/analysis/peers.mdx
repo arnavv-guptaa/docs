@@ -1,0 +1,94 @@
+---
+title: 'Peers Analysis'
+openapi: 'POST /v1/peers-analysis'
+---
+
+Generate an AI-powered peer comparison analysis for a stock. Compares the company against its sector peers on valuation, performance, and fundamentals.
+
+## How It Works
+
+This endpoint uses **async job processing**:
+
+1. **Submit Request**: POST with a stock symbol
+2. **Receive Job ID**: Get a job ID and polling URL immediately
+3. **Poll for Status**: Check `/v1/jobs/{job_id}` until status is `completed`
+4. **Get Analysis**: The completed job contains a narrative peer comparison
+
+<Note>
+Analysis typically takes 30-60 seconds.
+</Note>
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | Stock symbol (e.g., `AAPL`, `MSFT`) |
+
+## Response (202 Accepted)
+
+```json
+{
+  "job_id": "stock-66afc3d6-0409-4aa5-bb2d-be34e38efadb",
+  "status": "pending",
+  "symbol": "AAPL.O",
+  "check_url": "/v1/jobs/stock-66afc3d6-0409-4aa5-bb2d-be34e38efadb",
+  "estimated_duration_seconds": 60,
+  "message": "Peers analysis started for AAPL.O."
+}
+```
+
+## Completed Response
+
+When the job completes, `GET /v1/jobs/{job_id}` returns:
+
+```json
+{
+  "job_id": "stock-66afc3d6-...",
+  "status": "completed",
+  "result": {
+    "symbol": "AAPL.O",
+    "analysis": "Apple trades at a premium 32x PE multiple while generating an exceptional 171% ROE that dwarfs every peer except Ubiquiti's niche operation, yet the stock sits down 6% year-to-date as investors question growth sustainability in a maturing smartphone market. The company's $3.7 trillion market cap represents more than half the combined value of all technology hardware peers, supported by an EV/EBITDA of 24.6x that reflects consistent cash generation but signals limited upside at current valuations. While competitors like Western Digital surge 44% and Dell climbs 28% on AI infrastructure plays, Apple's ecosystem moat and services expansion provide defensive qualities that justify the valuation premium, though the current Hold consensus suggests analysts see limited catalysts for near-term outperformance."
+  }
+}
+```
+
+## Result Fields
+
+| Field | Description |
+|-------|-------------|
+| `symbol` | Resolved RIC |
+| `analysis` | AI-generated narrative comparing the stock against its sector peers on valuation, performance, returns, and competitive positioning |
+
+## Example
+
+```bash
+curl -X POST "https://api.chicago.global/v1/peers-analysis?symbol=AAPL" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript
+const response = await fetch(
+  'https://api.chicago.global/v1/peers-analysis?symbol=AAPL',
+  {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${API_KEY}` }
+  }
+);
+
+const { job_id, check_url } = await response.json();
+
+const interval = setInterval(async () => {
+  const status = await fetch(
+    `https://api.chicago.global${check_url}`,
+    { headers: { 'Authorization': `Bearer ${API_KEY}` } }
+  ).then(r => r.json());
+
+  if (status.status === 'completed') {
+    clearInterval(interval);
+    console.log(status.result.analysis);
+  } else if (status.status === 'failed') {
+    clearInterval(interval);
+    console.error('Failed:', status.error);
+  }
+}, 5000);
+```

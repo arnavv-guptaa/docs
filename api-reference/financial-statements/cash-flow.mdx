@@ -1,0 +1,97 @@
+---
+title: 'Cash Flow Statement'
+openapi: 'GET /v1/cash-flow'
+---
+
+Retrieve cash flow statement data for a given stock symbol. Returns operating, investing, and financing cash flows sourced from LSEG Datastream.
+
+## Query Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `symbol` | string | Yes | — | Stock symbol (e.g., `AAPL.O`, `0700.HK`). Ticker shorthand like `AAPL` is also accepted and will be resolved automatically. |
+| `limit` | integer | No | `4` | Number of periods to return |
+| `freq` | integer | No | `1` | `1` for Annual, `2` for Quarterly |
+
+## Response
+
+Returns an array of period objects with the full cash flow breakdown:
+
+```json
+[
+  {
+    "ric": "AAPL.O",
+    "perenddt": "2025-09-27",
+    "stmtdt": "2025-09-27",
+    "sourcedt": "2025-10-31",
+    "pertypecode": 1,
+    "currency": "USD",
+    "unitsconvtocode": "M",
+    "net_income_starting_line": 112010000000,
+    "depreciation_depletion": 11698000000,
+    "amortization": null,
+    "deferred_taxes": null,
+    "non_cash_items": 12774000000,
+    "changes_in_working_capital": -25000000000,
+    "accounts_receivable_change": -7029000000,
+    "inventories_change": 1400000000,
+    "other_assets_change": -9197000000,
+    "accounts_payable_change": 902000000,
+    "other_liabilities_change": -11076000000,
+    "cash_from_operating_activities": 111482000000,
+    "capital_expenditures": -12715000000,
+    "other_investing_cash_flow_items_total": 27910000000,
+    "cash_from_investing_activities": 15195000000,
+    "financing_cash_flow_items": -6071000000,
+    "total_cash_dividends_paid": -15421000000,
+    "issuance_retirement_of_stock_net": -90711000000,
+    "issuance_retirement_of_debt_net": -8483000000,
+    "cash_from_financing_activities": -120686000000,
+    "foreign_exchange_effects": null,
+    "net_change_in_cash": 5991000000,
+    "net_cash_beginning_balance": 29943000000,
+    "net_cash_ending_balance": 35934000000,
+    "cash_interest_paid": null,
+    "cash_taxes_paid": 43369000000
+  }
+]
+```
+
+<Note>
+All monetary values are in the company's reporting currency. The `currency` field indicates which currency. Negative values indicate cash outflows. Fields with `null` values are not applicable for the given company.
+</Note>
+
+## Key Fields
+
+| Field | Description |
+|-------|-------------|
+| `perenddt` | Period end date |
+| `pertypecode` | `1` for Annual, `2` for Quarterly |
+| `net_income_starting_line` | Net income used as starting point |
+| `depreciation_depletion` | Depreciation and depletion add-back |
+| `changes_in_working_capital` | Net change in working capital |
+| `cash_from_operating_activities` | Cash generated from core business operations |
+| `capital_expenditures` | Spending on property, plant, and equipment |
+| `cash_from_investing_activities` | Net cash from investment activities |
+| `cash_from_financing_activities` | Net cash from debt and equity transactions |
+| `net_change_in_cash` | Total change in cash for the period |
+| `net_cash_beginning_balance` | Cash balance at start of period |
+| `net_cash_ending_balance` | Cash balance at end of period |
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/cash-flow?symbol=AAPL.O&limit=4&freq=1" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript
+const response = await fetch(
+  'https://api.chicago.global/v1/cash-flow?symbol=AAPL.O&limit=4&freq=1',
+  { headers: { 'Authorization': `Bearer ${API_KEY}` } }
+);
+
+const periods = await response.json();
+const fcf = periods[0].cash_from_operating_activities + periods[0].capital_expenditures;
+console.log(`Free Cash Flow: ${fcf}`);
+```

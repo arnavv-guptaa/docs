@@ -1,0 +1,49 @@
+---
+title: 'Validate Symbol'
+openapi: 'GET /v1/validate-symbol'
+---
+
+Check if a stock symbol is valid and get its resolved RIC.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | Stock symbol to validate (e.g., `AAPL`, `RELIANCE`) |
+
+## Response
+
+**Valid symbol:**
+
+```json
+{
+  "success": true,
+  "symbol": "AAPL",
+  "ric": "AAPL.O",
+  "valid": true,
+  "message": "Symbol 'AAPL' resolved to RIC 'AAPL.O'"
+}
+```
+
+**Invalid symbol:**
+
+```json
+{
+  "success": false,
+  "symbol": "FAKE123",
+  "ric": null,
+  "valid": false,
+  "message": "Symbol 'FAKE123' not found"
+}
+```
+
+<Note>
+Use this endpoint to verify symbols before calling other endpoints. All stock endpoints accept both ticker shorthand (e.g., `AAPL`) and full RIC format (e.g., `AAPL.O`).
+</Note>
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/validate-symbol?symbol=AAPL" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

@@ -1,0 +1,178 @@
+---
+title: 'Universe Builder'
+openapi: 'POST /v1/builder'
+---
+
+Build a thematic stock universe from a natural language query. An AI agent interprets your query, searches ~65,000 company descriptions, and returns relevant stocks ranked by relevance score.
+
+## How It Works
+
+This endpoint uses **async job processing**:
+
+1. **Submit Request**: POST with a natural language query
+2. **Receive Job ID**: Get a job ID and polling URL immediately
+3. **Poll for Status**: Check `/v1/jobs/{job_id}` until status is `completed`
+4. **Get Results**: The completed job contains a ranked list of matching companies
+
+<Note>
+Typically takes 15-40 seconds. The agent may run multiple search iterations to refine results.
+</Note>
+
+## Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `query` | string | Yes | Natural language query describing the investment theme and any filters (2-500 characters) |
+
+```json
+{
+  "query": "Find me top 50 electric vehicle companies in Asia"
+}
+```
+
+## Response (202 Accepted)
+
+```json
+{
+  "job_id": "e2035316-0042-437a-9353-4b224f304d5a",
+  "status": "pending",
+  "query": "Top 20 electric vehicle companies in Asia",
+  "check_url": "/v1/jobs/e2035316-0042-437a-9353-4b224f304d5a",
+  "estimated_duration_seconds": 30,
+  "message": "Building stock universe for 'Top 20 electric vehicle companies in Asia'."
+}
+```
+
+## Completed Response
+
+When the job completes, `GET /v1/jobs/{job_id}` returns the matched companies:
+
+```json
+{
+  "job_id": "e2035316-0042-437a-9353-4b224f304d5a",
+  "status": "completed",
+  "result": {
+    "total_matches": 546,
+    "results_returned": 20,
+    "category_breakdown": {
+      "core": 18,
+      "peripheral": 2
+    },
+    "companies": [
+      {
+        "ric": "3677.HK",
+        "name": "Jiangsu Zenergy Battery Technologies Group Co Ltd",
+        "sector": "Industrials",
+        "market": "China",
+        "exchange": "Hong Kong",
+        "activity": "Active",
+        "market_cap": 12624996781.5,
+        "category": "core",
+        "composite_score": 249.43
+      },
+      {
+        "ric": "005380.KS",
+        "name": "Hyundai Motor Co",
+        "sector": "Consumer Cyclicals",
+        "market": "South Korea",
+        "exchange": "Korea",
+        "activity": "Active",
+        "market_cap": 91219584753000.0,
+        "category": "core",
+        "composite_score": 141.13
+      },
+      {
+        "ric": "0175.HK",
+        "name": "Geely Automobile Holdings Ltd",
+        "sector": "Consumer Cyclicals",
+        "market": "Hong Kong",
+        "exchange": "Hong Kong",
+        "activity": "Active",
+        "market_cap": 225892816535.3,
+        "category": "core",
+        "composite_score": 108.08
+      }
+    ]
+  }
+}
+```
+
+## Company Fields
+
+| Field | Description |
+|-------|-------------|
+| `ric` | Reuters Instrument Code (unique stock identifier) |
+| `name` | Company name |
+| `sector` | Business sector classification |
+| `market` | Country/market where the company is listed |
+| `exchange` | Stock exchange name |
+| `activity` | Company status (e.g., `Active`) |
+| `market_cap` | Market capitalization (in local currency) |
+| `category` | Match category: `core` (strongest match), `peripheral`, or `satellite` |
+| `composite_score` | Relevance score — higher means stronger thematic match |
+
+## Query Tips
+
+The agent works best with specific, descriptive queries:
+
+| Good Queries | Why |
+|-------------|-----|
+| "Top 50 electric vehicle battery manufacturers in Asia" | Specific theme + region + count |
+| "Gene therapy and CRISPR companies with market cap over $1B" | Specific technology + size filter |
+| "Semiconductor lithography and chip fabrication equipment" | Narrow technical theme |
+
+| Weak Queries | Why |
+|-------------|-----|
+| "Technology stocks" | Too broad — thousands of matches |
+| "Good companies" | No investable theme |
+| "Stocks" | Not actionable |
+
+## Supported Regions
+
+When your query mentions a geography, the agent can filter by:
+- **Regions**: Europe, Asia, Americas, Middle East, Oceania
+- **Countries**: United States, United Kingdom, Japan, South Korea, China, Hong Kong, Taiwan, Singapore, India, Germany, France, Canada, Brazil, Australia, Saudi Arabia, UAE, Thailand, Malaysia, Indonesia, and 20+ more
+
+## Example
+
+```bash
+curl -X POST "https://api.chicago.global/v1/builder" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "Top 30 AI infrastructure and data center companies"}'
+```
+
+```javascript
+const response = await fetch('https://api.chicago.global/v1/builder', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${API_KEY}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    query: 'Top 30 AI infrastructure and data center companies'
+  })
+});
+
+const { job_id, check_url } = await response.json();
+
+// Poll for results
+const interval = setInterval(async () => {
+  const status = await fetch(
+    `https://api.chicago.global${check_url}`,
+    { headers: { 'Authorization': `Bearer ${API_KEY}` } }
+  ).then(r => r.json());
+
+  if (status.status === 'completed') {
+    clearInterval(interval);
+    const { companies, total_matches } = status.result;
+    console.log(`Found ${total_matches} matches, returned ${companies.length}`);
+    companies.forEach(c => {
+      console.log(`${c.name} (${c.ric}) — ${c.market}, score: ${c.composite_score}`);
+    });
+  } else if (status.status === 'failed') {
+    clearInterval(interval);
+    console.error('Failed:', status.error);
+  }
+}, 5000);
+```

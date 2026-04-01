@@ -1,0 +1,62 @@
+---
+title: 'ETF Daily Price'
+openapi: 'GET /v1/etf/daily-price'
+---
+
+Get historical daily OHLCV price data for an ETF.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | ETF symbol (e.g., `SPY`, `QQQ`). Comma-separated for multiple. |
+| `start_date` | string | No | Start date (YYYY-MM-DD). Defaults to 1 year ago. |
+| `end_date` | string | No | End date (YYYY-MM-DD). Defaults to latest available. |
+
+## Response
+
+Returns an array of daily price records:
+
+```json
+[
+  {
+    "symbol": "SPY.P",
+    "date": "2025-12-01",
+    "open": 678.81,
+    "high": 682.99,
+    "low": 678.74,
+    "close": 680.27,
+    "volume": 61201192,
+    "change": -3.12,
+    "changepercent": -0.46
+  },
+  {
+    "symbol": "SPY.P",
+    "date": "2025-12-02",
+    "open": 681.92,
+    "high": 683.82,
+    "low": 679.33,
+    "close": 681.53,
+    "volume": 62953844,
+    "change": 1.26,
+    "changepercent": 0.19
+  }
+]
+```
+
+## Key Fields
+
+| Field | Description |
+|-------|-------------|
+| `date` | Trading date |
+| `open` / `high` / `low` / `close` | OHLC prices in ETF's trading currency |
+| `volume` | Daily trading volume |
+| `change` | Absolute price change from previous close |
+| `changepercent` | Percentage price change from previous close |
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/etf/daily-price?symbol=SPY&start_date=2025-12-01&end_date=2025-12-31" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

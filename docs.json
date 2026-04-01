@@ -95,7 +95,14 @@
           {
             "group": "Portfolio Analysis",
             "pages": [
-              "api-reference/portfolio/analyze"
+              "api-reference/portfolio/analyze",
+              "api-reference/portfolio/report"
+            ]
+          },
+          {
+            "group": "Builder",
+            "pages": [
+              "api-reference/builder/build"
             ]
           },
           {
@@ -108,13 +115,55 @@
             "group": "Analysis",
             "pages": [
               "api-reference/analysis/financial",
-              "api-reference/analysis/technical"
+              "api-reference/analysis/technical",
+              "api-reference/analysis/score",
+              "api-reference/analysis/peers",
+              "api-reference/analysis/news"
+            ]
+          },
+          {
+            "group": "Company Data",
+            "pages": [
+              "api-reference/company/info",
+              "api-reference/company/peers"
+            ]
+          },
+          {
+            "group": "Financial Statements",
+            "pages": [
+              "api-reference/financial-statements/income-statement",
+              "api-reference/financial-statements/balance-sheet",
+              "api-reference/financial-statements/cash-flow",
+              "api-reference/financial-statements/key-ratios"
+            ]
+          },
+          {
+            "group": "Price Data",
+            "pages": [
+              "api-reference/price/daily-price"
+            ]
+          },
+          {
+            "group": "ETF",
+            "pages": [
+              "api-reference/etf/search",
+              "api-reference/etf/profile",
+              "api-reference/etf/scores",
+              "api-reference/etf/holdings",
+              "api-reference/etf/daily-price",
+              "api-reference/etf/validate"
             ]
           },
           {
             "group": "Macro Reports",
             "pages": [
               "api-reference/macro/report"
+            ]
+          },
+          {
+            "group": "Validation",
+            "pages": [
+              "api-reference/validation/validate-symbol"
             ]
           }
         ]
