@@ -35,10 +35,26 @@
                 "benchmark": "ACWI",
                 "initial_value": 10000,
                 "portfolio": [
-                  {"date": "2024-01-01", "symbol": "AAPL.O", "weight": 0.25},
-                  {"date": "2024-01-01", "symbol": "MSFT.O", "weight": 0.25},
-                  {"date": "2024-01-01", "symbol": "GOOGL.O", "weight": 0.25},
-                  {"date": "2024-01-01", "symbol": "AMZN.O", "weight": 0.25}
+                  {
+                    "date": "2024-01-01",
+                    "symbol": "AAPL.O",
+                    "weight": 0.25
+                  },
+                  {
+                    "date": "2024-01-01",
+                    "symbol": "MSFT.O",
+                    "weight": 0.25
+                  },
+                  {
+                    "date": "2024-01-01",
+                    "symbol": "GOOGL.O",
+                    "weight": 0.25
+                  },
+                  {
+                    "date": "2024-01-01",
+                    "symbol": "AMZN.O",
+                    "weight": 0.25
+                  }
                 ]
               }
             }
@@ -149,7 +165,9 @@
         "summary": "Technical Analysis",
         "description": "Get AI-powered technical analysis including trend analysis, momentum indicators (RSI, MACD), support/resistance levels, volume analysis, and volatility assessment. This endpoint uses async job processing - submit your request, receive a job ID, then poll for results.",
         "operationId": "technicalAnalysis",
-        "tags": ["Analysis"],
+        "tags": [
+          "Analysis"
+        ],
         "parameters": [
           {
             "name": "symbol",
@@ -210,7 +228,9 @@
         "summary": "Financial Analysis",
         "description": "Get comprehensive AI-powered financial analysis including business strategy, accounting quality, financial performance, and investment recommendation. Analysis typically takes 2-5 minutes.",
         "operationId": "financialAnalysis",
-        "tags": ["Analysis"],
+        "tags": [
+          "Analysis"
+        ],
         "parameters": [
           {
             "name": "symbol",
@@ -260,7 +280,9 @@
         "summary": "Generate Stock Report",
         "description": "Generate a comprehensive stock report including financial analysis, valuation metrics, and AI-generated insights. This endpoint uses async job processing - submit your request, receive a job ID, then poll for results.",
         "operationId": "generateStockReport",
-        "tags": ["Stock Reports"],
+        "tags": [
+          "Stock Reports"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -326,7 +348,9 @@
         "summary": "Get Macro Report",
         "description": "Fetch macro economic report for a specific market. Returns report metadata and optionally the full report content. This is a synchronous endpoint - results are returned immediately.",
         "operationId": "getMacroReport",
-        "tags": ["Macro Reports"],
+        "tags": [
+          "Macro Reports"
+        ],
         "parameters": [
           {
             "name": "market",
@@ -345,7 +369,10 @@
             "description": "Response format: 'json' or 'pdf'",
             "schema": {
               "type": "string",
-              "enum": ["json", "pdf"],
+              "enum": [
+                "json",
+                "pdf"
+              ],
               "default": "json"
             }
           },
@@ -449,7 +476,9 @@
         "summary": "List Macro Report Markets",
         "description": "Get a list of all markets with available macro reports.",
         "operationId": "listMacroMarkets",
-        "tags": ["Macro Reports"],
+        "tags": [
+          "Macro Reports"
+        ],
         "responses": {
           "200": {
             "description": "List of available markets",
@@ -460,7 +489,1325 @@
                 },
                 "example": {
                   "success": true,
-                  "markets": ["China", "Germany", "Japan", "United States"]
+                  "markets": [
+                    "China",
+                    "Germany",
+                    "Japan",
+                    "United States"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/company-info": {
+      "get": {
+        "summary": "Company Info",
+        "description": "Get comprehensive company information including description, sector, market data, latest price, and Parallax factor scores.",
+        "operationId": "getCompanyInfo",
+        "tags": [
+          "Company"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Stock symbol (e.g., AAPL, 0700.HK). Comma-separated for multiple.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Company information retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyInfoResponse"
+                },
+                "example": {
+                  "activity": "Active",
+                  "change": "7.16",
+                  "changepercent": "2.9",
+                  "close": "253.79",
+                  "currency": "USD",
+                  "defensive": "9.5",
+                  "description": "Apple Inc. designs, manufactures and markets smartphones, personal computers, tablets, wearables and accessories...",
+                  "exchange": "Nasdaq",
+                  "exchangecode": "NAS",
+                  "high": "254.28",
+                  "industry": "Phones & Handheld Devices",
+                  "low": "247.10",
+                  "market": "United States",
+                  "momentum": "7.5",
+                  "mktcap": "3731400000000",
+                  "name": "Apple Inc",
+                  "open": "247.49",
+                  "quality": "10.0",
+                  "recommendation": "HOLD",
+                  "ric": "AAPL.O",
+                  "sector": "Technology",
+                  "tactical": "7.0",
+                  "total": "6.0",
+                  "value": "2.0",
+                  "volume": "62000000"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/peers": {
+      "get": {
+        "summary": "Peers",
+        "description": "Get a list of peer companies for a given stock, including valuation metrics, performance, and Parallax scores.",
+        "operationId": "getPeers",
+        "tags": [
+          "Company"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Stock symbol (e.g., AAPL, MSFT)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Peer companies retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PeerCompany"
+                  }
+                },
+                "example": [
+                  {
+                    "ric": "AAPL.O",
+                    "company_name": "Apple Inc",
+                    "market": "United States",
+                    "mtd": 0.0,
+                    "ytd": -6.35,
+                    "pe": 32.12,
+                    "ev_ebitda": 24.56,
+                    "roe": 170.68,
+                    "de": 1.35,
+                    "mktcap_b": 3731.4,
+                    "recommendation": "HOLD",
+                    "value": 2.0,
+                    "quality": 10.0,
+                    "momentum": 7.5,
+                    "defensive": 9.5,
+                    "tactical": 7.0,
+                    "total": 6.0
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/news-analysis": {
+      "post": {
+        "summary": "News Analysis",
+        "description": "Generate an AI-powered news analysis for a stock. Scans recent news and produces a concise summary with key takeaways. This endpoint uses async job processing.",
+        "operationId": "newsAnalysis",
+        "tags": [
+          "Analysis"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Stock symbol (e.g., AAPL, MSFT)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Job created successfully. Poll the check_url for results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisJobResponse"
+                },
+                "example": {
+                  "job_id": "stock-e1f4199f-9cd3-4175-9158-e3310b88f54b",
+                  "status": "pending",
+                  "symbol": "AAPL.O",
+                  "limit": 10,
+                  "check_url": "/v1/jobs/stock-e1f4199f-9cd3-4175-9158-e3310b88f54b",
+                  "estimated_duration_seconds": 90,
+                  "message": "News analysis started for AAPL.O."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/peers-analysis": {
+      "post": {
+        "summary": "Peers Analysis",
+        "description": "Generate an AI-powered peer comparison analysis for a stock. Compares the company against its sector peers on valuation, performance, and fundamentals. This endpoint uses async job processing.",
+        "operationId": "peersAnalysis",
+        "tags": [
+          "Analysis"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Stock symbol (e.g., AAPL, MSFT)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Job created successfully. Poll the check_url for results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisJobResponse"
+                },
+                "example": {
+                  "job_id": "stock-66afc3d6-0409-4aa5-bb2d-be34e38efadb",
+                  "status": "pending",
+                  "symbol": "AAPL.O",
+                  "check_url": "/v1/jobs/stock-66afc3d6-0409-4aa5-bb2d-be34e38efadb",
+                  "estimated_duration_seconds": 60,
+                  "message": "Peers analysis started for AAPL.O."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/score-analysis": {
+      "post": {
+        "summary": "Score Analysis",
+        "description": "Generate an AI-powered narrative analysis of a stock's Parallax factor scores, interpreting what the scores mean in the current market context. This endpoint uses async job processing.",
+        "operationId": "scoreAnalysis",
+        "tags": [
+          "Analysis"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Stock symbol (e.g., AAPL, MSFT)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Job created successfully. Poll the check_url for results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisJobResponse"
+                },
+                "example": {
+                  "job_id": "stock-c96e0635-3459-47cd-9f52-ef0ab04d00ee",
+                  "status": "pending",
+                  "symbol": "AAPL.O",
+                  "check_url": "/v1/jobs/stock-c96e0635-3459-47cd-9f52-ef0ab04d00ee",
+                  "estimated_duration_seconds": 60,
+                  "message": "Score analysis started for AAPL.O."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/builder": {
+      "post": {
+        "summary": "Universe Builder",
+        "description": "Build a thematic stock universe from a natural language query. An AI agent interprets your query, searches ~65,000 company descriptions, and returns relevant stocks ranked by relevance score. This endpoint uses async job processing.",
+        "operationId": "universeBuilder",
+        "tags": [
+          "Builder"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuilderRequest"
+              },
+              "example": {
+                "query": "Find me top 50 electric vehicle companies in Asia"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Job created successfully. Poll the check_url for results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuilderJobResponse"
+                },
+                "example": {
+                  "job_id": "e2035316-0042-437a-9353-4b224f304d5a",
+                  "status": "pending",
+                  "query": "Top 20 electric vehicle companies in Asia",
+                  "check_url": "/v1/jobs/e2035316-0042-437a-9353-4b224f304d5a",
+                  "estimated_duration_seconds": 30,
+                  "message": "Building stock universe for 'Top 20 electric vehicle companies in Asia'."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/daily-price": {
+      "get": {
+        "summary": "Daily Price",
+        "description": "Get historical daily OHLCV price data for a stock.",
+        "operationId": "getDailyPrice",
+        "tags": [
+          "Price"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Stock symbol (e.g., AAPL, MSFT). Comma-separated for multiple.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "description": "Start date (YYYY-MM-DD). Defaults to 1 year ago.",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example": "2025-01-01"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "description": "End date (YYYY-MM-DD). Defaults to latest available.",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example": "2025-12-31"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Daily price data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DailyPriceRecord"
+                  }
+                },
+                "example": [
+                  {
+                    "ric": "AAPL.O",
+                    "date": "2025-12-01",
+                    "open": 278.01,
+                    "high": 283.42,
+                    "low": 276.14,
+                    "close": 283.1,
+                    "volume": 46587723,
+                    "changepercent": 1.52
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/validate-symbol": {
+      "get": {
+        "summary": "Validate Symbol",
+        "description": "Check if a stock symbol is valid and get its resolved RIC.",
+        "operationId": "validateSymbol",
+        "tags": [
+          "Validation"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Stock symbol to validate (e.g., AAPL, RELIANCE)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Validation result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateSymbolResponse"
+                },
+                "examples": {
+                  "valid": {
+                    "summary": "Valid symbol",
+                    "value": {
+                      "success": true,
+                      "symbol": "AAPL",
+                      "ric": "AAPL.O",
+                      "valid": true,
+                      "message": "Symbol 'AAPL' resolved to RIC 'AAPL.O'"
+                    }
+                  },
+                  "invalid": {
+                    "summary": "Invalid symbol",
+                    "value": {
+                      "success": false,
+                      "symbol": "FAKE123",
+                      "ric": null,
+                      "valid": false,
+                      "message": "Symbol 'FAKE123' not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/balance-sheet": {
+      "get": {
+        "summary": "Balance Sheet",
+        "description": "Retrieve balance sheet data for a given stock symbol. Returns assets, liabilities, and equity line items sourced from LSEG Datastream.",
+        "operationId": "getBalanceSheet",
+        "tags": [
+          "Financial Statements"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Stock symbol (e.g., AAPL.O, 0700.HK). Ticker shorthand like AAPL is also accepted.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL.O"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Number of periods to return",
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "example": 4
+          },
+          {
+            "name": "freq",
+            "in": "query",
+            "required": false,
+            "description": "1 for Annual, 2 for Quarterly",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2
+              ],
+              "default": 1
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Balance sheet data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BalanceSheetPeriod"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/income-statement": {
+      "get": {
+        "summary": "Income Statement",
+        "description": "Retrieve income statement data for a given stock symbol. Returns line items from revenue through to EPS, sourced from LSEG Datastream.",
+        "operationId": "getIncomeStatement",
+        "tags": [
+          "Financial Statements"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Stock symbol (e.g., AAPL.O, 0700.HK). Ticker shorthand like AAPL is also accepted.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL.O"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Number of periods to return",
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "example": 4
+          },
+          {
+            "name": "freq",
+            "in": "query",
+            "required": false,
+            "description": "1 for Annual, 2 for Quarterly",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2
+              ],
+              "default": 1
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Income statement data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IncomeStatementPeriod"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/cash-flow": {
+      "get": {
+        "summary": "Cash Flow Statement",
+        "description": "Retrieve cash flow statement data for a given stock symbol. Returns operating, investing, and financing cash flows sourced from LSEG Datastream.",
+        "operationId": "getCashFlow",
+        "tags": [
+          "Financial Statements"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Stock symbol (e.g., AAPL.O, 0700.HK). Ticker shorthand like AAPL is also accepted.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL.O"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Number of periods to return",
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "example": 4
+          },
+          {
+            "name": "freq",
+            "in": "query",
+            "required": false,
+            "description": "1 for Annual, 2 for Quarterly",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2
+              ],
+              "default": 1
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cash flow data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CashFlowPeriod"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/key-ratios": {
+      "get": {
+        "summary": "Key Ratios",
+        "description": "Retrieve key financial ratios for a given stock symbol. Returns profitability, liquidity, leverage, and efficiency ratios sourced from LSEG Datastream.",
+        "operationId": "getKeyRatios",
+        "tags": [
+          "Financial Statements"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "Stock symbol (e.g., AAPL.O, 0700.HK). Ticker shorthand like AAPL is also accepted.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "AAPL.O"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Number of periods to return",
+            "schema": {
+              "type": "integer",
+              "default": 4
+            },
+            "example": 4
+          },
+          {
+            "name": "freq",
+            "in": "query",
+            "required": false,
+            "description": "1 for Annual, 2 for Quarterly",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2
+              ],
+              "default": 1
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Key ratios retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KeyRatiosPeriod"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/etf/profile": {
+      "get": {
+        "summary": "ETF Profile",
+        "description": "Get a comprehensive profile for an ETF including metadata, latest price, market cap, and Parallax factor scores.",
+        "operationId": "getEtfProfile",
+        "tags": [
+          "ETF"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "ETF symbol (e.g., SPY, QQQ). Comma-separated for multiple.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "SPY"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ETF profile retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EtfProfileResponse"
+                },
+                "example": {
+                  "symbol": "SPY.P",
+                  "name": "STATE STREET SPDR S&P 500 ETF TRUST",
+                  "activity": "ACTIVE",
+                  "market": "UNITED STATES",
+                  "exchange": "NYSE ARCA",
+                  "exchangecode": "ARC",
+                  "currency": "USD",
+                  "close": 650.34,
+                  "change_percent": 2.91,
+                  "change": 18.37,
+                  "volume": 152534130,
+                  "mktcap": 650068323282,
+                  "num_shares": 999582116,
+                  "value": 4.0,
+                  "quality": 8.0,
+                  "momentum": 6.0,
+                  "defensive": 8.0,
+                  "tactical": 6.0,
+                  "total": 5.9,
+                  "recommendation": "HOLD",
+                  "holdings_covered": 495,
+                  "weight_covered": 98.37
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/etf/holdings": {
+      "get": {
+        "summary": "ETF Holdings",
+        "description": "Get the top holdings of an ETF with their weights and Parallax factor scores.",
+        "operationId": "getEtfHoldings",
+        "tags": [
+          "ETF"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "ETF symbol (e.g., SPY, QQQ). Comma-separated for multiple.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "SPY"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of holdings to return",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            },
+            "example": 50
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ETF holdings retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EtfHolding"
+                  }
+                },
+                "example": [
+                  {
+                    "symbol": "NVDA.O",
+                    "weight": 7.31,
+                    "reweight": 7.43,
+                    "value": 2.5,
+                    "quality": 10.0,
+                    "momentum": 10.0,
+                    "defensive": 7.0,
+                    "tactical": 7.0,
+                    "total": 7.9,
+                    "recommendation": "BUY"
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/etf/scores": {
+      "get": {
+        "summary": "ETF Scores",
+        "description": "Get Parallax factor scores for an ETF, calculated as weighted averages across its holdings.",
+        "operationId": "getEtfScores",
+        "tags": [
+          "ETF"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "ETF symbol (e.g., SPY, QQQ). Comma-separated for multiple.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "SPY"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ETF scores retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EtfScoresResponse"
+                },
+                "example": {
+                  "symbol": "SPY.P",
+                  "value": 4.0,
+                  "quality": 8.0,
+                  "momentum": 6.0,
+                  "defensive": 8.0,
+                  "tactical": 6.0,
+                  "total": 5.9,
+                  "recommendation": "HOLD",
+                  "holdings_covered": 495,
+                  "weight_covered": 98.37
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/etf/search": {
+      "get": {
+        "summary": "ETF Search",
+        "description": "Search and filter ETFs by name, market, currency, score, and recommendation.",
+        "operationId": "searchEtf",
+        "tags": [
+          "ETF"
+        ],
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "description": "Search ETF name (partial match, e.g., S&P, Vanguard)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "market",
+            "in": "query",
+            "required": false,
+            "description": "Filter by market (e.g., UNITED STATES, UNITED KINGDOM)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "required": false,
+            "description": "Filter by currency (e.g., USD, EUR)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "min_score",
+            "in": "query",
+            "required": false,
+            "description": "Minimum total Parallax score",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "max_score",
+            "in": "query",
+            "required": false,
+            "description": "Maximum total Parallax score",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "recommendation",
+            "in": "query",
+            "required": false,
+            "description": "Filter by recommendation (e.g., BUY, STRONG BUY)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "activity",
+            "in": "query",
+            "required": false,
+            "description": "Activity filter",
+            "schema": {
+              "type": "string",
+              "default": "ACTIVE"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Max results (1-100)",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ETF search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EtfSearchResult"
+                  }
+                },
+                "example": [
+                  {
+                    "symbol": "ZPDE.F",
+                    "name": "STST SPDR S&P U S EN.SEL SECT.UCITS ETF",
+                    "activity": "ACTIVE",
+                    "market": "GERMANY",
+                    "exchange": "XETRA",
+                    "currency": "EUR",
+                    "value": 6.0,
+                    "quality": 7.0,
+                    "momentum": 9.0,
+                    "defensive": 8.0,
+                    "tactical": 10.0,
+                    "total": 8.8,
+                    "recommendation": "STRONG BUY"
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/etf/validate": {
+      "get": {
+        "summary": "Validate ETF Symbol",
+        "description": "Check if an ETF symbol is valid and get its resolved primary RIC.",
+        "operationId": "validateEtf",
+        "tags": [
+          "ETF"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "ETF symbol to validate (e.g., SPY, QQQ)",
+            "schema": {
+              "type": "string"
+            },
+            "example": "SPY"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Validation result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateEtfResponse"
+                },
+                "examples": {
+                  "valid": {
+                    "summary": "Valid symbol",
+                    "value": {
+                      "valid": true,
+                      "symbol": "SPY",
+                      "primary_symbol": "SPY.P"
+                    }
+                  },
+                  "invalid": {
+                    "summary": "Invalid symbol",
+                    "value": {
+                      "valid": false,
+                      "symbol": "FAKE123",
+                      "primary_symbol": null,
+                      "error": "ETF symbol 'FAKE123' not found in IDENTIFIERS"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/etf/daily-price": {
+      "get": {
+        "summary": "ETF Daily Price",
+        "description": "Get historical daily OHLCV price data for an ETF.",
+        "operationId": "getEtfDailyPrice",
+        "tags": [
+          "ETF"
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "description": "ETF symbol (e.g., SPY, QQQ). Comma-separated for multiple.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "SPY"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "description": "Start date (YYYY-MM-DD). Defaults to 1 year ago.",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example": "2025-01-01"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "description": "End date (YYYY-MM-DD). Defaults to latest available.",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example": "2025-12-31"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ETF daily price data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EtfDailyPriceRecord"
+                  }
+                },
+                "example": [
+                  {
+                    "symbol": "SPY.P",
+                    "date": "2025-12-01",
+                    "open": 678.81,
+                    "high": 682.99,
+                    "low": 678.74,
+                    "close": 680.27,
+                    "volume": 61201192,
+                    "change": -3.12,
+                    "changepercent": -0.46
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portfolioreport": {
+      "post": {
+        "summary": "Portfolio Report",
+        "description": "Generate a PDF or HTML portfolio report from the output of the /v1/portfolio/analyze endpoint. This endpoint uses async job processing.",
+        "operationId": "generatePortfolioReport",
+        "tags": [
+          "Portfolio"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PortfolioReportRequest"
+              },
+              "example": {
+                "portfolio_data": {},
+                "format": "pdf"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Job created successfully. Poll the check_url for results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortfolioReportJobResponse"
+                },
+                "example": {
+                  "job_id": "port-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                  "status": "pending",
+                  "format": "pdf",
+                  "check_url": "/v1/jobs/port-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                  "estimated_duration_seconds": 60,
+                  "message": "Portfolio report generation started. Poll the check_url to get results."
                 }
               }
             }
@@ -497,7 +1844,9 @@
           },
           "status": {
             "type": "string",
-            "enum": ["pending"],
+            "enum": [
+              "pending"
+            ],
             "description": "Initial job status"
           },
           "symbol": {
@@ -578,7 +1927,9 @@
           },
           "status": {
             "type": "string",
-            "enum": ["pending"],
+            "enum": [
+              "pending"
+            ],
             "description": "Initial job status"
           },
           "symbol": {
@@ -601,7 +1952,9 @@
       },
       "StockReportRequest": {
         "type": "object",
-        "required": ["symbol"],
+        "required": [
+          "symbol"
+        ],
         "description": "Request body for stock report generation",
         "properties": {
           "symbol": {
@@ -626,7 +1979,9 @@
           },
           "status": {
             "type": "string",
-            "enum": ["pending"],
+            "enum": [
+              "pending"
+            ],
             "description": "Initial job status"
           },
           "symbol": {
@@ -680,7 +2035,11 @@
       },
       "PortfolioHolding": {
         "type": "object",
-        "required": ["date", "symbol", "weight"],
+        "required": [
+          "date",
+          "symbol",
+          "weight"
+        ],
         "description": "A single portfolio holding entry for a rebalance date",
         "properties": {
           "date": {
@@ -705,7 +2064,9 @@
       },
       "PortfolioAnalysisRequest": {
         "type": "object",
-        "required": ["portfolio"],
+        "required": [
+          "portfolio"
+        ],
         "description": "Request body for portfolio analysis",
         "properties": {
           "portfolio": {
@@ -757,8 +2118,14 @@
             "nullable": true,
             "description": "Custom transaction cost rates by market. Format: {'market_name': {'buy': rate, 'sell': rate}}. If not provided, uses default rates.",
             "example": {
-              "Singapore": {"buy": 0.14, "sell": 0.14},
-              "United States": {"buy": 0.10, "sell": 0.10}
+              "Singapore": {
+                "buy": 0.14,
+                "sell": 0.14
+              },
+              "United States": {
+                "buy": 0.1,
+                "sell": 0.1
+              }
             }
           },
           "fields": {
@@ -793,7 +2160,11 @@
               ]
             },
             "description": "Optional field selection. If omitted, all fields are returned. Use this to reduce response size.",
-            "example": ["portfolio_summary", "performance_metrics", "latest_holdings"]
+            "example": [
+              "portfolio_summary",
+              "performance_metrics",
+              "latest_holdings"
+            ]
           }
         }
       },
@@ -806,7 +2177,9 @@
           },
           "status": {
             "type": "string",
-            "enum": ["pending"],
+            "enum": [
+              "pending"
+            ],
             "description": "Initial job status"
           },
           "check_url": {
@@ -849,7 +2222,12 @@
           },
           "status": {
             "type": "string",
-            "enum": ["pending", "processing", "completed", "failed"],
+            "enum": [
+              "pending",
+              "processing",
+              "completed",
+              "failed"
+            ],
             "description": "Current job status"
           },
           "progress": {
@@ -893,38 +2271,90 @@
                 "type": "object",
                 "description": "Echoed portfolio configuration",
                 "properties": {
-                  "start_date": { "type": "string" },
-                  "end_date": { "type": "string" },
-                  "base_currency": { "type": "string" },
-                  "benchmark": { "type": "string" },
-                  "initial_value": { "type": "number" },
-                  "include_transaction_costs": { "type": "boolean" },
-                  "transaction_costs_applied": { "type": "object", "nullable": true }
+                  "start_date": {
+                    "type": "string"
+                  },
+                  "end_date": {
+                    "type": "string"
+                  },
+                  "base_currency": {
+                    "type": "string"
+                  },
+                  "benchmark": {
+                    "type": "string"
+                  },
+                  "initial_value": {
+                    "type": "number"
+                  },
+                  "include_transaction_costs": {
+                    "type": "boolean"
+                  },
+                  "transaction_costs_applied": {
+                    "type": "object",
+                    "nullable": true
+                  }
                 }
               },
               "data_quality": {
                 "type": "object",
                 "description": "Data coverage and missing RICs",
                 "properties": {
-                  "total_rics_requested": { "type": "integer" },
-                  "rics_found_in_database": { "type": "integer" },
-                  "missing_rics": { "type": "array", "items": { "type": "string" } },
-                  "missing_rics_count": { "type": "integer" },
-                  "data_completeness_pct": { "type": "number" }
+                  "total_rics_requested": {
+                    "type": "integer"
+                  },
+                  "rics_found_in_database": {
+                    "type": "integer"
+                  },
+                  "missing_rics": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "missing_rics_count": {
+                    "type": "integer"
+                  },
+                  "data_completeness_pct": {
+                    "type": "number"
+                  }
                 }
               },
               "portfolio_summary": {
                 "type": "object",
                 "description": "High-level P&L summary",
                 "properties": {
-                  "final_value": { "type": "number", "description": "Final portfolio value" },
-                  "total_return": { "type": "number", "description": "Total return as decimal" },
-                  "total_price_pl": { "type": "number", "description": "P&L from price changes" },
-                  "total_fx_pl": { "type": "number", "description": "P&L from FX changes" },
-                  "total_pl": { "type": "number", "description": "Total P&L" },
-                  "total_transaction_cost": { "type": "number", "description": "Total transaction costs incurred" },
-                  "transaction_cost_pct_of_initial": { "type": "number", "description": "Transaction costs as % of initial value" },
-                  "include_transaction_costs": { "type": "boolean", "description": "Whether transaction costs were applied" }
+                  "final_value": {
+                    "type": "number",
+                    "description": "Final portfolio value"
+                  },
+                  "total_return": {
+                    "type": "number",
+                    "description": "Total return as decimal"
+                  },
+                  "total_price_pl": {
+                    "type": "number",
+                    "description": "P&L from price changes"
+                  },
+                  "total_fx_pl": {
+                    "type": "number",
+                    "description": "P&L from FX changes"
+                  },
+                  "total_pl": {
+                    "type": "number",
+                    "description": "Total P&L"
+                  },
+                  "total_transaction_cost": {
+                    "type": "number",
+                    "description": "Total transaction costs incurred"
+                  },
+                  "transaction_cost_pct_of_initial": {
+                    "type": "number",
+                    "description": "Transaction costs as % of initial value"
+                  },
+                  "include_transaction_costs": {
+                    "type": "boolean",
+                    "description": "Whether transaction costs were applied"
+                  }
                 }
               },
               "turnover_analysis": {
@@ -934,18 +2364,40 @@
                   "summary": {
                     "type": "object",
                     "properties": {
-                      "days_in_period": { "type": "integer" },
-                      "num_rebalances": { "type": "integer" },
-                      "annualized_turnover_pct": { "type": "number" },
-                      "total_transaction_cost": { "type": "number" },
-                      "annualized_cost_pct": { "type": "number" },
-                      "total_buy_value": { "type": "number" },
-                      "total_sell_value": { "type": "number" },
-                      "include_transaction_costs": { "type": "boolean" }
+                      "days_in_period": {
+                        "type": "integer"
+                      },
+                      "num_rebalances": {
+                        "type": "integer"
+                      },
+                      "annualized_turnover_pct": {
+                        "type": "number"
+                      },
+                      "total_transaction_cost": {
+                        "type": "number"
+                      },
+                      "annualized_cost_pct": {
+                        "type": "number"
+                      },
+                      "total_buy_value": {
+                        "type": "number"
+                      },
+                      "total_sell_value": {
+                        "type": "number"
+                      },
+                      "include_transaction_costs": {
+                        "type": "boolean"
+                      }
                     }
                   },
-                  "by_rebalance": { "type": "array", "description": "Turnover breakdown by rebalance date" },
-                  "by_market": { "type": "object", "description": "Turnover breakdown by market" }
+                  "by_rebalance": {
+                    "type": "array",
+                    "description": "Turnover breakdown by rebalance date"
+                  },
+                  "by_market": {
+                    "type": "object",
+                    "description": "Turnover breakdown by market"
+                  }
                 }
               },
               "performance_metrics": {
@@ -955,36 +2407,76 @@
                   "portfolio": {
                     "type": "object",
                     "properties": {
-                      "total_return": { "type": "number" },
-                      "annualized_return": { "type": "number" },
-                      "annualized_volatility": { "type": "number" },
-                      "max_drawdown": { "type": "number" },
-                      "sharpe_ratio": { "type": "number" },
-                      "sortino_ratio": { "type": "number" },
-                      "calmar_ratio": { "type": "number" },
-                      "win_rate": { "type": "number" },
-                      "var_95": { "type": "number" },
-                      "var_99": { "type": "number" }
+                      "total_return": {
+                        "type": "number"
+                      },
+                      "annualized_return": {
+                        "type": "number"
+                      },
+                      "annualized_volatility": {
+                        "type": "number"
+                      },
+                      "max_drawdown": {
+                        "type": "number"
+                      },
+                      "sharpe_ratio": {
+                        "type": "number"
+                      },
+                      "sortino_ratio": {
+                        "type": "number"
+                      },
+                      "calmar_ratio": {
+                        "type": "number"
+                      },
+                      "win_rate": {
+                        "type": "number"
+                      },
+                      "var_95": {
+                        "type": "number"
+                      },
+                      "var_99": {
+                        "type": "number"
+                      }
                     }
                   },
                   "benchmark": {
                     "type": "object",
                     "properties": {
-                      "total_return": { "type": "number" },
-                      "annualized_return": { "type": "number" },
-                      "sharpe_ratio": { "type": "number" },
-                      "max_drawdown": { "type": "number" }
+                      "total_return": {
+                        "type": "number"
+                      },
+                      "annualized_return": {
+                        "type": "number"
+                      },
+                      "sharpe_ratio": {
+                        "type": "number"
+                      },
+                      "max_drawdown": {
+                        "type": "number"
+                      }
                     }
                   },
                   "relative": {
                     "type": "object",
                     "properties": {
-                      "beta": { "type": "number" },
-                      "alpha_annualized": { "type": "number" },
-                      "correlation": { "type": "number" },
-                      "information_ratio": { "type": "number" },
-                      "tracking_error": { "type": "number" },
-                      "excess_return": { "type": "number" }
+                      "beta": {
+                        "type": "number"
+                      },
+                      "alpha_annualized": {
+                        "type": "number"
+                      },
+                      "correlation": {
+                        "type": "number"
+                      },
+                      "information_ratio": {
+                        "type": "number"
+                      },
+                      "tracking_error": {
+                        "type": "number"
+                      },
+                      "excess_return": {
+                        "type": "number"
+                      }
                     }
                   }
                 }
@@ -1001,13 +2493,27 @@
                 "type": "object",
                 "description": "Quant factor scores",
                 "properties": {
-                  "value": { "type": "number" },
-                  "quality": { "type": "number" },
-                  "momentum": { "type": "number" },
-                  "defensive": { "type": "number" },
-                  "tactical": { "type": "number" },
-                  "total": { "type": "number" },
-                  "coverage": { "type": "number" }
+                  "value": {
+                    "type": "number"
+                  },
+                  "quality": {
+                    "type": "number"
+                  },
+                  "momentum": {
+                    "type": "number"
+                  },
+                  "defensive": {
+                    "type": "number"
+                  },
+                  "tactical": {
+                    "type": "number"
+                  },
+                  "total": {
+                    "type": "number"
+                  },
+                  "coverage": {
+                    "type": "number"
+                  }
                 }
               },
               "concentration_metrics": {
@@ -1020,11 +2526,25 @@
                 "items": {
                   "type": "object",
                   "properties": {
-                    "date": { "type": "string" },
-                    "ric": { "type": "string" },
-                    "transaction_qty": { "type": "number" },
-                    "transaction_value": { "type": "number" },
-                    "transaction_type": { "type": "string", "enum": ["BUY", "SELL"] }
+                    "date": {
+                      "type": "string"
+                    },
+                    "ric": {
+                      "type": "string"
+                    },
+                    "transaction_qty": {
+                      "type": "number"
+                    },
+                    "transaction_value": {
+                      "type": "number"
+                    },
+                    "transaction_type": {
+                      "type": "string",
+                      "enum": [
+                        "BUY",
+                        "SELL"
+                      ]
+                    }
                   }
                 }
               },
@@ -1034,13 +2554,27 @@
                 "items": {
                   "type": "object",
                   "properties": {
-                    "ric": { "type": "string" },
-                    "name": { "type": "string" },
-                    "quantity": { "type": "number" },
-                    "weight": { "type": "number" },
-                    "ending_value": { "type": "number" },
-                    "market": { "type": "string" },
-                    "sector": { "type": "string" }
+                    "ric": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "quantity": {
+                      "type": "number"
+                    },
+                    "weight": {
+                      "type": "number"
+                    },
+                    "ending_value": {
+                      "type": "number"
+                    },
+                    "market": {
+                      "type": "string"
+                    },
+                    "sector": {
+                      "type": "string"
+                    }
                   }
                 }
               },
@@ -1090,13 +2624,27 @@
                 "items": {
                   "type": "object",
                   "properties": {
-                    "date": { "type": "string" },
-                    "portfolio_value": { "type": "number" },
-                    "daily_return": { "type": "number" },
-                    "cumulative_return": { "type": "number" },
-                    "benchmark_value": { "type": "number" },
-                    "benchmark_daily_return": { "type": "number" },
-                    "benchmark_cumulative_return": { "type": "number" }
+                    "date": {
+                      "type": "string"
+                    },
+                    "portfolio_value": {
+                      "type": "number"
+                    },
+                    "daily_return": {
+                      "type": "number"
+                    },
+                    "cumulative_return": {
+                      "type": "number"
+                    },
+                    "benchmark_value": {
+                      "type": "number"
+                    },
+                    "benchmark_daily_return": {
+                      "type": "number"
+                    },
+                    "benchmark_cumulative_return": {
+                      "type": "number"
+                    }
                   }
                 }
               }
@@ -1131,10 +2679,16 @@
               "properties": {
                 "loc": {
                   "type": "array",
-                  "items": { "type": "string" }
+                  "items": {
+                    "type": "string"
+                  }
                 },
-                "msg": { "type": "string" },
-                "type": { "type": "string" }
+                "msg": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                }
               }
             }
           }
@@ -1158,7 +2712,10 @@
           },
           "format": {
             "type": "string",
-            "enum": ["json", "pdf"],
+            "enum": [
+              "json",
+              "pdf"
+            ],
             "description": "Response format"
           },
           "file_url": {
@@ -1191,6 +2748,1099 @@
               "type": "string"
             },
             "description": "List of available market names"
+          }
+        }
+      },
+      "CompanyInfoResponse": {
+        "type": "object",
+        "properties": {
+          "ric": {
+            "type": "string",
+            "description": "Reuters Instrument Code"
+          },
+          "name": {
+            "type": "string",
+            "description": "Company name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Business description"
+          },
+          "sector": {
+            "type": "string",
+            "description": "Sector classification"
+          },
+          "industry": {
+            "type": "string",
+            "description": "Industry classification"
+          },
+          "market": {
+            "type": "string",
+            "description": "Country/market"
+          },
+          "exchange": {
+            "type": "string",
+            "description": "Stock exchange"
+          },
+          "exchangecode": {
+            "type": "string",
+            "description": "Exchange code"
+          },
+          "currency": {
+            "type": "string",
+            "description": "Trading currency"
+          },
+          "activity": {
+            "type": "string",
+            "description": "Company status"
+          },
+          "close": {
+            "type": "string",
+            "description": "Latest closing price"
+          },
+          "open": {
+            "type": "string",
+            "description": "Opening price"
+          },
+          "high": {
+            "type": "string",
+            "description": "Day high"
+          },
+          "low": {
+            "type": "string",
+            "description": "Day low"
+          },
+          "change": {
+            "type": "string",
+            "description": "Absolute price change"
+          },
+          "changepercent": {
+            "type": "string",
+            "description": "Percentage price change"
+          },
+          "volume": {
+            "type": "string",
+            "description": "Trading volume"
+          },
+          "mktcap": {
+            "type": "string",
+            "description": "Market capitalization"
+          },
+          "value": {
+            "type": "string",
+            "description": "Parallax value score (0-10)"
+          },
+          "quality": {
+            "type": "string",
+            "description": "Parallax quality score (0-10)"
+          },
+          "momentum": {
+            "type": "string",
+            "description": "Parallax momentum score (0-10)"
+          },
+          "defensive": {
+            "type": "string",
+            "description": "Parallax defensive score (0-10)"
+          },
+          "tactical": {
+            "type": "string",
+            "description": "Parallax tactical score (0-10)"
+          },
+          "total": {
+            "type": "string",
+            "description": "Composite Parallax score"
+          },
+          "recommendation": {
+            "type": "string",
+            "description": "STRONG BUY, BUY, HOLD, SELL, STRONG SELL"
+          }
+        }
+      },
+      "PeerCompany": {
+        "type": "object",
+        "properties": {
+          "ric": {
+            "type": "string",
+            "description": "Reuters Instrument Code"
+          },
+          "company_name": {
+            "type": "string",
+            "description": "Company name"
+          },
+          "market": {
+            "type": "string",
+            "description": "Country/market"
+          },
+          "mtd": {
+            "type": "number",
+            "description": "Month-to-date return (%)"
+          },
+          "ytd": {
+            "type": "number",
+            "description": "Year-to-date return (%)"
+          },
+          "pe": {
+            "type": "number",
+            "description": "Price-to-earnings ratio"
+          },
+          "ev_ebitda": {
+            "type": "number",
+            "description": "Enterprise value to EBITDA"
+          },
+          "roe": {
+            "type": "number",
+            "description": "Return on equity (%)"
+          },
+          "de": {
+            "type": "number",
+            "description": "Debt-to-equity ratio"
+          },
+          "mktcap_b": {
+            "type": "number",
+            "description": "Market cap in billions (USD)"
+          },
+          "recommendation": {
+            "type": "string",
+            "description": "STRONG BUY, BUY, HOLD, SELL, STRONG SELL"
+          },
+          "value": {
+            "type": "number",
+            "description": "Parallax value score (0-10)"
+          },
+          "quality": {
+            "type": "number",
+            "description": "Parallax quality score (0-10)"
+          },
+          "momentum": {
+            "type": "number",
+            "description": "Parallax momentum score (0-10)"
+          },
+          "defensive": {
+            "type": "number",
+            "description": "Parallax defensive score (0-10)"
+          },
+          "tactical": {
+            "type": "number",
+            "description": "Parallax tactical score (0-10)"
+          },
+          "total": {
+            "type": "number",
+            "description": "Composite Parallax score"
+          }
+        }
+      },
+      "AnalysisJobResponse": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "description": "Unique job identifier"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending"
+            ],
+            "description": "Initial job status"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "Stock symbol being analyzed"
+          },
+          "check_url": {
+            "type": "string",
+            "description": "URL to poll for job status"
+          },
+          "estimated_duration_seconds": {
+            "type": "integer",
+            "description": "Estimated processing time in seconds"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable status message"
+          }
+        }
+      },
+      "BuilderRequest": {
+        "type": "object",
+        "required": [
+          "query"
+        ],
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 500,
+            "description": "Natural language query describing the investment theme and any filters",
+            "example": "Find me top 50 electric vehicle companies in Asia"
+          }
+        }
+      },
+      "BuilderJobResponse": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "description": "Unique job identifier"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending"
+            ],
+            "description": "Initial job status"
+          },
+          "query": {
+            "type": "string",
+            "description": "The search query submitted"
+          },
+          "check_url": {
+            "type": "string",
+            "description": "URL to poll for job status"
+          },
+          "estimated_duration_seconds": {
+            "type": "integer",
+            "description": "Estimated processing time in seconds"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable status message"
+          }
+        }
+      },
+      "DailyPriceRecord": {
+        "type": "object",
+        "properties": {
+          "ric": {
+            "type": "string",
+            "description": "Resolved RIC"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Trading date"
+          },
+          "open": {
+            "type": "number",
+            "description": "Opening price"
+          },
+          "high": {
+            "type": "number",
+            "description": "Day high price"
+          },
+          "low": {
+            "type": "number",
+            "description": "Day low price"
+          },
+          "close": {
+            "type": "number",
+            "description": "Closing price"
+          },
+          "volume": {
+            "type": "integer",
+            "description": "Daily trading volume"
+          },
+          "changepercent": {
+            "type": "number",
+            "description": "Percentage price change from previous close"
+          }
+        }
+      },
+      "ValidateSymbolResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the request was successful"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "The symbol that was queried"
+          },
+          "ric": {
+            "type": "string",
+            "nullable": true,
+            "description": "Resolved Reuters Instrument Code (null if invalid)"
+          },
+          "valid": {
+            "type": "boolean",
+            "description": "Whether the symbol is valid"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable result message"
+          }
+        }
+      },
+      "BalanceSheetPeriod": {
+        "type": "object",
+        "properties": {
+          "ric": {
+            "type": "string",
+            "description": "Reuters Instrument Code"
+          },
+          "perenddt": {
+            "type": "string",
+            "format": "date",
+            "description": "Period end date"
+          },
+          "stmtdt": {
+            "type": "string",
+            "format": "date",
+            "description": "Statement date"
+          },
+          "sourcedt": {
+            "type": "string",
+            "format": "date",
+            "description": "Source date"
+          },
+          "pertypecode": {
+            "type": "integer",
+            "description": "1 for Annual, 2 for Quarterly"
+          },
+          "currency": {
+            "type": "string",
+            "description": "Reporting currency"
+          },
+          "unitsconvtocode": {
+            "type": "string",
+            "description": "Unit scale (e.g., M for millions)"
+          },
+          "cash_and_short_term_investments": {
+            "type": "number",
+            "nullable": true,
+            "description": "Cash, cash equivalents, and short-term investments"
+          },
+          "accounts_receivable_trade_net": {
+            "type": "number",
+            "nullable": true
+          },
+          "total_receivables_net": {
+            "type": "number",
+            "nullable": true
+          },
+          "total_inventory": {
+            "type": "number",
+            "nullable": true
+          },
+          "total_current_assets": {
+            "type": "number",
+            "nullable": true,
+            "description": "Total short-term assets"
+          },
+          "property_plant_equipment_total_net": {
+            "type": "number",
+            "nullable": true,
+            "description": "PP&E net of depreciation"
+          },
+          "goodwill_net": {
+            "type": "number",
+            "nullable": true
+          },
+          "long_term_investments": {
+            "type": "number",
+            "nullable": true
+          },
+          "total_assets": {
+            "type": "number",
+            "nullable": true,
+            "description": "Total assets"
+          },
+          "accounts_payable": {
+            "type": "number",
+            "nullable": true
+          },
+          "total_current_liabilities": {
+            "type": "number",
+            "nullable": true,
+            "description": "Total short-term liabilities"
+          },
+          "total_long_term_debt": {
+            "type": "number",
+            "nullable": true,
+            "description": "Long-term borrowings"
+          },
+          "total_debt": {
+            "type": "number",
+            "nullable": true,
+            "description": "Total debt (short-term + long-term)"
+          },
+          "total_liabilities": {
+            "type": "number",
+            "nullable": true,
+            "description": "Total liabilities"
+          },
+          "total_equity": {
+            "type": "number",
+            "nullable": true,
+            "description": "Shareholders' equity"
+          },
+          "total_liabilities_and_shareholders_equity": {
+            "type": "number",
+            "nullable": true
+          },
+          "total_common_shares_outstanding": {
+            "type": "number",
+            "nullable": true,
+            "description": "Shares outstanding"
+          }
+        }
+      },
+      "IncomeStatementPeriod": {
+        "type": "object",
+        "properties": {
+          "ric": {
+            "type": "string",
+            "description": "Reuters Instrument Code"
+          },
+          "perenddt": {
+            "type": "string",
+            "format": "date",
+            "description": "Period end date"
+          },
+          "stmtdt": {
+            "type": "string",
+            "format": "date"
+          },
+          "sourcedt": {
+            "type": "string",
+            "format": "date"
+          },
+          "pertypecode": {
+            "type": "integer",
+            "description": "1 for Annual, 2 for Quarterly"
+          },
+          "currency": {
+            "type": "string",
+            "description": "Reporting currency"
+          },
+          "unitsconvtocode": {
+            "type": "string",
+            "description": "Unit scale (e.g., M for millions)"
+          },
+          "revenue": {
+            "type": "number",
+            "nullable": true,
+            "description": "Net sales / revenue"
+          },
+          "total_revenue": {
+            "type": "number",
+            "nullable": true,
+            "description": "Total revenue"
+          },
+          "cost_of_revenue_total": {
+            "type": "number",
+            "nullable": true
+          },
+          "gross_profit": {
+            "type": "number",
+            "nullable": true,
+            "description": "Revenue minus cost of revenue"
+          },
+          "sga_expenses_total": {
+            "type": "number",
+            "nullable": true,
+            "description": "SG&A expenses"
+          },
+          "research_development": {
+            "type": "number",
+            "nullable": true,
+            "description": "R&D expenses"
+          },
+          "total_operating_expense": {
+            "type": "number",
+            "nullable": true,
+            "description": "Total operating costs"
+          },
+          "operating_income": {
+            "type": "number",
+            "nullable": true,
+            "description": "Operating income"
+          },
+          "net_income_before_taxes": {
+            "type": "number",
+            "nullable": true,
+            "description": "Pre-tax earnings"
+          },
+          "provision_for_income_taxes": {
+            "type": "number",
+            "nullable": true
+          },
+          "net_income": {
+            "type": "number",
+            "nullable": true,
+            "description": "Bottom line earnings"
+          },
+          "basic_weighted_average_shares": {
+            "type": "number",
+            "nullable": true
+          },
+          "basic_eps_excluding_extraordinary_items": {
+            "type": "number",
+            "nullable": true,
+            "description": "EPS excluding extraordinary items"
+          },
+          "basic_eps_including_extraordinary_items": {
+            "type": "number",
+            "nullable": true,
+            "description": "EPS including extraordinary items"
+          }
+        }
+      },
+      "CashFlowPeriod": {
+        "type": "object",
+        "properties": {
+          "ric": {
+            "type": "string",
+            "description": "Reuters Instrument Code"
+          },
+          "perenddt": {
+            "type": "string",
+            "format": "date",
+            "description": "Period end date"
+          },
+          "stmtdt": {
+            "type": "string",
+            "format": "date"
+          },
+          "sourcedt": {
+            "type": "string",
+            "format": "date"
+          },
+          "pertypecode": {
+            "type": "integer",
+            "description": "1 for Annual, 2 for Quarterly"
+          },
+          "currency": {
+            "type": "string",
+            "description": "Reporting currency"
+          },
+          "unitsconvtocode": {
+            "type": "string",
+            "description": "Unit scale (e.g., M for millions)"
+          },
+          "net_income_starting_line": {
+            "type": "number",
+            "nullable": true,
+            "description": "Net income used as starting point"
+          },
+          "depreciation_depletion": {
+            "type": "number",
+            "nullable": true
+          },
+          "non_cash_items": {
+            "type": "number",
+            "nullable": true
+          },
+          "changes_in_working_capital": {
+            "type": "number",
+            "nullable": true
+          },
+          "cash_from_operating_activities": {
+            "type": "number",
+            "nullable": true,
+            "description": "Cash from core business operations"
+          },
+          "capital_expenditures": {
+            "type": "number",
+            "nullable": true,
+            "description": "Spending on PP&E"
+          },
+          "cash_from_investing_activities": {
+            "type": "number",
+            "nullable": true,
+            "description": "Net cash from investment activities"
+          },
+          "total_cash_dividends_paid": {
+            "type": "number",
+            "nullable": true
+          },
+          "issuance_retirement_of_stock_net": {
+            "type": "number",
+            "nullable": true
+          },
+          "issuance_retirement_of_debt_net": {
+            "type": "number",
+            "nullable": true
+          },
+          "cash_from_financing_activities": {
+            "type": "number",
+            "nullable": true,
+            "description": "Net cash from debt and equity transactions"
+          },
+          "net_change_in_cash": {
+            "type": "number",
+            "nullable": true,
+            "description": "Total change in cash for the period"
+          },
+          "net_cash_beginning_balance": {
+            "type": "number",
+            "nullable": true
+          },
+          "net_cash_ending_balance": {
+            "type": "number",
+            "nullable": true
+          }
+        }
+      },
+      "KeyRatiosPeriod": {
+        "type": "object",
+        "properties": {
+          "ric": {
+            "type": "string",
+            "description": "Reuters Instrument Code"
+          },
+          "perenddt": {
+            "type": "string",
+            "format": "date",
+            "description": "Period end date"
+          },
+          "year": {
+            "type": "integer",
+            "description": "Fiscal year"
+          },
+          "gross_margin": {
+            "type": "number",
+            "nullable": true,
+            "description": "Gross profit as % of revenue"
+          },
+          "ebitda_margin": {
+            "type": "number",
+            "nullable": true,
+            "description": "EBITDA as % of revenue"
+          },
+          "operating_margin": {
+            "type": "number",
+            "nullable": true,
+            "description": "Operating income as % of revenue"
+          },
+          "net_margin": {
+            "type": "number",
+            "nullable": true,
+            "description": "Net income as % of revenue"
+          },
+          "return_on_equity": {
+            "type": "number",
+            "nullable": true,
+            "description": "ROE (%)"
+          },
+          "return_on_assets": {
+            "type": "number",
+            "nullable": true,
+            "description": "ROA (%)"
+          },
+          "return_on_invested_capital": {
+            "type": "number",
+            "nullable": true,
+            "description": "ROIC (%)"
+          },
+          "pe": {
+            "type": "number",
+            "nullable": true,
+            "description": "Price-to-earnings ratio"
+          },
+          "price_book_value": {
+            "type": "number",
+            "nullable": true,
+            "description": "Price-to-book ratio"
+          },
+          "price_sales": {
+            "type": "number",
+            "nullable": true,
+            "description": "Price-to-sales ratio"
+          },
+          "enterprise_value_ebit": {
+            "type": "number",
+            "nullable": true,
+            "description": "EV/EBIT"
+          },
+          "fcf_yield": {
+            "type": "number",
+            "nullable": true,
+            "description": "Free cash flow yield (%)"
+          },
+          "dividend_yield": {
+            "type": "number",
+            "nullable": true,
+            "description": "Dividend yield (%)"
+          },
+          "current_ratio": {
+            "type": "number",
+            "nullable": true,
+            "description": "Current assets / current liabilities"
+          },
+          "quick_ratio": {
+            "type": "number",
+            "nullable": true,
+            "description": "Quick assets / current liabilities"
+          },
+          "debt_equity": {
+            "type": "number",
+            "nullable": true,
+            "description": "Total debt / shareholders' equity"
+          },
+          "net_debt_to_ebitda": {
+            "type": "number",
+            "nullable": true,
+            "description": "Net debt / EBITDA"
+          }
+        }
+      },
+      "EtfProfileResponse": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "description": "Resolved primary RIC"
+          },
+          "name": {
+            "type": "string",
+            "description": "ETF name"
+          },
+          "activity": {
+            "type": "string",
+            "description": "Activity status"
+          },
+          "market": {
+            "type": "string",
+            "description": "Market"
+          },
+          "exchange": {
+            "type": "string",
+            "description": "Exchange"
+          },
+          "exchangecode": {
+            "type": "string",
+            "description": "Exchange code"
+          },
+          "currency": {
+            "type": "string",
+            "description": "Trading currency"
+          },
+          "close": {
+            "type": "number",
+            "description": "Latest closing price"
+          },
+          "change_percent": {
+            "type": "number",
+            "description": "Daily price change (%)"
+          },
+          "change": {
+            "type": "number",
+            "description": "Absolute price change"
+          },
+          "volume": {
+            "type": "integer",
+            "description": "Trading volume"
+          },
+          "mktcap": {
+            "type": "number",
+            "description": "Total market capitalization"
+          },
+          "num_shares": {
+            "type": "integer",
+            "description": "Shares outstanding"
+          },
+          "value": {
+            "type": "number",
+            "description": "Parallax value score (0-10)"
+          },
+          "quality": {
+            "type": "number",
+            "description": "Parallax quality score (0-10)"
+          },
+          "momentum": {
+            "type": "number",
+            "description": "Parallax momentum score (0-10)"
+          },
+          "defensive": {
+            "type": "number",
+            "description": "Parallax defensive score (0-10)"
+          },
+          "tactical": {
+            "type": "number",
+            "description": "Parallax tactical score (0-10)"
+          },
+          "total": {
+            "type": "number",
+            "description": "Composite Parallax score"
+          },
+          "recommendation": {
+            "type": "string",
+            "description": "STRONG BUY, BUY, HOLD, SELL, STRONG SELL"
+          },
+          "holdings_covered": {
+            "type": "integer",
+            "description": "Number of holdings with Parallax scores"
+          },
+          "weight_covered": {
+            "type": "number",
+            "description": "% of ETF weight covered by scored holdings"
+          }
+        }
+      },
+      "EtfHolding": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "description": "Holding RIC"
+          },
+          "weight": {
+            "type": "number",
+            "description": "Holding weight in the ETF (%)"
+          },
+          "reweight": {
+            "type": "number",
+            "description": "Normalized weight across scored holdings only (%)"
+          },
+          "value": {
+            "type": "number",
+            "description": "Parallax value score (0-10)"
+          },
+          "quality": {
+            "type": "number",
+            "description": "Parallax quality score (0-10)"
+          },
+          "momentum": {
+            "type": "number",
+            "description": "Parallax momentum score (0-10)"
+          },
+          "defensive": {
+            "type": "number",
+            "description": "Parallax defensive score (0-10)"
+          },
+          "tactical": {
+            "type": "number",
+            "description": "Parallax tactical score (0-10)"
+          },
+          "total": {
+            "type": "number",
+            "description": "Composite Parallax score"
+          },
+          "recommendation": {
+            "type": "string",
+            "description": "STRONG BUY, BUY, HOLD, SELL, STRONG SELL"
+          }
+        }
+      },
+      "EtfScoresResponse": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "description": "Resolved primary RIC"
+          },
+          "value": {
+            "type": "number",
+            "description": "Value factor score (0-10)"
+          },
+          "quality": {
+            "type": "number",
+            "description": "Quality factor score (0-10)"
+          },
+          "momentum": {
+            "type": "number",
+            "description": "Momentum factor score (0-10)"
+          },
+          "defensive": {
+            "type": "number",
+            "description": "Defensive factor score (0-10)"
+          },
+          "tactical": {
+            "type": "number",
+            "description": "Tactical factor score (0-10)"
+          },
+          "total": {
+            "type": "number",
+            "description": "Composite score (0-10)"
+          },
+          "recommendation": {
+            "type": "string",
+            "description": "Overall recommendation"
+          },
+          "holdings_covered": {
+            "type": "integer",
+            "description": "Number of ETF holdings with Parallax scores"
+          },
+          "weight_covered": {
+            "type": "number",
+            "description": "Percentage of ETF weight covered by scored holdings"
+          }
+        }
+      },
+      "EtfSearchResult": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "description": "ETF symbol"
+          },
+          "name": {
+            "type": "string",
+            "description": "ETF name"
+          },
+          "activity": {
+            "type": "string",
+            "description": "Activity status"
+          },
+          "market": {
+            "type": "string",
+            "description": "Market"
+          },
+          "exchange": {
+            "type": "string",
+            "description": "Exchange"
+          },
+          "currency": {
+            "type": "string",
+            "description": "Trading currency"
+          },
+          "value": {
+            "type": "number",
+            "description": "Value score (0-10)"
+          },
+          "quality": {
+            "type": "number",
+            "description": "Quality score (0-10)"
+          },
+          "momentum": {
+            "type": "number",
+            "description": "Momentum score (0-10)"
+          },
+          "defensive": {
+            "type": "number",
+            "description": "Defensive score (0-10)"
+          },
+          "tactical": {
+            "type": "number",
+            "description": "Tactical score (0-10)"
+          },
+          "total": {
+            "type": "number",
+            "description": "Composite score (0-10)"
+          },
+          "recommendation": {
+            "type": "string",
+            "description": "Overall recommendation"
+          }
+        }
+      },
+      "ValidateEtfResponse": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "description": "Whether the symbol is valid"
+          },
+          "symbol": {
+            "type": "string",
+            "description": "The symbol that was queried"
+          },
+          "primary_symbol": {
+            "type": "string",
+            "nullable": true,
+            "description": "Resolved primary RIC (null if invalid)"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message (only present for invalid symbols)"
+          }
+        }
+      },
+      "EtfDailyPriceRecord": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "description": "ETF symbol"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Trading date"
+          },
+          "open": {
+            "type": "number",
+            "description": "Opening price"
+          },
+          "high": {
+            "type": "number",
+            "description": "Day high price"
+          },
+          "low": {
+            "type": "number",
+            "description": "Day low price"
+          },
+          "close": {
+            "type": "number",
+            "description": "Closing price"
+          },
+          "volume": {
+            "type": "integer",
+            "description": "Daily trading volume"
+          },
+          "change": {
+            "type": "number",
+            "description": "Absolute price change from previous close"
+          },
+          "changepercent": {
+            "type": "number",
+            "description": "Percentage price change from previous close"
+          }
+        }
+      },
+      "PortfolioReportRequest": {
+        "type": "object",
+        "required": [
+          "portfolio_data"
+        ],
+        "properties": {
+          "portfolio_data": {
+            "type": "object",
+            "description": "The complete result from the /v1/portfolio/analyze endpoint"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "pdf",
+              "html",
+              "both"
+            ],
+            "default": "pdf",
+            "description": "Output format: pdf, html, or both"
+          }
+        }
+      },
+      "PortfolioReportJobResponse": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "description": "Unique job identifier"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending"
+            ],
+            "description": "Initial job status"
+          },
+          "format": {
+            "type": "string",
+            "description": "Requested output format"
+          },
+          "check_url": {
+            "type": "string",
+            "description": "URL to poll for job status"
+          },
+          "estimated_duration_seconds": {
+            "type": "integer",
+            "description": "Estimated processing time in seconds"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable status message"
           }
         }
       }
