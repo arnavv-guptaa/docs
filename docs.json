@@ -106,8 +106,9 @@
             ]
           },
           {
-            "group": "Stock Reports",
+            "group": "Stock",
             "pages": [
+              "api-reference/stock/search",
               "api-reference/stock/report"
             ]
           },

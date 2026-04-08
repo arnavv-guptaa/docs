@@ -1,0 +1,58 @@
+---
+title: 'Stock Search'
+openapi: 'GET /v1/stock/search'
+---
+
+Search stocks by symbol, name, sector, or industry with typo-tolerant fuzzy matching.
+
+## Query Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `query` | string | Yes | — | Search query (typo-tolerant, e.g., `AAPL`, `apple`, `nvidia`, `semiconductor`) |
+| `market` | string | No | — | Filter by market (e.g., `United States`, `United Kingdom`) |
+| `sector` | string | No | — | Filter by sector (e.g., `Technology`, `Healthcare`) |
+| `limit` | integer | No | `20` | Max results (1-100) |
+
+## Response
+
+Returns an array of matching stocks:
+
+```json
+[
+  {
+    "symbol": "AAPL.O",
+    "name": "Apple Inc",
+    "sector": "Technology",
+    "industry": "Phones & Handheld Devices",
+    "market": "United States",
+    "exchange": "NASDAQ",
+    "currency": "USD"
+  },
+  {
+    "symbol": "164A.T",
+    "name": "Applepark Co Ltd",
+    "sector": "Industrials",
+    "industry": "Highways & Rail Tracks",
+    "market": "Japan",
+    "exchange": "Tokyo",
+    "currency": "JPY"
+  }
+]
+```
+
+## Examples
+
+```bash
+# Search by name
+curl "https://api.chicago.global/v1/stock/search?query=apple&limit=10" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+
+# Search by symbol
+curl "https://api.chicago.global/v1/stock/search?query=AAPL" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+
+# Filter by market and sector
+curl "https://api.chicago.global/v1/stock/search?query=semiconductor&market=United%20States&sector=Technology&limit=10" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
