@@ -1,0 +1,76 @@
+---
+title: 'Parallax MCP Server'
+description: 'Use Parallax investment intelligence directly from Claude, Cursor, VS Code, and other AI clients'
+---
+
+The **Parallax MCP server** exposes Chicago Global's investment research as a set of
+tools any [Model Context Protocol](https://modelcontextprotocol.io) client can call —
+Claude, Cursor, VS Code, ChatGPT, and more. Instead of wiring up the
+[REST API](/api-reference/introduction) yourself, you connect once and your AI assistant
+can score stocks, analyze portfolios, pull financials, read macro and market telemetry,
+synthesize news, and generate research reports on your behalf.
+
+<CardGroup cols={2}>
+  <Card title="Connect a client" icon="plug" href="/mcp/connect">
+    Add Parallax to Claude, Cursor, VS Code, or ChatGPT in a couple of minutes.
+  </Card>
+  <Card title="Authentication" icon="lock" href="/mcp/authentication">
+    How OAuth sign-in and programmatic bearer tokens work.
+  </Card>
+  <Card title="Tool reference" icon="toolbox" href="/mcp/tools">
+    Every tool the server exposes, grouped by what it does.
+  </Card>
+  <Card title="REST API" icon="code" href="/api-reference/introduction">
+    Prefer raw HTTP? The same intelligence is available over the REST API.
+  </Card>
+</CardGroup>
+
+## Endpoint
+
+The server speaks **Streamable HTTP** (the current MCP transport). Point your client at:
+
+```
+https://mcp.chicago.global/api/mcp
+```
+
+A legacy **SSE** endpoint is also available for older clients:
+
+```
+https://mcp.chicago.global/api/sse
+```
+
+<Note>
+The first time a client connects, you'll complete a one-time browser sign-in
+(OAuth) to link your Parallax account. Most clients handle this automatically —
+see [Authentication](/mcp/authentication).
+</Note>
+
+## What you can do
+
+| Area | Examples |
+|------|----------|
+| **Stock intelligence** | Score a stock vs. its peers, historical factor trends, company profile, technical analysis |
+| **Portfolio** | Quick factor scores, full multi-stock analysis, redundancy/overlap checks |
+| **Fundamentals** | Income statement, balance sheet, cash flow, ratios, valuation summary |
+| **ETFs** | Profile & factor scores, top holdings look-through, search, daily prices |
+| **Macro & markets** | Country macro outlook, daily market telemetry, leading/lagging baskets |
+| **News & research** | AI-synthesized stock news, impact assessments, full research reports |
+| **Discovery** | Build a thematic stock universe from a plain-English theme, search stocks & ETFs |
+| **Docs** | Fetch Parallax methodology and glossary pages inline |
+
+See the full [tool reference](/mcp/tools) for the complete list, including which tools
+are free vs. paid and which run asynchronously.
+
+## Symbol format
+
+Tools accept symbols in **RIC** format (ticker + exchange suffix, e.g. `AAPL.O`,
+`JPM.N`, `2330.TW`). Many tools also accept a plain ticker (`AAPL`) and resolve it for
+you; when in doubt, use the `search_stocks` tool to find the exact symbol first.
+
+## Relationship to the REST API
+
+The MCP server is a thin, auth-aware layer over the same
+[`api.chicago.global`](/api-reference/introduction) backend. Tool outputs mirror the REST
+responses, and long-running tools use the same async job model surfaced through
+`check_job_status`. If you're building an application, use the REST API directly; if
+you're working inside an AI client, use MCP.

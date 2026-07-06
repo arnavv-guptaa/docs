@@ -1,4 +1,4 @@
-  {
+{
   "$schema": "https://mintlify.com/docs.json",
   "theme": "willow",
   "name": "Parallax API",
@@ -89,14 +89,35 @@
             "group": "Overview",
             "pages": [
               "api-reference/introduction",
-              "api-reference/jobs/status"
+              "api-reference/jobs/status",
+              "api-reference/jobs/list",
+              "api-reference/health"
             ]
           },
           {
             "group": "Portfolio Analysis",
             "pages": [
               "api-reference/portfolio/analyze",
-              "api-reference/portfolio/report"
+              "api-reference/portfolio/report",
+              "api-reference/reports/cio-report"
+            ]
+          },
+          {
+            "group": "Portfolio Tracker",
+            "pages": [
+              "api-reference/portfolio-tracker/overview",
+              "api-reference/portfolio-tracker/track",
+              "api-reference/portfolio-tracker/validate",
+              "api-reference/portfolio-tracker/resolve",
+              "api-reference/portfolio-tracker/get",
+              "api-reference/portfolio-tracker/summary",
+              "api-reference/portfolio-tracker/analytics",
+              "api-reference/portfolio-tracker/holdings",
+              "api-reference/portfolio-tracker/holdings-latest",
+              "api-reference/portfolio-tracker/increment",
+              "api-reference/portfolio-tracker/update",
+              "api-reference/portfolio-tracker/update-validate",
+              "api-reference/portfolio-tracker/delete"
             ]
           },
           {
@@ -119,14 +140,24 @@
               "api-reference/analysis/technical",
               "api-reference/analysis/score",
               "api-reference/analysis/peers",
-              "api-reference/analysis/news"
+              "api-reference/analysis/risk-return-profile",
+              "api-reference/analysis/macro-context",
+              "api-reference/assessment/create"
+            ]
+          },
+          {
+            "group": "News",
+            "pages": [
+              "api-reference/analysis/news",
+              "api-reference/news/latest"
             ]
           },
           {
             "group": "Company Data",
             "pages": [
               "api-reference/company/info",
-              "api-reference/company/peers"
+              "api-reference/company/peers",
+              "api-reference/company/background"
             ]
           },
           {
@@ -139,9 +170,43 @@
             ]
           },
           {
+            "group": "Financial Ratios",
+            "pages": [
+              "api-reference/financial-ratios/altman-zscore",
+              "api-reference/financial-ratios/current-ratios",
+              "api-reference/financial-ratios/piotroski-fscore"
+            ]
+          },
+          {
+            "group": "Financial Data",
+            "pages": [
+              "api-reference/financial-data/financial-summary",
+              "api-reference/financial-data/dividend-history",
+              "api-reference/financial-data/divyield-history"
+            ]
+          },
+          {
+            "group": "Scores",
+            "pages": [
+              "api-reference/scores/historical-scores",
+              "api-reference/scores/score-metrics",
+              "api-reference/scores/sector-avg-scores"
+            ]
+          },
+          {
+            "group": "Valuation",
+            "pages": [
+              "api-reference/valuation/dcf",
+              "api-reference/valuation/multiples"
+            ]
+          },
+          {
             "group": "Price Data",
             "pages": [
-              "api-reference/price/daily-price"
+              "api-reference/price/daily-price",
+              "api-reference/price/returns-calendar",
+              "api-reference/price/rolling-volatility",
+              "api-reference/price/rolling-drawdown"
             ]
           },
           {
@@ -158,13 +223,39 @@
           {
             "group": "Macro Reports",
             "pages": [
-              "api-reference/macro/report"
+              "api-reference/macro/report",
+              "api-reference/macro/markets"
+            ]
+          },
+          {
+            "group": "Telemetry",
+            "pages": [
+              "api-reference/telemetry/summary",
+              "api-reference/telemetry/baskets",
+              "api-reference/telemetry/basket-detail",
+              "api-reference/telemetry/macro",
+              "api-reference/telemetry/factor",
+              "api-reference/telemetry/snapshot"
             ]
           },
           {
             "group": "Validation",
             "pages": [
               "api-reference/validation/validate-symbol"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "MCP Server",
+        "groups": [
+          {
+            "group": "Model Context Protocol",
+            "pages": [
+              "mcp/overview",
+              "mcp/connect",
+              "mcp/authentication",
+              "mcp/tools"
             ]
           }
         ]
@@ -250,15 +341,15 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "_socials": {

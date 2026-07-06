@@ -1,7 +1,12 @@
 ---
 title: 'Introduction'
-description: 'Parallax API - Financial data and portfolio analytics'
+description: 'The Parallax API - AI-powered investment research and portfolio analytics'
 ---
+
+The **Parallax API** gives you programmatic access to Chicago Global's investment
+intelligence: multi-factor scoring, portfolio analysis and tracking, financial
+statements, analyst estimates, ETF analytics, valuation (DCF & multiples), macro
+and market telemetry, and AI-generated research reports.
 
 ## Base URL
 
@@ -11,9 +16,13 @@ All API requests should be made to:
 https://api.chicago.global
 ```
 
+The current API version is **v1.1.0**. The URL path version (`/v1/`) is a separate,
+slower-moving axis — see the [changelog](https://github.com/arnavv-guptaa/parallax-api/blob/main/CHANGELOG.md)
+for the release history and our SemVer policy.
+
 ## Authentication
 
-All API endpoints require a Bearer token in the Authorization header:
+All `/v1/*` endpoints require a Bearer token in the `Authorization` header:
 
 ```bash
 Authorization: Bearer YOUR_API_KEY
@@ -21,44 +30,82 @@ Authorization: Bearer YOUR_API_KEY
 
 <Warning>
 Keep your API key secure. Do not expose it in client-side code or public repositories.
+Contact [parallax@chicago.global](mailto:parallax@chicago.global) to request a key.
 </Warning>
 
-## Async Job Processing
+<Tip>
+Prefer using the tools directly from an AI client? The same intelligence is available
+over the **[Parallax MCP server](/mcp/overview)** with a one-time OAuth login — no key
+handling required.
+</Tip>
 
-Several endpoints (like Portfolio Analysis) use async job processing for long-running operations:
+## Symbol format
 
-1. **Submit Request** - POST your data to the endpoint
-2. **Receive Job ID** - Get a `job_id` and `check_url` immediately
-3. **Poll for Status** - GET the `check_url` until status is `completed`
-4. **Get Results** - The completed response contains your data
+Most endpoints accept a symbol in **RIC** format — the ticker plus an exchange suffix,
+e.g. `AAPL.O` (Apple, Nasdaq), `JPM.N` (JPMorgan, NYSE), `RELI.NS` (Reliance, NSE),
+`2330.TW` (TSMC, Taiwan). Plain tickers are accepted by some endpoints and by
+`/v1/validate-symbol`, but RIC is the canonical form. Use
+[Stock Search](/api-reference/stock/search) or
+[Validate Symbol](/api-reference/validation/validate-symbol) to resolve a RIC.
+
+## Async job processing
+
+Long-running endpoints (portfolio analysis, stock reports, technical/financial/news
+analysis, CIO reports, assessments, company background, macro context) use an async
+job pattern:
+
+1. **Submit** — `POST` your request to the endpoint.
+2. **Receive a job** — you get a `job_id` (and a polling URL) immediately.
+3. **Poll** — `GET /v1/jobs/{job_id}` until `status` is `completed` (or `failed`).
+4. **Read results** — the completed response contains your data.
 
 ```javascript
 // 1. Submit
-const { job_id, check_url } = await fetch('/v1/portfolio/analyze', {
+const { job_id } = await fetch('https://api.chicago.global/v1/portfolio/analyze', {
   method: 'POST',
-  headers: { 'Authorization': `Bearer ${API_KEY}` },
-  body: JSON.stringify(payload)
+  headers: {
+    'Authorization': `Bearer ${API_KEY}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(payload),
 }).then(r => r.json());
 
 // 2. Poll
 let result;
 while (!result) {
-  const status = await fetch(check_url).then(r => r.json());
+  const status = await fetch(`https://api.chicago.global/v1/jobs/${job_id}`, {
+    headers: { 'Authorization': `Bearer ${API_KEY}` },
+  }).then(r => r.json());
+
   if (status.status === 'completed') result = status.result;
+  else if (status.status === 'failed') throw new Error(status.error);
   else await new Promise(r => setTimeout(r, 3000));
 }
 ```
 
-## Response Codes
+Use [List Jobs](/api-reference/jobs/list) to enumerate recent jobs, and
+[Get Job Status](/api-reference/jobs/status) to poll a single job.
+
+## Response headers
+
+| Header | Description |
+|--------|-------------|
+| `X-Request-ID` | Unique ID for the request. Include it when reporting an issue so we can trace it. |
+| `X-Credits-Remaining` | Credits left on your key after a billable request (when applicable). |
+
+## Response codes
 
 | Code | Description |
 |------|-------------|
 | 200 | Success |
-| 401 | Unauthorized - Invalid or missing API key |
+| 401 | Unauthorized — invalid or missing API key |
 | 404 | Not found |
-| 422 | Validation error - Check request body |
-| 500 | Server error |
+| 422 | Validation error — check the request body |
+| 429 | Rate limit exceeded — slow down and retry |
+| 500 | Server error — includes an `X-Request-ID` you can report |
 
-## Rate Limits
+## Rate limits
 
-Contact support for rate limit information based on your plan.
+Requests are rate limited per API key. If you exceed your limit you'll receive a
+`429` response; back off and retry. Limits depend on your plan — contact
+[support](https://parallax.chicago.global/contact) for details.

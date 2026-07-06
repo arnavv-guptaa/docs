@@ -1,0 +1,93 @@
+---
+title: 'Authentication'
+description: 'How the Parallax MCP server authenticates clients — OAuth sign-in and bearer tokens'
+---
+
+The Parallax MCP server implements the
+[MCP Authorization specification](https://modelcontextprotocol.io/specification/basic/authorization)
+(OAuth 2.1). For almost every client this means: **connect the URL, click through a
+one-time browser sign-in, done.** Credentials are managed by the client — you never paste
+an API key into a config file.
+
+## OAuth sign-in (recommended)
+
+When a client first connects to `https://mcp.chicago.global/api/mcp`:
+
+<Steps>
+  <Step title="Discovery">
+    The client reads the server's OAuth metadata from the well-known endpoints:
+
+    ```
+    https://mcp.chicago.global/.well-known/oauth-protected-resource
+    https://mcp.chicago.global/.well-known/oauth-authorization-server
+    ```
+  </Step>
+  <Step title="Dynamic client registration">
+    The client registers itself automatically (no pre-provisioned client ID needed) and
+    receives its OAuth credentials.
+  </Step>
+  <Step title="Browser sign-in">
+    A browser window opens for you to sign in to your Parallax account and approve access.
+    Authentication is handled by Chicago Global's identity provider.
+  </Step>
+  <Step title="Token issued">
+    The client receives an access token and uses it as a bearer token on every MCP
+    request. Tokens refresh automatically — you won't normally sign in again.
+  </Step>
+</Steps>
+
+<Note>
+This flow is built in to Claude, Cursor, and VS Code. If your client only supports local
+stdio servers, use [`mcp-remote`](/mcp/connect) — it performs the same OAuth flow and
+caches the tokens locally.
+</Note>
+
+## Programmatic access (bearer token)
+
+For scripts, tests, or servers that can't do an interactive browser flow, send a bearer
+token directly in the `Authorization` header of your JSON-RPC request:
+
+```bash
+curl -s -X POST https://mcp.chicago.global/api/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "Authorization: Bearer $PARALLAX_TOKEN" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/call",
+    "params": { "name": "get_company_info", "arguments": { "symbol": "AAPL.O" } }
+  }'
+```
+
+Responses are returned as Server-Sent Events (`data:` lines) — parse the `result.content`
+of the event whose `id` matches your request.
+
+<Warning>
+Treat bearer tokens like passwords. Don't commit them to source control or expose them in
+client-side code. Contact [parallax@chicago.global](mailto:parallax@chicago.global) to
+request programmatic credentials.
+</Warning>
+
+## CORS
+
+The server sends permissive CORS headers and handles `OPTIONS` preflight, so browser- and
+edge-based MCP clients can connect. The OAuth and `.well-known` routes are intentionally
+reachable without a session so machine clients can complete discovery and registration.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The browser sign-in never opens">
+    Make sure your client supports **remote** MCP servers. Local-only clients need the
+    `mcp-remote` bridge (see [Connect a Client](/mcp/connect)), which triggers the sign-in.
+  </Accordion>
+  <Accordion title="401 Unauthorized on tool calls">
+    Your token expired or wasn't sent. Re-authorize the connector, or (for programmatic
+    use) refresh the bearer token in your `Authorization` header.
+  </Accordion>
+  <Accordion title="Paid tool returns an error">
+    Some tools (e.g. full research reports) are billable and require an entitled account.
+    See the [tool reference](/mcp/tools) for which tools are paid.
+  </Accordion>
+</AccordionGroup>
