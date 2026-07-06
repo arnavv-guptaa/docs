@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Parallax API",
-    "description": "Parallax by Chicago Global — AI-powered investment research and portfolio analytics. Multi-factor scoring, portfolio analysis and tracking, financial statements, analyst estimates, ETF analytics, valuation (DCF & multiples), macro and market telemetry, and AI-generated research reports.",
+    "description": "Parallax by Chicago Global \u2014 AI-powered investment research and portfolio analytics. Multi-factor scoring, portfolio analysis and tracking, financial statements, analyst estimates, ETF analytics, valuation (DCF & multiples), macro and market telemetry, and AI-generated research reports.",
     "version": "1.1.0"
   },
   "servers": [
@@ -23,7 +23,7 @@
           "Stock Reports"
         ],
         "summary": "Stock Report",
-        "description": "Generate comprehensive stock report (ASYNC - returns job_id immediately).\n\nThis endpoint creates a background job for report generation. The actual generation\nhappens asynchronously without blocking. Use GET /jobs/{job_id} to check status.\n\n**Response Format:**\n```json\n{\n    \"job_id\": \"uuid-string\",\n    \"status\": \"pending\",\n    \"symbol\": \"AAPL.O\",\n    \"check_url\": \"/v1/jobs/{job_id}\",\n    \"estimated_duration_seconds\": 300\n}\n```\n\n**Workflow:**\n1. POST /stock-report → Get job_id (returns in <1 second)\n2. Poll GET /jobs/{job_id} every 5-10 seconds\n3. When status=\"completed\", result contains pdf_url, html_url, json_url\n\n**Example:**\n```bash\n# Start generation\ncurl -X POST \"https://api/v1/stock-report\" \\\n     -H \"Authorization: Bearer key\" \\\n     -d '{\"symbol\":\"AAPL.O\",\"force\":false}'\n\n# Check status\ncurl \"https://api/v1/jobs/{job_id}\" -H \"Authorization: Bearer key\"\n```",
+        "description": "Generate comprehensive stock report (ASYNC - returns job_id immediately).\n\nThis endpoint creates a background job for report generation. The actual generation\nhappens asynchronously without blocking. Use GET /jobs/{job_id} to check status.\n\n**Response Format:**\n```json\n{\n    \"job_id\": \"uuid-string\",\n    \"status\": \"pending\",\n    \"symbol\": \"AAPL.O\",\n    \"check_url\": \"/v1/jobs/{job_id}\",\n    \"estimated_duration_seconds\": 300\n}\n```\n\n**Workflow:**\n1. POST /stock-report \u2192 Get job_id (returns in <1 second)\n2. Poll GET /jobs/{job_id} every 5-10 seconds\n3. When status=\"completed\", result contains pdf_url, html_url, json_url\n\n**Example:**\n```bash\n# Start generation\ncurl -X POST \"https://api/v1/stock-report\" \\\n     -H \"Authorization: Bearer key\" \\\n     -d '{\"symbol\":\"AAPL.O\",\"force\":false}'\n\n# Check status\ncurl \"https://api/v1/jobs/{job_id}\" -H \"Authorization: Bearer key\"\n```",
         "operationId": "stock_report_v1_stock_report_post",
         "requestBody": {
           "content": {
@@ -1796,7 +1796,7 @@
           "Score Data"
         ],
         "summary": "Sector Avg Scores",
-        "description": "Get average scores for sectors.\n- No sector, no market → global averages for all sectors\n- No sector, market provided → all sectors in that market\n- Sector provided, no market → global avg for that sector\n- Both provided → avg of sector in that market",
+        "description": "Get average scores for sectors.\n- No sector, no market \u2192 global averages for all sectors\n- No sector, market provided \u2192 all sectors in that market\n- Sector provided, no market \u2192 global avg for that sector\n- Both provided \u2192 avg of sector in that market",
         "operationId": "sector_avg_scores_v1_sector_avg_scores_get",
         "security": [
           {
@@ -2528,7 +2528,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Resolve Portfolio",
-        "description": "Resolve a dirty portfolio into a clean one that passes /validate.\n\nSame body as /track. Applies deterministic clean-up rules (canonicalize\nsymbols to RICs, drop unresolvable symbols + future-dated rows, dedup,\ndrop non-positive weights, renormalize each date to sum 1.0), then re-runs\nthe SAME validator /track uses to prove the result is clean.\n\nReturns a discriminated status (HTTP 200 in all three cases — this is a\ndry-run that never persists):\n  - status \"clean\":        input already valid, returned unchanged.\n  - status \"resolved\":     input was dirty, the returned `portfolio` is the\n                           fixed definition (pass it straight to /track).\n  - status \"unresolvable\": the portfolio is broken beyond automatic repair\n                           (e.g. nothing old enough to track, or every date\n                           emptied out). `validation.errors` says why.\nEvery edit is itemized in `changes` / `dropped` — nothing is altered\nsilently.",
+        "description": "Resolve a dirty portfolio into a clean one that passes /validate.\n\nSame body as /track. Applies deterministic clean-up rules (canonicalize\nsymbols to RICs, drop unresolvable symbols + future-dated rows, dedup,\ndrop non-positive weights, renormalize each date to sum 1.0), then re-runs\nthe SAME validator /track uses to prove the result is clean.\n\nReturns a discriminated status (HTTP 200 in all three cases \u2014 this is a\ndry-run that never persists):\n  - status \"clean\":        input already valid, returned unchanged.\n  - status \"resolved\":     input was dirty, the returned `portfolio` is the\n                           fixed definition (pass it straight to /track).\n  - status \"unresolvable\": the portfolio is broken beyond automatic repair\n                           (e.g. nothing old enough to track, or every date\n                           emptied out). `validation.errors` says why.\nEvery edit is itemized in `changes` / `dropped` \u2014 nothing is altered\nsilently.",
         "operationId": "resolve_portfolio_v1_portfolio_resolve_post",
         "requestBody": {
           "content": {
@@ -2580,7 +2580,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Validate Portfolio Update",
-        "description": "Dry-run validation for an update (same optional fields as /update).\n\nMerges the payload onto the stored registry + holdings, then validates the\nresulting definition — the same snapshot /update would persist if accepted.",
+        "description": "Dry-run validation for an update (same optional fields as /update).\n\nMerges the payload onto the stored registry + holdings, then validates the\nresulting definition \u2014 the same snapshot /update would persist if accepted.",
         "operationId": "validate_portfolio_update_v1_portfolio__portfolio_key__validate_post",
         "security": [
           {
@@ -2760,7 +2760,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Increment Portfolio",
-        "description": "Extend a tracked portfolio's analytics to yesterday. No request body —\nholdings and params are unchanged. Compute runs as a background job.",
+        "description": "Extend a tracked portfolio's analytics to yesterday. No request body \u2014\nholdings and params are unchanged. Compute runs as a background job.",
         "operationId": "increment_portfolio_v1_portfolio__portfolio_key__increment_post",
         "security": [
           {
@@ -2917,7 +2917,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Get Portfolio Analytics",
-        "description": "Read the derived analytics for a tracked portfolio. Fast and read-only —\nno compute. Returns a discriminated status:\n  - {status: \"ready\", analytics}  when the series is computed\n  - {status: \"not_computed\"} (200) when the portfolio exists but its series\n    is empty (a background compute hasn't landed) — the client triggers a\n    rebuild and polls, rather than dead-ending on a 404\n  - 404 only when the portfolio genuinely doesn't exist.",
+        "description": "Read the derived analytics for a tracked portfolio. Fast and read-only \u2014\nno compute. Returns a discriminated status:\n  - {status: \"ready\", analytics}  when the series is computed\n  - {status: \"not_computed\"} (200) when the portfolio exists but its series\n    is empty (a background compute hasn't landed) \u2014 the client triggers a\n    rebuild and polls, rather than dead-ending on a 404\n  - 404 only when the portfolio genuinely doesn't exist.",
         "operationId": "get_portfolio_analytics_v1_portfolio__portfolio_key__analytics_get",
         "security": [
           {
@@ -2970,7 +2970,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Get Portfolio Holdings",
-        "description": "Get the portfolio DEFINITION: every holding in the registry across all\nrebalance dates, with the as-defined weights (date, symbol, weight). This is\nthe portfolio exactly as the user/builder set it — the source of truth for\nthe definition. For the latest COMPUTED state (drifted weights) use\n/holdings/latest.",
+        "description": "Get the portfolio DEFINITION: every holding in the registry across all\nrebalance dates, with the as-defined weights (date, symbol, weight). This is\nthe portfolio exactly as the user/builder set it \u2014 the source of truth for\nthe definition. For the latest COMPUTED state (drifted weights) use\n/holdings/latest.",
         "operationId": "get_portfolio_holdings_v1_portfolio__portfolio_key__holdings_get",
         "security": [
           {
@@ -3023,7 +3023,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Get Portfolio Holdings Latest",
-        "description": "Get the latest COMPUTED holdings from ClickHouse — the portfolio's current\nstate on its most recent computed day, with drifted weights / ending values.\nFor the as-defined definition (all rebalance dates) use /holdings.\n\nDiscriminated status, matching /analytics:\n  - {status: \"ready\", holdings}   when the series is computed\n  - {status: \"not_computed\", holdings: []} (200) when the portfolio exists but\n    its series is empty (a background compute hasn't landed)\n  - 404 only when the portfolio genuinely doesn't exist.",
+        "description": "Get the latest COMPUTED holdings from ClickHouse \u2014 the portfolio's current\nstate on its most recent computed day, with drifted weights / ending values.\nFor the as-defined definition (all rebalance dates) use /holdings.\n\nDiscriminated status, matching /analytics:\n  - {status: \"ready\", holdings}   when the series is computed\n  - {status: \"not_computed\", holdings: []} (200) when the portfolio exists but\n    its series is empty (a background compute hasn't landed)\n  - 404 only when the portfolio genuinely doesn't exist.",
         "operationId": "get_portfolio_holdings_latest_v1_portfolio__portfolio_key__holdings_latest_get",
         "security": [
           {
@@ -3500,7 +3500,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry Summary",
-        "description": "Quick daily market snapshot — always ~2KB, no large payloads.\n\nReturns: `regime_tag`, `signals`, `metadata`, `raw_tape`, `divergences`\n\n**MCP intent:** \"What's the regime today?\", \"Any divergences?\", \"Give me a market brief\"",
+        "description": "Quick daily market snapshot \u2014 always ~2KB, no large payloads.\n\nReturns: `regime_tag`, `signals`, `metadata`, `raw_tape`, `divergences`",
         "operationId": "get_telemetry_summary_v1_telemetry_summary_get",
         "security": [
           {
@@ -3562,7 +3562,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry Baskets",
-        "description": "Thematic basket performance — filtered and sorted slice of all 400 baskets.\n\nDefault response (top 20 by daily, no members): ~8KB.\nFull 400 baskets with members: ~800KB — use `limit=400&include_members=true` explicitly.\n\n**Basket fields:** name, basket_id, market, quadrant, daily, wtd, mtd, ytd,\nscores, n_stocks, momentum_1m, momentum_6m, daily_zscore, is_priced_in,\nconfirmed_in, n_confirmed_markets. Members added when `include_members=true`.\n\n**MCP intent:** \"What baskets are doing well?\", \"Leaders in Australia?\",\n\"Which themes are working?\", \"Top basket scores by MTD\"",
+        "description": "Thematic basket performance \u2014 filtered and sorted slice of all 400 baskets.\n\nDefault response (top 20 by daily, no members): ~8KB.\nFull 400 baskets with members: ~800KB \u2014 use `limit=400&include_members=true` explicitly.\n\n**Basket fields:** name, basket_id, market, quadrant, daily, wtd, mtd, ytd,\nscores, n_stocks, momentum_1m, momentum_6m, daily_zscore, is_priced_in,\nconfirmed_in, n_confirmed_markets. Members added when `include_members=true`.",
         "operationId": "get_telemetry_baskets_v1_telemetry_baskets_get",
         "security": [
           {
@@ -3698,7 +3698,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry Basket Detail",
-        "description": "Single basket detail including member stock list (~1.1KB).\n\nResolve `basket_id` from `GET /telemetry/baskets` first.\n\n**Chain pattern:** summary → baskets list → basket detail (members)\n\n**MCP intent:** \"Tell me about the AI basket\", \"What stocks are in [basket]?\"",
+        "description": "Single basket detail including member stock list (~1.1KB).\n\nResolve `basket_id` from `GET /telemetry/baskets` first.\n\n**Chain pattern:** summary \u2192 baskets list \u2192 basket detail (members)",
         "operationId": "get_telemetry_basket_detail_v1_telemetry_baskets__basket_id__get",
         "security": [
           {
@@ -3769,7 +3769,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry Macro",
-        "description": "Macro lens — per-market breakdown with aggregate stats, top/bottom baskets, distributions.\n\n- **No `market` param** → all 38 markets (~43.5KB). Each market has: aggregate_daily/wtd/mtd/ytd,\n  n_baskets, size_tier, total_market_cap_usd, top/bottom performers per period, return distribution.\n- **`market=GB`** → full detail for one country (~1.1KB).\n\nAlso returns `regime_tag` and `signals` for context.\n\n**MCP intent:** \"What's the macro regime?\", \"UK market breakdown\", \"How is Australia looking?\"",
+        "description": "Macro lens \u2014 per-market breakdown with aggregate stats, top/bottom baskets, distributions.\n\n- **No `market` param** \u2192 all 38 markets (~43.5KB). Each market has: aggregate_daily/wtd/mtd/ytd,\n  n_baskets, size_tier, total_market_cap_usd, top/bottom performers per period, return distribution.\n- **`market=GB`** \u2192 full detail for one country (~1.1KB).\n\nAlso returns `regime_tag` and `signals` for context.",
         "operationId": "get_telemetry_macro_v1_telemetry_macro_get",
         "security": [
           {
@@ -3849,7 +3849,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry Factor",
-        "description": "Factor lens — momentum, value, quality, size, defensive, tactical factor performance.\n\n**Default (~2.2KB):** `factors`, `commentary`, `split_methods`\n\n**Opt-in large fields:**\n- `portfolios` (~107KB total, ~2–3KB with `market=US`)\n- `timeseries` (~592KB) — explicit opt-in only\n- `correlations` (~767KB) — explicit opt-in only\n\n`commentary` sub-keys: `regime`, `dominant_factor`, `headline`, `paragraphs`, `model`, `generated_at`\n\n**MCP intent:** \"Show me factor performance\", \"What's momentum doing?\",\n\"Value vs quality today?\", \"Factor portfolios for US\"",
+        "description": "Factor lens \u2014 momentum, value, quality, size, defensive, tactical factor performance.\n\n**Default (~2.2KB):** `factors`, `commentary`, `split_methods`\n\n**Opt-in large fields:**\n- `portfolios` (~107KB total, ~2\u20133KB with `market=US`)\n- `timeseries` (~592KB) \u2014 explicit opt-in only\n- `correlations` (~767KB) \u2014 explicit opt-in only\n\n`commentary` sub-keys: `regime`, `dominant_factor`, `headline`, `paragraphs`, `model`, `generated_at`",
         "operationId": "get_telemetry_factor_v1_telemetry_factor_get",
         "security": [
           {
@@ -3950,7 +3950,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry",
-        "description": "Get daily market telemetry for a given report date (legacy field-selection endpoint).\n\n**Prefer the focused sub-endpoints for MCP use:**\n- `GET /telemetry/summary` — regime, signals, divergences (~2KB)\n- `GET /telemetry/baskets` — thematic baskets with filters\n- `GET /telemetry/macro` — per-market macro breakdown\n- `GET /telemetry/factor` — factor lens\n\n**Default fields** (~60KB): `regime_tag`, `raw_tape`, `metadata`, `signals`, `markets`, `commentary`, `divergences`\n\n**Large fields** (opt-in): `baskets` (~800KB), `factor_view` (~1.47MB)\n\n**Dot notation for commentary sub-fields:**\n`commentary.headline`, `commentary.mechanism`, `commentary.paragraphs`,\n`commentary.narrative_text`, `commentary.market_notes`, `commentary.model`,\n`commentary.generated_at`, `commentary.compliance_violations`\n\n**Dot notation for factor_view sub-fields:**\n`factor_view.factors`, `factor_view.commentary`, `factor_view.split_methods`,\n`factor_view.portfolios` (~107KB), `factor_view.timeseries` (~592KB), `factor_view.correlations` (~767KB)",
+        "description": "Get daily market telemetry for a given report date (legacy field-selection endpoint).\n\n**Prefer the focused sub-endpoints:**\n- `GET /telemetry/summary` \u2014 regime, signals, divergences (~2KB)\n- `GET /telemetry/baskets` \u2014 thematic baskets with filters\n- `GET /telemetry/macro` \u2014 per-market macro breakdown\n- `GET /telemetry/factor` \u2014 factor lens\n\n**Default fields** (~60KB): `regime_tag`, `raw_tape`, `metadata`, `signals`, `markets`, `commentary`, `divergences`\n\n**Large fields** (opt-in): `baskets` (~800KB), `factor_view` (~1.47MB)\n\n**Dot notation for commentary sub-fields:**\n`commentary.headline`, `commentary.mechanism`, `commentary.paragraphs`,\n`commentary.narrative_text`, `commentary.market_notes`, `commentary.model`,\n`commentary.generated_at`, `commentary.compliance_violations`\n\n**Dot notation for factor_view sub-fields:**\n`factor_view.factors`, `factor_view.commentary`, `factor_view.split_methods`,\n`factor_view.portfolios` (~107KB), `factor_view.timeseries` (~592KB), `factor_view.correlations` (~767KB)",
         "operationId": "get_telemetry_v1_telemetry_get",
         "security": [
           {
@@ -4610,7 +4610,7 @@
           "DCF"
         ],
         "summary": "Get Dcf",
-        "description": "Bear/Base/Bull DCF valuation from the latest calibrated run.\n\nSource is dcf_calibrated (written by dcf_engine/). The response contract is\nunchanged from the dcf_outputs era — only the numbers improve. Set\nDCF_SOURCE=legacy to fall back to dcf_outputs (rollback switch).",
+        "description": "Bear/Base/Bull DCF valuation from the latest calibrated run.\n\nSource is dcf_calibrated (written by dcf_engine/). The response contract is\nunchanged from the dcf_outputs era \u2014 only the numbers improve. Set\nDCF_SOURCE=legacy to fall back to dcf_outputs (rollback switch).",
         "operationId": "get_dcf_v1_dcf_get",
         "security": [
           {
@@ -4697,11 +4697,11 @@
               "type": "integer",
               "maximum": 5,
               "minimum": 1,
-              "description": "Forecast horizon — accepted for backward compat, ignored (source refreshes daily).",
+              "description": "Forecast horizon \u2014 accepted for backward compat, ignored (source refreshes daily).",
               "default": 1,
               "title": "Horizon"
             },
-            "description": "Forecast horizon — accepted for backward compat, ignored (source refreshes daily)."
+            "description": "Forecast horizon \u2014 accepted for backward compat, ignored (source refreshes daily)."
           },
           {
             "name": "refresh",
@@ -4709,11 +4709,11 @@
             "required": false,
             "schema": {
               "type": "boolean",
-              "description": "Accepted for backward compat, ignored — dcf_outputs refreshes daily upstream.",
+              "description": "Accepted for backward compat, ignored \u2014 dcf_outputs refreshes daily upstream.",
               "default": false,
               "title": "Refresh"
             },
-            "description": "Accepted for backward compat, ignored — dcf_outputs refreshes daily upstream."
+            "description": "Accepted for backward compat, ignored \u2014 dcf_outputs refreshes daily upstream."
           }
         ],
         "responses": {
@@ -5376,7 +5376,7 @@
         },
         "type": "object",
         "title": "UpdatePortfolioRequest",
-        "description": "Request model for updating a tracked portfolio.\n\nAll fields are optional — send only what you want to change. If `portfolio`\nis provided, holdings are fully replaced. Analytics are recomputed in the\nbackground up to the latest trading day; extending the series through a\nspecific date without changing definition is /increment's job."
+        "description": "Request model for updating a tracked portfolio.\n\nAll fields are optional \u2014 send only what you want to change. If `portfolio`\nis provided, holdings are fully replaced. Analytics are recomputed in the\nbackground up to the latest trading day; extending the series through a\nspecific date without changing definition is /increment's job."
       },
       "ValidationError": {
         "properties": {
