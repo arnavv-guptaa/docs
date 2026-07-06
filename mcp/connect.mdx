@@ -1,0 +1,109 @@
+---
+title: 'Connect a Client'
+description: 'Add the Parallax MCP server to Claude, Cursor, VS Code, ChatGPT, and other clients'
+---
+
+The Parallax MCP server is a **remote** server that speaks Streamable HTTP at:
+
+```
+https://mcp.chicago.global/api/mcp
+```
+
+Point any MCP-capable client at that URL. On first connection the client opens a
+browser window for a one-time Parallax sign-in (OAuth) — after that, your assistant can
+call Parallax tools directly. See [Authentication](/mcp/authentication) for details.
+
+## Claude
+
+<Tabs>
+  <Tab title="Claude (web & desktop) connector">
+    In **Settings → Connectors → Add custom connector**, give it a name (e.g. `Parallax`)
+    and paste the server URL:
+
+    ```
+    https://mcp.chicago.global/api/mcp
+    ```
+
+    Approve the browser sign-in when prompted. The Parallax tools then appear in the
+    tools menu of any chat.
+  </Tab>
+  <Tab title="Claude Desktop config (mcp-remote)">
+    If you configure Claude Desktop by file, bridge the remote server with
+    [`mcp-remote`](https://www.npmjs.com/package/mcp-remote) in
+    `claude_desktop_config.json`:
+
+    ```json
+    {
+      "mcpServers": {
+        "parallax": {
+          "command": "npx",
+          "args": ["-y", "mcp-remote", "https://mcp.chicago.global/api/mcp"]
+        }
+      }
+    }
+    ```
+
+    Restart Claude Desktop; a browser window opens for sign-in on first use.
+  </Tab>
+</Tabs>
+
+## Cursor
+
+Add the server to `~/.cursor/mcp.json` (global) or `.cursor/mcp.json` (per-project):
+
+```json
+{
+  "mcpServers": {
+    "parallax": {
+      "url": "https://mcp.chicago.global/api/mcp"
+    }
+  }
+}
+```
+
+Open **Settings → MCP**, confirm Parallax is listed, and complete the sign-in prompt.
+
+## VS Code
+
+With MCP support (GitHub Copilot agent mode), create `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "parallax": {
+      "type": "http",
+      "url": "https://mcp.chicago.global/api/mcp"
+    }
+  }
+}
+```
+
+Reload the window and start the server from the MCP view; authorize when prompted.
+
+## ChatGPT
+
+In **Settings → Connectors** (developer mode), add a remote MCP server with the URL
+`https://mcp.chicago.global/api/mcp` and authorize access. Parallax tools become
+available to the model in chat.
+
+## Any other MCP client
+
+Any client that supports remote MCP servers can connect with the same URL. For clients
+that only support local **stdio** servers, bridge with `mcp-remote`:
+
+```bash
+npx -y mcp-remote https://mcp.chicago.global/api/mcp
+```
+
+<Note>
+Prefer the Streamable HTTP endpoint (`/api/mcp`). Use the legacy SSE endpoint
+(`https://mcp.chicago.global/api/sse`) only if your client doesn't yet support
+Streamable HTTP.
+</Note>
+
+## Verify the connection
+
+Once connected, ask your assistant something like *"Use Parallax to give me a peer
+snapshot of MSFT.O"* or *"List the Parallax macro countries."* If the tools are wired up
+correctly, the client will call `get_peer_snapshot` / `list_macro_countries` and return
+live data. Browse everything available in the [tool reference](/mcp/tools).

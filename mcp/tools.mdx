@@ -1,0 +1,92 @@
+---
+title: 'Tool Reference'
+description: 'Every tool the Parallax MCP server exposes, grouped by capability'
+---
+
+The Parallax MCP server exposes the tools below. **Free** tools are included with any
+connected account; **paid** tools (full research reports) require an entitled account.
+Tools marked **async** run as background jobs — the client submits, then polls
+`check_job_status` until the result is ready (most complete in seconds to a few minutes).
+
+<Note>
+Symbols use **RIC** format (e.g. `AAPL.O`, `JPM.N`, `2330.TW`). Use `search_stocks` /
+`search_etfs` to resolve a symbol first if you're unsure.
+</Note>
+
+## Stocks & scores
+
+| Tool | What it does | Cost | Timing |
+|------|--------------|------|--------|
+| `search_stocks` | Find a stock by symbol, name, sector, or industry (typo-tolerant). Use before other tools to get the RIC. | Free | Instant |
+| `get_company_info` | Company profile: sector, industry, market cap, description. Accepts comma-separated multi-symbol. | Free | Instant |
+| `get_peer_snapshot` | Score a stock against its peers — the default "tell me about X" tool. Returns Quality/Value/Momentum/Defensive/Tactical plus a peer comparison. | Free | Fast |
+| `get_score_analysis` | Historical factor-score trends (how Quality/Value/Momentum/Defensive/Tactical evolved). | Free | Instant |
+| `get_financials` | Financial statements & ratios — `statement`: `income`, `balance_sheet`, `cash_flow`, `ratios`, `summary`. | Free | Instant |
+| `get_stock_outlook` | Analyst outlook — `aspect`: `analyst_targets`, `recommendations`, `risk_return`, `dividends`. | Free | Instant |
+| `get_technical_analysis` | Trend, momentum (RSI, MACD), support/resistance, volume, volatility. | Free | Async (~15–30s) |
+| `get_financial_analysis` | Deep financial analysis using Palepu's framework (profitability, liquidity, solvency, valuation). | Free | Async (~2–5m) |
+| `get_stock_report` | Full Chicago Global research report with PDF/HTML links. | **Paid** | Async (~1–2m) |
+| `export_price_series` | Price data for charting tools (dates/prices, CSV, or JSON). | Free | Instant |
+| `export_peer_comparison` | Peer-comparison data for charting tools. | Free | Instant |
+
+## Portfolio
+
+| Tool | What it does | Cost | Timing |
+|------|--------------|------|--------|
+| `quick_portfolio_scores` | Instant VALUE/QUALITY/MOMENTUM/DEFENSIVE scores for a set of holdings. | Free | ~2s |
+| `analyze_portfolio` | Full multi-stock portfolio analysis (each holding needs a rebalance date, symbol, weight). | Free | Async |
+| `check_portfolio_redundancy` | Detect redundant/overlapping positions — sector concentration, industry duplicates, factor clusters. | Free | Fast |
+
+## ETFs
+
+| Tool | What it does | Cost | Timing |
+|------|--------------|------|--------|
+| `search_etfs` | Find an ETF by symbol or name (typo-tolerant). | Free | Instant |
+| `etf_search` | Filter ETFs by name, market, currency, score range, or recommendation. | Free | Instant |
+| `etf_profile` | ETF profile and factor scores + recommendation (accepts a plain ticker like `SPY`). | Free | Instant |
+| `etf_holdings` | Top holdings with portfolio weights and per-holding factor scores. | Free | Instant |
+| `etf_daily_price` | Daily OHLCV price data for one or more ETFs. | Free | Instant |
+
+## Macro & market telemetry
+
+| Tool | What it does | Cost | Timing |
+|------|--------------|------|--------|
+| `macro_analyst` | Macro outlook for a market/country (progressive disclosure — overview, then a component for detail). | Free | ~2–3s |
+| `list_macro_countries` | List all markets/countries with available macro reports. | Free | Instant |
+| `check_macro_health` | Health check for the macro-reports service. | Free | Instant |
+| `get_telemetry` | Daily market telemetry snapshot — regime, leading/lagging baskets, the daily narrative. | Free | Async (~15–30s) |
+
+## News & research
+
+| Tool | What it does | Cost | Timing |
+|------|--------------|------|--------|
+| `get_news_synthesis` | AI-synthesized news analysis for a stock (use this, not web search, for stock news). | Free | ~30–90s (instant if cached) |
+| `get_assessment` | Thorough AI impact assessment via deep research — include as much context as possible in the prompt. | Free | Async (~3m) |
+
+## Discovery
+
+| Tool | What it does | Cost | Timing |
+|------|--------------|------|--------|
+| `build_stock_universe` | Build a thematic stock universe from a plain-English query (searches ~65K company descriptions, ranks by relevance). | Free | ~1m |
+
+## Documentation
+
+| Tool | What it does | Cost | Timing |
+|------|--------------|------|--------|
+| `explain_methodology` | Explain Parallax scoring methodology (value, quality, momentum, defensive, tactical, overall). | Free | Instant |
+| `get_docs` | Fetch a documentation page (e.g. `methodology/value`, `glossary/sharpe-ratio`). | Free | Instant |
+| `list_docs` | List documentation pages, optionally filtered by section. | Free | Instant |
+
+## Utility
+
+| Tool | What it does | Cost | Timing |
+|------|--------------|------|--------|
+| `check_api_health` | Check that the Parallax API is reachable and healthy. | Free | Instant |
+| `check_job_status` | Check a background job (`pending` / `processing` / `completed` / `failed`) and retrieve results. | Free | Instant |
+| `submit_feedback` | Send feedback or report an issue to Chicago Global (auto-classified by priority). | Free | Instant |
+
+<Tip>
+Async tools return a job handle immediately. Poll `check_job_status` with the returned id
+until it reports `completed`, then read the result — the same pattern the
+[REST API](/api-reference/jobs/status) uses.
+</Tip>

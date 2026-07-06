@@ -1,0 +1,102 @@
+---
+title: 'Portfolio Tracker Overview'
+description: 'Persistent, continuously-updated portfolios with incremental daily analytics'
+---
+
+The **Portfolio Tracker** turns a one-shot portfolio analysis into a *persistent*
+object that Parallax keeps current for you. Unlike
+[`/v1/portfolio/analyze`](/api-reference/portfolio/analyze) — which recomputes a
+portfolio's entire history on every call — a tracked portfolio is stored once and then
+advanced day-by-day by **appending only new days**. This makes daily dashboards and
+long-running monitoring fast and cheap.
+
+<Note>
+Under the hood, each tracked portfolio keeps a **`seed_state` boundary** (the last
+persisted per-RIC value and benchmark level). Incremental updates extend the analytics
+from that boundary instead of recomputing from inception, so a day-by-day build produces
+exactly the same result as a single from-inception run — for both the portfolio and its
+benchmark.
+</Note>
+
+## Lifecycle
+
+<Steps>
+  <Step title="Validate & resolve (optional)">
+    Use [Validate Portfolio](/api-reference/portfolio-tracker/validate) to check a
+    portfolio definition (per-date weights must sum to 1.0, symbols must resolve) and
+    [Resolve Portfolio](/api-reference/portfolio-tracker/resolve) to normalize symbols to
+    RICs before you commit to tracking.
+  </Step>
+  <Step title="Track">
+    [Track Portfolio](/api-reference/portfolio-tracker/track) registers the portfolio and
+    kicks off its initial analytics in the background, returning a **`portfolio_key`**
+    immediately (no compute wait). The portfolio is `initializing` until its analytics
+    persist.
+  </Step>
+  <Step title="Read analytics">
+    Poll [Get Analytics](/api-reference/portfolio-tracker/analytics). It returns a
+    discriminated status: `not_computed` (200) while the background compute hasn't landed
+    yet, then `ready` with the full analytics series. Reads are fast and never trigger a
+    recompute.
+  </Step>
+  <Step title="Keep it current">
+    [Increment](/api-reference/portfolio-tracker/increment) brings a portfolio forward to
+    yesterday by appending only the missing trading days. Active portfolios are advanced
+    automatically by a daily worker, so this is usually hands-off.
+  </Step>
+  <Step title="Amend or remove">
+    [Update](/api-reference/portfolio-tracker/update) changes the definition (holdings,
+    benchmark, currency, initial value) and recomputes;
+    [Delete](/api-reference/portfolio-tracker/delete) removes the portfolio and all its data.
+  </Step>
+</Steps>
+
+## Endpoints
+
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| [Track](/api-reference/portfolio-tracker/track) | `POST /v1/portfolio/track` | Register a portfolio and start initial analytics |
+| [Validate](/api-reference/portfolio-tracker/validate) | `POST /v1/portfolio/validate` | Validate a portfolio definition before tracking |
+| [Resolve](/api-reference/portfolio-tracker/resolve) | `POST /v1/portfolio/resolve` | Resolve/normalize symbols to RICs |
+| [Get Portfolio](/api-reference/portfolio-tracker/get) | `GET /v1/portfolio/{portfolio_key}` | Portfolio metadata |
+| [Get Summary](/api-reference/portfolio-tracker/summary) | `GET /v1/portfolio/{portfolio_key}/summary` | Headline summary |
+| [Get Analytics](/api-reference/portfolio-tracker/analytics) | `GET /v1/portfolio/{portfolio_key}/analytics` | Derived analytics series (`ready`/`not_computed`) |
+| [Get Holdings](/api-reference/portfolio-tracker/holdings) | `GET /v1/portfolio/{portfolio_key}/holdings` | Holdings over time |
+| [Latest Holdings](/api-reference/portfolio-tracker/holdings-latest) | `GET /v1/portfolio/{portfolio_key}/holdings/latest` | Most recent holdings |
+| [Increment](/api-reference/portfolio-tracker/increment) | `POST /v1/portfolio/{portfolio_key}/increment` | Append new trading days |
+| [Update](/api-reference/portfolio-tracker/update) | `POST /v1/portfolio/{portfolio_key}/update` | Replace/amend the definition and recompute |
+| [Validate Update](/api-reference/portfolio-tracker/update-validate) | `POST /v1/portfolio/{portfolio_key}/validate` | Validate an update before applying |
+| [Delete](/api-reference/portfolio-tracker/delete) | `DELETE /v1/portfolio/{portfolio_key}` | Delete the portfolio and its data |
+
+## Typical flow
+
+```bash
+# 1. Register a tracked portfolio -> returns a portfolio_key immediately
+curl -s https://api.chicago.global/v1/portfolio/track \
+  -H "Authorization: Bearer $PARALLAX_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "portfolio": [
+      { "date": "2024-01-01", "symbol": "AAPL.O", "weight": 0.5 },
+      { "date": "2024-01-01", "symbol": "MSFT.O", "weight": 0.5 }
+    ],
+    "base_currency": "USD",
+    "benchmark": "ACWI.OQ",
+    "initial_value": 10000
+  }'
+# => { "portfolio_key": "pf_...", "status": "initializing" }
+
+# 2. Poll analytics until status == "ready"
+curl -s https://api.chicago.global/v1/portfolio/pf_.../analytics \
+  -H "Authorization: Bearer $PARALLAX_API_KEY"
+# => { "status": "not_computed" }  ... then { "status": "ready", "analytics": { ... } }
+
+# 3. (Automatic daily, or on demand) bring analytics forward to yesterday
+curl -s -X POST https://api.chicago.global/v1/portfolio/pf_.../increment \
+  -H "Authorization: Bearer $PARALLAX_API_KEY"
+```
+
+<Warning>
+Tracker requests cap a future `end_date` at yesterday (a future date used to silently
+freeze a portfolio) and reject any rebalance date whose per-date weights don't sum to 1.0.
+</Warning>
