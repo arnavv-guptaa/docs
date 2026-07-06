@@ -239,14 +239,6 @@
             ]
           },
           {
-            "group": "Data & Skills",
-            "pages": [
-              "api-reference/data/query",
-              "api-reference/skills/list",
-              "api-reference/skills/get"
-            ]
-          },
-          {
             "group": "Validation",
             "pages": [
               "api-reference/validation/validate-symbol"
