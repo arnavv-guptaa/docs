@@ -44,7 +44,9 @@ Only the target company itself, duplicate listings of the same issuer, and obser
 
 Each eligible issuer-level observation is translated into an implied value for the target. The displayed range is built from the distribution of those observations, using quartiles where the sample supports them and observed extremes where it does not.
 
-Outliers remain in the evidence and are flagged using relative and distributional diagnostics. They are not silently deleted or winsorized. Parallax also calculates robust and leave-one-out centers as stability diagnostics. Those diagnostics challenge the primary center. They do not quietly replace it.
+The general peer-evidence range keeps the sample median as its contextual midpoint. The client price-target workbook is a separate calculation and uses a robust quartile-weighted center instead. Both draw on the same eligible observations, and each labels the statistic it applies rather than substituting one center for another without saying so.
+
+Outliers remain in the evidence and are flagged using relative and distributional diagnostics. They are not silently deleted or winsorized. Parallax also calculates leave-one-out and unflagged centers as stability diagnostics. Those diagnostics challenge the primary center. They do not quietly replace it.
 
 ### Why a robust center earns its place
 

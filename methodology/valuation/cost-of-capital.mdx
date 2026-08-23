@@ -39,6 +39,8 @@ Using a raw sovereign yield together with a full country premium can count the s
     The local sovereign yield treated as the base rate, where the sovereign spread is intended to carry the default component. That component must not then be added again.
 
     `Cost of equity = local sovereign yield + beta × equity risk premium, with no duplicate sovereign adjustment`
+
+    Note that the two conventions are not interchangeable. A sovereign spread is a debt-market default spread, while equity country risk is conventionally that spread scaled by the ratio of equity to bond volatility, which exceeds one. Convention B therefore charges less country risk than Convention A for the same country unless the scaling step is applied. Either convention is defensible. Neither is the conservative one by construction.
   </Tab>
 </Tabs>
 
@@ -74,7 +76,7 @@ Country exposure follows the source and convertibility of operating cash flows, 
 
 ## Evidence From a Population Audit
 
-Parallax periodically rebuilds a large cross-section of corporate FCFF valuations from their frozen cash flows before changing any rate assumption, so that subsequent changes can be attributed to the rate convention rather than to model drift.
+To test its rate conventions, Parallax rebuilt a large cross-section of corporate FCFF valuations from their frozen cash flows before changing any rate assumption. Reproduction error was effectively zero, so subsequent changes could be attributed to the rate convention rather than to model drift.
 
 That work rejected two appealing shortcuts.
 
