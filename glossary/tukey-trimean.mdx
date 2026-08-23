@@ -29,6 +29,8 @@ Peer valuation distributions are frequently skewed. One story stock or one distr
 
 `Trimean = (Q1 + 2 × median + Q3) / 4`
 
+The quartiles above use the linear-interpolation convention that is the default in R, NumPy, pandas and Excel's `QUARTILE.INC`. Tukey's original hinges are computed slightly differently and give a marginally different result on small samples, so the convention should always be stated alongside the statistic.
+
 The construction is deliberate. Anchoring on the median provides resistance to outliers. Including both quartiles preserves information about skew that a bare median discards. The statistic comes from Tukey's *Exploratory Data Analysis* (1977).
 
 ### Common Misreadings

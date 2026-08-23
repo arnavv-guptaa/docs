@@ -13,7 +13,7 @@ Think of buying a house that carries a mortgage. The price of the house is one n
 
 ### Example
 
-A company's operating business is worth 1,000. It carries 300 of debt and holds 50 of cash it does not need to run the business. Equity value is 1,000 − 300 + 50 = 750. Divide that by the diluted share count and you have value per share.
+A company's operating business is worth 1,000. It carries 300 of debt and holds 50 of cash it does not need to run the business. Its net debt is therefore 300 − 50 = 250, and equity value is 1,000 − 250 = 750. Divide that by the diluted share count and you have value per share.
 
 ### Why It Matters
 
@@ -27,7 +27,9 @@ Two companies can have identical operating businesses and very different share p
 
 `Enterprise value = present value of explicit FCFF + present value of continuing value`
 
-`Equity value = enterprise value − net debt − senior obligations + non-operating assets`
+`Equity value = enterprise value − net debt − senior obligations + other non-operating assets`
+
+Net debt is gross debt less surplus cash, so the cash is already accounted for. The final term covers non-operating assets **other than** that cash, such as an idle property or a minority stake in a listed company. Adding surplus cash again here would count it twice.
 
 `Value per share = equity value / diluted equivalent shares outstanding`
 
@@ -37,7 +39,8 @@ The step from enterprise value to value per share is called the bridge, and it i
 
 - **Using the listed share count instead of the issuer-wide count**: multiple share classes, depositary receipts and dual listings can make the ticker-level count a fraction of the true economic denominator, which inflates value per share.
 - **Mixing bases across the bridge**: enterprise value in reporting currency divided by shares in trading currency produces a clean-looking number with no meaning.
-- **Treating all cash as non-operating**: a business needs working cash to run. Only genuine surplus belongs in the bridge.
+- **Counting surplus cash twice**: if net debt is used, the cash is already in the bridge. Adding it again as a non-operating asset overstates equity value by the full amount of that cash.
+- **Treating all cash as non-operating**: a business needs working cash to run. Only genuine surplus reduces net debt.
 
 ### In Parallax Reports
 
