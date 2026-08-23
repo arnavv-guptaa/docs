@@ -1,0 +1,87 @@
+---
+title: 'Integrating Factor Evidence'
+description: 'What Parallax factor scores add to a valuation thesis, and the questions they cannot answer'
+---
+
+import ValuationDisclaimer from '/snippets/valuation-disclaimer.mdx';
+
+Parallax factor scores compare a security's return and risk characteristics against a global investment universe. They answer a different question from DCF and peer valuation, and they are kept in that separate role.
+
+## The Economic Question
+
+Does the stock exhibit characteristics that have historically been associated with return, resilience or near-term opportunity?
+
+The six Parallax dimensions are Value, Quality, Momentum, Defensive, Size and Tactical. Scores run from 0 to 10, with higher scores more supportive. Size is expressed through portfolio construction rather than through the stock-level overall score.
+
+## First-Principles Derivation
+
+A factor score is a relative rank assembled from multiple signals.
+
+`Factor score = rounded relative rank of a precision-weighted signal ensemble`
+
+Value compares price with fundamentals. Quality tests profitability, balance-sheet strength, cash conversion and accounting quality. Momentum measures intermediate price and earnings direction. Defensive measures low-volatility and resilience characteristics. Tactical captures shorter-lived liquidity, flow and event conditions. Size influences attention, liquidity and implementation.
+
+The score can support or challenge a valuation thesis. It cannot produce a price target, because it does not forecast company cash flows and does not specify a discount rate.
+
+## What Each Factor Contributes
+
+| Factor | What it contributes | What it cannot establish |
+|---|---|---|
+| **Value** | Relative cheapness across several fundamental measures | Intrinsic value or a catalyst |
+| **Quality** | Profitability, cash-flow quality, balance-sheet strength and durability | A guarantee that quality persists |
+| **Momentum** | Intermediate price and earnings direction | Long-run business value |
+| **Defensive** | Lower volatility, resilience and downside characteristics | Upside growth |
+| **Tactical** | Near-term flow, liquidity and event evidence | A standalone investment thesis |
+| **Size** | Attention, liquidity and portfolio-construction effects | A stock-level recommendation |
+
+The overall score combines the stock-selection factors under a controlled weighting process. Reconciliation uses the overall recommendation together with the strongest and weakest component evidence. It does not reinterpret an unavailable score, and it does not use a factor label as a substitute for data.
+
+## A Worked Reconciliation
+
+An issuer trades at 100.0. Its DCF range is 80.0 to 120.0 and the peer range is 95.0 to 130.0. Factor scores are Value 8.0, Quality 4.0, Momentum 3.0, Defensive 7.0 and Tactical 6.0, with an overall score of 6.8.
+
+The correct reading is conditional:
+
+- **DCF** says the current price sits inside the independently supported operating range.
+- **Peers** say the market prices related companies at a somewhat higher range.
+- **Value** supports relative cheapness and **Defensive** supports resilience.
+- **Momentum** says the market has not confirmed the thesis over the intermediate horizon.
+- **Quality** remains the central fundamental weakness.
+
+No arithmetic average of these numbers improves the conclusion.
+
+## The Seductive Wrong Answer
+
+<Warning>
+"The Value score is 8.0, so the DCF must be too low."
+
+Factor Value is relative and systematic. DCF is company-specific and conditional on operating assumptions. A high Value score can coexist with a low intrinsic value if the whole sector is cheap, earnings are cyclically inflated, or the balance sheet is fragile. The conflict identifies the next analytical question rather than settling it.
+</Warning>
+
+## A Reader Sanity Check
+
+For each factor, ask whether the score measures the same horizon and economic object as the valuation conclusion.
+
+- A Momentum conflict may be a timing question.
+- A Quality conflict may challenge margins or the fade period.
+- A Defensive conflict may challenge position sizing rather than fair value.
+- A Value conflict may reveal that peer and DCF denominators sit on different accounting bases.
+
+## What Would Falsify the Conclusion
+
+The score is stale or unavailable; the scale is misread; the strongest and weakest components are not cited; or the narrative converts a relative rank into a cash-flow forecast. A factor conclusion also fails when the underlying signal is structurally inappropriate for the company's archetype.
+
+## How Parallax Applies This
+
+Parallax carries factor date, scale, recommendation and component scores into reconciliation. It names the strongest and weakest evidence, and explains whether they support, complicate, or sit outside the valuation thesis. Factor evidence never establishes an intrinsic range, and it is never blended into a composite fair value.
+
+<ValuationDisclaimer />
+
+<CardGroup cols={2}>
+  <Card title="Factor Deep Dive" icon="microscope" href="/methodology/factors">
+    Detailed implementation of each of the six factors.
+  </Card>
+  <Card title="Technical Evidence" icon="chart-candlestick" href="/methodology/valuation/technical-evidence">
+    Where price behavior informs timing, sizing and risk.
+  </Card>
+</CardGroup>

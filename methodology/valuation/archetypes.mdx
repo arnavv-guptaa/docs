@@ -1,0 +1,98 @@
+---
+title: 'Archetype Conventions'
+description: 'Why banks, REITs, holding companies, utilities and resource producers each require a different valuation lens, and how companies are routed to the right one'
+---
+
+import ValuationDisclaimer from '/snippets/valuation-disclaimer.mdx';
+
+Banks, property companies, holding companies, utilities, resource producers and ordinary operating companies create value through different balance sheets. One universal multiple or cash-flow model produces consistency of format at the expense of economic meaning.
+
+## The Economic Question
+
+Which asset, liability or operating relationship creates value for this company?
+
+For an industrial company, invested capital produces operating cash flow. For a bank, deposits and debt are operating raw material. For a REIT, property cash flow and financing interact. For a mine, reserves deplete. For a holding company, value sits across listed stakes, private businesses, parent cash and parent obligations.
+
+## The Archetype Map
+
+Every company is routed to an economic archetype before any model runs. The archetype determines the primary intrinsic lens, the family of peer multiples that can apply, and the companion variable a reader should check alongside any multiple.
+
+| Archetype | Primary intrinsic lens | Peer metric family | Companion variable |
+|---|---|---|---|
+| **Stable operating company** | FCFF DCF | Enterprise-value multiples | Growth, ROIC, reinvestment |
+| **Transition or loss-making company** | Extended FCFF plus reverse DCF | Revenue and cash-flow based, with any proxy labelled | Future margin, cash-burn duration, financing |
+| **Bank or lender** | Residual income or equity cash flow | Equity multiples | ROE minus cost of equity, capital adequacy, credit quality |
+| **Insurer** | Equity return and distributable capital | Equity multiples | Underwriting quality, reserve adequacy, investment spread |
+| **Equity REIT** | Property cash flow, NAV or AFFO where available | Book and operating proxies, accounting basis checked first | Occupancy, rent growth, cap rates, maintenance capital |
+| **Mortgage REIT** | Equity spread and book-value framework | Book-value based | Funding spread, duration, credit loss, tangible book |
+| **Holding company** | Look-through sum of parts | Blended book and earnings context | Look-through asset value, parent debt, tax leakage |
+| **Utility** | Regulated operating return or equity-return model | Earnings and operating multiples, perimeter checked | Allowed return, rate base, capital plan |
+| **Resource company** | Finite reserve or through-cycle asset value | Operating multiples, book only as a funded-capital proxy | Reserve life, cost curve, commodity deck |
+| **Property developer** | Project NAV and completion cash flow | Book value, labelled as a provisional NAV proxy | Land value, completion cost, presales, leverage |
+
+<Note>
+The peer metric family shown here is the economic category. Within each family, the specific metric and its fallback order are selected by the pipeline from the evidence actually available for that company, and any lower-order proxy is labelled in the output.
+</Note>
+
+## Banks and Insurers
+
+Industrial enterprise value is awkward for a bank, because deposits and borrowings are operating inputs rather than financing choices. A residual-income model begins with common equity and adds the present value of future returns above the cost of equity.
+
+`Residual income = beginning common equity × (ROE − cost of equity)`
+
+Growth is constrained by regulatory capital and retained earnings. A low P/B multiple can indicate opportunity, weak asset quality, or an inability to earn the equity charge. ROE and credit quality decide which interpretation survives.
+
+## REITs and Property Companies
+
+Equity REITs and mortgage REITs are separate business models and are routed separately.
+
+For equity REITs, FFO and AFFO improve comparability when aligned data are available. When they are not, a book-value proxy is used only after confirming a comparable accounting basis, and an operating proxy is used when that evidence is inadequate. Dividend yield remains context, because an unsustainable payout can look attractive immediately before it is cut.
+
+Developers require project and land economics. A book-value multiple is labelled as a proxy, never presented as property NAV.
+
+## Holding Companies
+
+A complete holding-company valuation adds listed stakes, private businesses and other assets, then subtracts parent debt, tax leakage and other parent obligations.
+
+Peer context blends book-value and earnings evidence where both legs have adequate support. The result is trading context. Parallax does not invent a generic holding-company discount, and does not call the blend a sum-of-parts value.
+
+## Utilities and Reporting Perimeters
+
+Utility accounts can mix consolidated operating businesses with material equity-accounted income. When net profit repeatedly exceeds consolidated revenue, the income statement is warning that enterprise value and consolidated EBIT may not describe the same economic perimeter. In that case the model narrows to earnings-based evidence and states the limitation.
+
+## Resources and Finite-Life Assets
+
+A mine or concession is not a perpetual annuity. The operating model uses a production schedule, reserve life, price deck, cost curve, sustaining capital, royalties, tax and closure obligations. Market futures can anchor near-term commodity prices, and a normalized through-cycle deck is used beyond the liquid curve. The asset ends when the reserve or concession ends.
+
+For an exploration-stage company with no usable revenue, operating profit or earnings, a book-value multiple may still describe how the market treats funded balance-sheet capital. It is labelled as a limited proxy, because it does not value unrecognized reserves, permitting probability, future financing or dilution.
+
+## The Seductive Wrong Answer
+
+<Warning>
+"The data set has EV/EBITDA for every company, so EV/EBITDA is comparable."
+
+Availability is not economic suitability. Debt is operating inventory for a bank. Depreciation carries different meaning for property and for technology. A finite reserve cannot support a perpetual terminal value. Method selection follows the business, not the easiest populated field.
+</Warning>
+
+## A Reader Sanity Check
+
+Name the balance-sheet item or operating relationship that creates value. If the answer is deposits, reserves, property, projects or subsidiary stakes, verify that the selected method represents that item directly. Then check whether the peer multiple's companion variable captures the central risk.
+
+## What Would Falsify the Conclusion
+
+The company's economics do not match the selected archetype; a REIT subtype is unresolved; book-value accounting bases differ; a resource life or closure cost is missing; or a holding-company result depends on an assumed discount rather than on look-through assets and obligations.
+
+## How Parallax Applies This
+
+Parallax routes each company to an economic archetype, applies the corresponding valuation and peer-metric hierarchy, and labels lower-order proxies. When evidence is inadequate, Parallax reconstructs it from aligned statements and market evidence, or shows that the context is unavailable. It does not switch to an economically unrelated metric merely to fill a panel.
+
+<ValuationDisclaimer />
+
+<CardGroup cols={2}>
+  <Card title="Data and Model Pipeline" icon="database" href="/methodology/valuation/data-pipeline">
+    How archetype routing is automated across the coverage universe.
+  </Card>
+  <Card title="Relative Valuation" icon="scale-balanced" href="/methodology/valuation/relative-valuation">
+    Peer membership, statistical center and outlier discipline.
+  </Card>
+</CardGroup>

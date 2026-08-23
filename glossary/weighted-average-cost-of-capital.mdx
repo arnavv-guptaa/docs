@@ -1,0 +1,59 @@
+---
+title: 'Weighted Average Cost of Capital (WACC)'
+description: 'Understanding WACC - the blended return that lenders and shareholders require, used to discount future cash flows to present value'
+---
+
+WACC is the blended return that a company's lenders and shareholders require. It is the rate at which future operating cash flows are discounted back to a present value.
+
+## Beginner
+
+### What It Means
+
+Money in the future is worth less than money today, because you could have invested it and because the future is uncertain. WACC is the rate that converts future cash into today's terms. It blends what lenders demand with what equity investors demand, weighted by how much of each the company uses.
+
+### Example
+
+A company funds itself 70% with equity that requires 10%, and 30% with debt costing 5% after tax. WACC is (0.7 × 10%) + (0.3 × 5%) = 8.5%. A cash flow of 100 arriving in five years is worth about 66 today at that rate.
+
+### Why It Matters
+
+Small changes in WACC move valuations a lot, especially for companies whose value sits far in the future. A one percentage point change can move a growth company's value more than a large change in its operating margin.
+
+---
+
+## Advanced
+
+### How to Read It
+
+`Cost of equity = risk-free rate + beta × equity risk premium + country risk adjustment`
+
+`After-tax cost of debt = pre-tax borrowing cost × (1 − usable marginal tax rate)`
+
+`WACC = equity weight × cost of equity + debt weight × after-tax cost of debt`
+
+Weights use market values, because the discount rate measures current opportunity cost. The tax shield counts only when the business can actually use it. The currency of the risk-free rate, the inflation assumptions and the cash flows must all match.
+
+### Common Misreadings
+
+- **Double-counting country risk**: pairing a raw local sovereign yield with a full country risk premium charges the same risk twice. Pick one convention.
+- **Using WACC as a downside dial**: raising the discount rate to express pessimism buries an operating view in a financing input. Downside belongs in revenue, margin and reinvestment first.
+- **Using the company's coupon as the cost of debt**: what matters is the rate the company would pay today, not the one it locked in years ago.
+- **Applying WACC to a bank**: for a lender, borrowing is operating raw material, so equity-based discounting applies.
+
+### In Parallax Reports
+
+Parallax records each WACC component with its observation date, checks that debt cost sits below equity cost after seniority and tax, and reports the observed beta, an operating-beta diagnostic and the price-implied rate as three separate pieces of evidence. See [Cost of Capital](/methodology/valuation/cost-of-capital).
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Bottom-Up Beta" href="/glossary/bottom-up-beta">
+    Estimating systematic risk from peers
+  </Card>
+  <Card title="Beta" href="/glossary/beta">
+    Sensitivity to market movements
+  </Card>
+  <Card title="Adjusted Present Value" href="/glossary/adjusted-present-value">
+    An alternative when leverage shifts
+  </Card>
+</CardGroup>

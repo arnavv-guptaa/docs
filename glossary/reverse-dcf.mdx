@@ -1,0 +1,58 @@
+---
+title: 'Reverse DCF'
+description: 'Understanding reverse DCF - solving the current share price for the growth and margins it already assumes, then testing whether those are plausible'
+---
+
+A reverse DCF runs a discounted cash flow model backwards. Instead of forecasting cash flows to find a value, it takes the market price as given and solves for the operating performance that price requires.
+
+## Beginner
+
+### What It Means
+
+Rather than arguing about whose target price is right, a reverse DCF asks a more answerable question: what would this company have to actually do for today's price to make sense? That turns a debate about opinions into a debate about revenue growth, margins and market share.
+
+### Example
+
+A stock trades at 100. Holding everything else at reasonable levels, the price only works if revenue grows 12% a year for five years. Independent evidence supports somewhere between 9% and 13%. The price sits inside what the evidence can defend. If the stock rose to 140 and implied growth moved to 18%, the price would now require an outcome beyond that range.
+
+### Why It Matters
+
+It reframes the question from "is this stock cheap?" to "do I believe the company can deliver what the price already assumes?" That is a question an investor can research, and one that can be proven wrong.
+
+---
+
+## Advanced
+
+### How to Read It
+
+Hold WACC, tax, reinvestment and terminal economics constant. Solve for the single driver that makes model value equal current price.
+
+`Implied growth = the g such that model value(g, other independent assumptions) = current price`
+
+`Expectation gap = independently supported driver − price-implied driver`
+
+Solve for growth, margin and competitive duration separately. If all three require heroic assumptions simultaneously, the risk is larger than any single solve suggests. Translating implied growth into units, customers, capacity or market share makes it testable against a real market.
+
+### Common Misreadings
+
+- **Feeding the answer back into the base case**: adopting the price-implied growth as the forecast makes every price look justified. The two must stay separate.
+- **Treating the solution as a prediction**: it is a boundary condition describing what the market believes, not a forecast of what will happen.
+- **Solving only for growth**: margin and competitive duration can carry just as much of the price.
+
+### In Parallax Reports
+
+Parallax displays the independent driver assumptions beside the price-implied boundaries. The reverse DCF can challenge an intrinsic range and explain the current price. It never establishes intrinsic value and never instructs the forward forecast. See [Reverse DCF and Expectation Boundaries](/methodology/valuation/reverse-dcf).
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Margin of Safety" href="/glossary/margin-of-safety">
+    The cushion between value and price
+  </Card>
+  <Card title="Free Cash Flow to the Firm" href="/glossary/free-cash-flow-to-firm">
+    The stream being solved for
+  </Card>
+  <Card title="Continuing Value" href="/glossary/continuing-value">
+    Held constant while the driver is solved
+  </Card>
+</CardGroup>

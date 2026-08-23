@@ -1,0 +1,127 @@
+---
+title: 'Cost of Capital'
+description: 'Building a currency-matched discount rate across developed and emerging markets, and diagnosing beta when trading is thin or markets are partly segmented'
+---
+
+Cost of capital combines a currency-matched base rate with priced operating, financial and country risk. The arithmetic is simple. The difficult work is deciding which risks are already present in each input, and whether the observed beta represents the economic exposure being valued.
+
+## The Economic Question
+
+What return would a diversified investor require for committing capital to these operating cash flows, in this currency, at this point in the cycle?
+
+The answer is not the company's coupon, an analyst hurdle, or a number selected to make value resemble price. It is an opportunity cost assembled from dated market evidence and a defensible estimate of systematic exposure.
+
+The international case adds two measurement problems. A lightly traded share can produce an attenuated regression beta because its price does not move contemporaneously with the market. An emerging market can be partly integrated with global capital markets and partly exposed to local risk. Neither problem is solved by adding an arbitrary premium.
+
+## First-Principles Derivation
+
+`Cost of equity = risk-free rate + beta × equity risk premium + country risk adjustment`
+
+`After-tax cost of debt = pre-tax borrowing cost × (1 − usable marginal tax rate)`
+
+`WACC = equity weight × cost of equity + debt weight × after-tax cost of debt`
+
+Weights are based on market values because the discount rate measures current opportunity cost. The tax shield is recognized only when the business can use it. The currency of the risk-free rate, the inflation assumptions and the cash flows must match.
+
+## Two Internally Consistent Country-Risk Conventions
+
+<Warning>
+Using a raw sovereign yield together with a full country premium can count the same risk twice. Pick one convention and hold it.
+</Warning>
+
+<Tabs>
+  <Tab title="Convention A">
+    A default-stripped currency rate paired with a separately estimated country risk premium.
+
+    `Cost of equity = default-stripped currency rate + beta × equity risk premium + explicit country adjustment`
+  </Tab>
+  <Tab title="Convention B">
+    The local sovereign yield treated as the base rate, where the sovereign spread is intended to carry the default component. That component must not then be added again.
+
+    `Cost of equity = local sovereign yield + beta × equity risk premium, with no duplicate sovereign adjustment`
+  </Tab>
+</Tabs>
+
+## Model Mechanics
+
+### Dated rates and premiums
+
+The base curve, equity risk premium and country adjustment are dated market inputs. A premium carried for years without review creates false stability. Historical realized returns provide a cross-check. They do not substitute for the return embedded in current prices.
+
+### Regression beta
+
+A single-stock beta is an estimate with sampling error, not a company characteristic engraved in stone. Lead-lag corrections address nonsynchronous trading, and statistical shrinkage reduces the influence of an imprecise extreme estimate. Standard error, explanatory power, trading frequency and the choice of market index belong beside the beta, not in a footnote.
+
+### Operating or bottom-up beta
+
+A bottom-up beta begins with companies exposed to similar operating risks, removes each peer's financial leverage, takes a stable central estimate, then applies the target capital structure.
+
+`Unlevered beta = levered beta / [1 + (1 − tax rate) × debt/equity]`
+
+`Relevered beta = operating beta × [1 + (1 − tax rate) × target debt/equity]`
+
+It is most useful when the local regression is thin, or the quoted security is a poor representation of the business. It is not automatically superior. A global peer set can understate local segmentation, regulation or funding risk.
+
+### Market-implied rate
+
+A reverse valuation can hold the operating forecast fixed and solve for the discount rate that equates value with price. That implied rate is a diagnostic boundary, not a replacement WACC.
+
+A large gap can mean the discount rate is understated. It can equally mean that growth, margins, reinvestment or terminal economics are too generous. Price identifies the disagreement. It does not adjudicate its cause.
+
+### Country and financial exposure
+
+Country exposure follows the source and convertibility of operating cash flows, not merely the listing venue. Debt cost should ordinarily remain below cost of equity after accounting for seniority and tax. An inversion is evidence to investigate, not a rate to pass through automatically.
+
+## Evidence From a Population Audit
+
+Parallax periodically rebuilds a large cross-section of corporate FCFF valuations from their frozen cash flows before changing any rate assumption, so that subsequent changes can be attributed to the rate convention rather than to model drift.
+
+That work rejected two appealing shortcuts.
+
+<Note>
+**A local sovereign yield is not necessarily higher** than a default-stripped currency rate plus an explicit country premium. Switching to it does not reliably repair a low-rate concern.
+
+**A cross-market operating beta is not necessarily more conservative** than a local regression beta. In a large cross-section it can lower the median discount rate rather than raise it.
+</Note>
+
+The implication is that the right repair is conditional on market integration, trading quality and operating exposure. There is no universally safe substitution.
+
+A population median also conceals the cases that matter. Two companies in the same market and industry can carry similar recorded discount rates while their price-implied rates differ by several multiples of each other. That difference is a direction to revisit both the covariance estimate and the operating path. Treating the entire gap as a beta error would let the discount rate absorb questions that belong in margins, reinvestment and continuing value.
+
+## The Seductive Wrong Answer
+
+<Warning>
+"Replace beta with an industry beta and use the local 10-year bond. The emerging-market problem is solved."
+
+Each change can be defensible, but neither is conservative by construction. The sovereign yield may already contain the spread carried elsewhere in the model, and the industry beta may remove local segmentation and liquidity exposure. A discount rate is not a valuation throttle. Operating downside belongs first in revenue, margin, reinvestment and scenario assumptions.
+</Warning>
+
+## A Reader Sanity Check
+
+- Confirm that the risk-free rate, inflation and cash flows use the same currency.
+- State whether sovereign risk sits in the base rate or in a separate premium, and prevent duplication.
+- Inspect beta standard error, explanatory power, trading frequency, lead-lag correction and shrinkage.
+- Compare operating and regression beta, then explain large differences rather than averaging them.
+- Check market-value capital weights and any hybrid securities.
+- Verify that the assumed tax shield is usable over the forecast horizon.
+- Solve the market-implied rate with the operating forecast fixed, then decide which operating or rate assumption deserves review.
+- Revalue the base case under a defined ladder of higher discount rates, and label every fixed rate as a stress.
+
+## What Would Falsify the Conclusion
+
+The rate build fails if current sovereign yields, equity risk pricing, debt spreads or leverage differ materially from the inputs; if the beta is dominated by nonsynchronous or sparse trading; if the operating peer set does not share the target's risk; if the country-risk convention counts the same spread twice; or if the forecast currency and discount-rate currency diverge.
+
+## How Parallax Applies This
+
+Parallax records each component of WACC and its date, checks the hierarchy between debt and equity costs, and reports the observed company beta, the operating-beta diagnostic and the price-implied rate as distinct pieces of evidence. Nonsynchronous-trading correction and statistical shrinkage address measurement noise. Neither is allowed to manufacture a reassuring answer.
+
+For a cash-burning transition, Parallax also tests a higher WACC as a named stress and requires that the stress reduce value. A stress never replaces the independently estimated base rate, and a price-implied rate never instructs the forecast to converge to price.
+
+<CardGroup cols={2}>
+  <Card title="Continuing Value" icon="infinity" href="/methodology/valuation/continuing-value">
+    Mature economics, competitive fade and terminal concentration.
+  </Card>
+  <Card title="Reverse DCF" icon="arrows-left-right" href="/methodology/valuation/reverse-dcf">
+    Solving the price for its implied operating expectations.
+  </Card>
+</CardGroup>

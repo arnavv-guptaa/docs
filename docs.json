@@ -46,6 +46,39 @@
             ]
           },
           {
+            "group": "Valuation Framework",
+            "pages": [
+              "methodology/valuation/overview",
+              "methodology/valuation/data-pipeline",
+              "methodology/valuation/financial-statements",
+              "methodology/valuation/growth-and-returns",
+              "methodology/valuation/fcff",
+              "methodology/valuation/cost-of-capital",
+              "methodology/valuation/continuing-value",
+              "methodology/valuation/transition-stage"
+            ]
+          },
+          {
+            "group": "Market Expectations and Peers",
+            "pages": [
+              "methodology/valuation/reverse-dcf",
+              "methodology/valuation/relative-valuation",
+              "methodology/valuation/archetypes",
+              "methodology/valuation/scenarios"
+            ]
+          },
+          {
+            "group": "Evidence and Outputs",
+            "pages": [
+              "methodology/valuation/factor-integration",
+              "methodology/valuation/technical-evidence",
+              "methodology/valuation/reconciliation",
+              "methodology/valuation/price-targets",
+              "methodology/valuation/interpreting-outputs",
+              "methodology/valuation/references"
+            ]
+          },
+          {
             "group": "Risk",
             "pages": [
               "methodology/risk-management"
@@ -202,6 +235,23 @@
               "glossary/quantitative-investing",
               "glossary/return",
               "glossary/systematic-strategy"
+            ]
+          },
+          {
+            "group": "Valuation Terms",
+            "pages": [
+              "glossary/enterprise-value",
+              "glossary/free-cash-flow-to-firm",
+              "glossary/nopat",
+              "glossary/invested-capital",
+              "glossary/return-on-invested-capital",
+              "glossary/weighted-average-cost-of-capital",
+              "glossary/continuing-value",
+              "glossary/reverse-dcf",
+              "glossary/bottom-up-beta",
+              "glossary/adjusted-present-value",
+              "glossary/margin-of-safety",
+              "glossary/tukey-trimean"
             ]
           },
           {

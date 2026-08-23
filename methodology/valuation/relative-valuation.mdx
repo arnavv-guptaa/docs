@@ -1,0 +1,108 @@
+---
+title: 'Relative Valuation and Peer Evidence'
+description: 'How the market prices related economics, why peer membership is preserved rather than curated, and how outliers are handled without deletion'
+---
+
+import ValuationDisclaimer from '/snippets/valuation-disclaimer.mdx';
+
+Relative valuation explains how the market prices related economics. It is credible only when membership, metric basis, statistical center and the translation to value per share are all visible.
+
+## The Economic Question
+
+How does the market price companies exposed to similar growth, profitability, capital intensity and risk?
+
+A multiple is useful only when the numerator and denominator describe the same economic perimeter and period.
+
+| Multiple | What it pays for |
+|---|---|
+| **EV/Revenue** | Scale, before profitability is proven |
+| **EV/EBIT** | Operating earnings, before financing |
+| **P/E** | Earnings after financing and tax |
+| **P/B** | Book capital, most informative where book capital is economically central |
+
+## First-Principles Derivation
+
+`Peer enterprise value = peer multiple × target operating denominator`
+
+`Peer equity value = peer enterprise value − target net debt − senior obligations + non-operating assets`
+
+`Peer value per share = peer equity value / diluted equivalent shares outstanding`
+
+Currency cancels inside a properly constructed ratio, because numerator and denominator use the same currency. It does not disappear when the implied enterprise value is translated into a target share price. That final bridge still requires source-based exchange rates and a security-specific share denominator.
+
+## Peer Membership Is Preserved, Not Curated
+
+<Note>
+Parallax begins with the defined company-specific peer group and preserves its members. An industry label does not grant permission to remove a company from that group. An extreme observation can be flagged, explained and tested without deleting the issuer.
+</Note>
+
+When the defined group does not carry enough usable evidence for the selected metric, Parallax repairs the cohort through an explicit, disclosed ladder. It broadens by economic classification first, from sub-industry toward industry and sector within the same geography, and relaxes geography only after the classification rungs fail. Defined peers stay first. Constructed peers are appended and labelled as such.
+
+Only the target company itself, duplicate listings of the same issuer, and observations that fail the selected metric's mathematical requirements are removed. Every supplied, added, excluded and retained outlier remains visible to the reader.
+
+## The Statistical Center
+
+Each eligible issuer-level observation is translated into an implied value for the target. The displayed range is built from the distribution of those observations, using quartiles where the sample supports them and observed extremes where it does not.
+
+Outliers remain in the evidence and are flagged using relative and distributional diagnostics. They are not silently deleted or winsorized. Parallax also calculates robust and leave-one-out centers as stability diagnostics. Those diagnostics challenge the primary center. They do not quietly replace it.
+
+### Why a robust center earns its place
+
+Consider eight eligible peer observations implying share values of 2.7, 24.0, 39.3, 40.5, 46.7, 53.8, 67.8 and 84.2 in local currency. The arithmetic mean is 44.9 and the median is 43.6. The first and third quartiles are 35.5 and 57.3.
+
+Tukey's trimean weights the median twice and each quartile once:
+
+`Trimean = (Q1 + 2 × median + Q3) / 4 = (35.5 + 2 × 43.6 + 57.3) / 4 = 45.0`
+
+The result does not let the 2.7 low observation or the 84.2 high observation dominate, yet it recognizes that the upper half of the distribution is wider than the lower middle. The endpoints remain visible. Robustness comes from the statistic, not from quietly deleting awkward peers.
+
+<Info>
+Figures are displayed to one decimal place. Calculations retain full precision.
+</Info>
+
+## When Two Metrics Disagree
+
+When two approved metrics both produce full ranges and their centers are close, the ranges can be combined component by component. When they disagree materially, the primary metric leads and the second remains visible as contested evidence.
+
+Divergence is information. It is not an inconvenience to average away.
+
+## A Real-World Edge Case
+
+A narrative-driven company can trade far beyond ordinary multiples for its sector, sometimes anchored by enthusiasm around a private competitor. Removing that public company because its valuation is extreme would turn the peer process into an opinion filter. Allowing the extreme observation to define the center would be equally weak.
+
+The disciplined treatment preserves the company, shows its raw implied value, flags its influence, and compares the all-observation center with leave-one-out and unflagged diagnostics. A client can then see both the market's enthusiasm and the range that is less sensitive to a single story stock.
+
+## The Seductive Wrong Answer
+
+<Warning>
+"The target trades below the peer median, therefore it is cheap."
+
+A lower multiple may reflect lower growth, lower ROIC, weaker balance-sheet quality or greater risk. Every multiple has a companion variable. P/B is read with ROE and cost of equity. P/E is read with growth, payout and risk. EV/EBIT is read with operating growth and reinvestment. EV/Revenue is read with credible future margins and capital intensity.
+</Warning>
+
+## A Reader Sanity Check
+
+- Confirm that target and peers use the same period and denominator basis.
+- Inspect every member, including cross-listing deduplication and constructed additions.
+- Compare the primary center with leave-one-out and unflagged diagnostics.
+- Translate the multiple back into an implied margin, ROE or growth assumption.
+- Check the enterprise-to-equity bridge and the diluted share count.
+
+## What Would Falsify the Conclusion
+
+The peer set does not share the relevant economics; the target denominator is nonpositive or inconsistent; too few same-basis observations survive; a cross-listing appears twice as separate companies; or the implied value depends on an exchange rate or share count that does not reconcile.
+
+## How Parallax Applies This
+
+Parallax exposes the member list, metric basis, issuer-level observations, outlier flags, statistical center, constructed-peer count, and the translation to value per share. Peer context never rescues a blocked intrinsic valuation, and it is never called intrinsic value.
+
+<ValuationDisclaimer />
+
+<CardGroup cols={2}>
+  <Card title="Archetype Conventions" icon="sitemap" href="/methodology/valuation/archetypes">
+    Which multiple family a company's balance sheet actually justifies.
+  </Card>
+  <Card title="Price Targets and Ratings" icon="bullseye" href="/methodology/valuation/price-targets">
+    How peer evidence and consensus combine into a client-facing target.
+  </Card>
+</CardGroup>

@@ -1,0 +1,77 @@
+---
+title: 'Scenario Design and Falsification'
+description: 'Building Bear, Base and Bull cases that differ in operating drivers rather than in discount-rate dials, and stating what would prove each case wrong'
+---
+
+import ValuationDisclaimer from '/snippets/valuation-disclaimer.mdx';
+
+A valuation range should represent coherent alternative operating states, each with explicit assumptions and observations that would invalidate it. It should not be an arbitrary percentage band around a central estimate.
+
+## The Economic Question
+
+Which operating outcomes are plausible, what evidence separates them, and how much downside can the investor absorb if the base case is wrong?
+
+The future is uncertain and expected returns cannot be observed directly. Precision therefore comes from clear conditional logic, not from narrow ranges.
+
+## First-Principles Derivation
+
+Bear, Base and Bull cases should differ in the small set of drivers that define the business: volume, price, margin, reinvestment, financing and competitive duration. Each case carries its own internally consistent path. The spread in value is the consequence of those paths.
+
+`Margin of safety = independently supported value − price paid`
+
+Margin of safety absorbs analytical error, bad luck and adverse change. It is not a fixed percentage attached to every stock. Greater duration, leverage, accounting uncertainty and financing dependence all require a wider cushion.
+
+## Model Mechanics
+
+<AccordionGroup>
+  <Accordion title="Scenario construction">
+    Cases are linked, not independent. A weaker demand case may reduce pricing, delay margin improvement, increase working capital and prolong financing needs. A stronger case may improve unit economics while also attracting competition and requiring more investment.
+  </Accordion>
+
+  <Accordion title="Negative equity values">
+    Limited liability means the client-facing Bear value cannot fall below zero. Parallax floors a negative Bear display at zero and preserves the raw negative calculation in the underlying record. Base and Bull must remain positive and correctly ordered for an intrinsic range to appear at all.
+  </Accordion>
+
+  <Accordion title="Adjusted present value">
+    APV separates all-equity operating value from financing side effects. It is useful when leverage changes materially, tax shields are unstable, or subsidized financing matters. For a stable capital structure, APV often resembles a WACC DCF because both discount the same operating economics. Similarity is expected. It is not an additional vote of confidence.
+  </Accordion>
+</AccordionGroup>
+
+## A Worked Case
+
+A recent IPO has a Base value of 45.0, a Bull value of 75.0 and a raw Bear value of −10.0. The displayed Bear is zero, while the underlying calculation retains −10.0.
+
+That result does not automatically make the IPO a Strong Sell. The valuation explains which growth and margin assumptions the current price requires, the factor evidence describes systematic characteristics, and the rating reflects the full evidence with explicit uncertainty.
+
+IPOs often arrive with favorable sentiment, fresh capital and conservative near-term guidance. They also have limited public history and elevated expectations. The methodology has to represent both facts.
+
+## The Seductive Wrong Answer
+
+<Warning>
+"Use WACC plus 2.0% for Bear and WACC minus 2.0% for Bull."
+
+Changing only the discount rate turns economic uncertainty into a finance dial. The Bear case should explain weaker customers, price, margin, reinvestment or financing. Rate stress supplements that operating case when risk pricing itself is uncertain.
+</Warning>
+
+## A Reader Sanity Check
+
+Write one sentence describing the operating world in each case, without mentioning price. Then identify the two reported metrics that would move the company from Base toward Bear or Bull. If the cases cannot be described in operating language, the range is decoration.
+
+## What Would Falsify the Conclusion
+
+The cases change unrelated assumptions in contradictory directions; the Bear omits the central downside mechanism; the Bull requires no extra reinvestment; or the range stays narrow despite high duration and financing risk.
+
+## How Parallax Applies This
+
+Parallax constructs linked operating scenarios, preserves raw values, floors only the displayed negative Bear, and blocks a range entirely when Base or Bull is nonpositive or the scenarios are not correctly ordered. Warnings remain visible to the reader and never alter the valuation math.
+
+<ValuationDisclaimer />
+
+<CardGroup cols={2}>
+  <Card title="Factor Integration" icon="layer-group" href="/methodology/valuation/factor-integration">
+    Where systematic factor evidence supports or challenges a valuation thesis.
+  </Card>
+  <Card title="Interpreting Outputs" icon="chart-line" href="/methodology/valuation/interpreting-outputs">
+    Reading a valuation range without confusing it with a forecast.
+  </Card>
+</CardGroup>

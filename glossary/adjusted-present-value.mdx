@@ -1,0 +1,59 @@
+---
+title: 'Adjusted Present Value (APV)'
+description: 'Understanding APV - valuing the operating business as if it had no debt, then adding the effects of financing separately'
+---
+
+Adjusted present value separates the value of the operating business from the value created or destroyed by how it is financed. It values the business as if it were all-equity funded, then adds financing side effects on top.
+
+## Beginner
+
+### What It Means
+
+A standard DCF bundles the effect of debt into the discount rate. APV takes them apart. First: what is this business worth with no debt at all? Second: what does the debt add or subtract, through tax relief on interest, subsidized borrowing, or the costs of financial distress?
+
+### Example
+
+An all-equity valuation of a business produces 800. Its debt generates interest tax relief worth 60 in present value. Distress risk costs an estimated 20. APV is 800 + 60 − 20 = 840.
+
+### Why It Matters
+
+When leverage is stable, APV and a standard WACC-based DCF describe the same economics and usually land close together. When leverage is changing sharply, as in a buyout or a restructuring, a single fixed WACC becomes wrong every year of the forecast. APV handles that cleanly.
+
+---
+
+## Advanced
+
+### How to Read It
+
+APV is most useful when:
+
+- Capital structure changes materially over the forecast period.
+- Tax shields are unstable, because the company cannot always use them.
+- Financing is subsidized, as with concessionary development funding.
+- Distress costs are material enough to model explicitly.
+
+The value of a tax shield depends on the company actually being able to use it. A loss-making company gets no benefit from interest deductibility until it has taxable profit to deduct against.
+
+### Common Misreadings
+
+- **Treating agreement between APV and a WACC DCF as confirmation**: both discount the same operating economics. Similarity is expected, not an additional vote of confidence.
+- **Valuing the tax shield at full statutory rates regardless of usability**: the shield is worth what the company can actually claim.
+- **Ignoring distress costs**: an APV that adds tax benefits while omitting the costs of the leverage that created them is one-sided.
+
+### In Parallax Reports
+
+APV is available as an analytical method where leverage or tax-shield stability makes a single fixed WACC unreliable. Like DCF, it stays outside the client price-target arithmetic. See [Scenario Design and Falsification](/methodology/valuation/scenarios).
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="WACC" href="/glossary/weighted-average-cost-of-capital">
+    The alternative discounting approach
+  </Card>
+  <Card title="Enterprise Value" href="/glossary/enterprise-value">
+    What both methods produce
+  </Card>
+  <Card title="Free Cash Flow to the Firm" href="/glossary/free-cash-flow-to-firm">
+    The stream both methods discount
+  </Card>
+</CardGroup>
