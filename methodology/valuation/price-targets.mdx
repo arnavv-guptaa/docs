@@ -25,7 +25,11 @@ The rating is a separate signal-to-noise judgment. A 12.0% valuation gap is cons
 
 `Expected return = client target / current price − 1`
 
-The raw target is always retained as the audit calculation. Equal weighting is a declared convention, not a claim that the two sources are independent. It prevents either source from quietly dominating, and it gives the reader an immediate result to reconstruct.
+The raw target is always retained as the audit calculation.
+
+Be clear about what the equal weighting is and is not. Peer multiples and sell-side targets are **correlated** sources, because published targets are themselves often built from peer multiples. Averaging them therefore buys no diversification and reduces no error. The weighting exists to stop either source from quietly dominating, and to give the reader a result they can reconstruct in one line.
+
+This is why the blend is a **commercial summary of market evidence and not an intrinsic estimate**. An intrinsic valuation is the DCF, it lives on its own pages, and it is deliberately kept out of this arithmetic. Anyone reading the target as a fair value is reading it wrong.
 
 <Warning>
 The raw calculation is not automatically the client target. A multiple applied to the wrong denominator, a listing-level share count substituted for the issuer-wide total, an incomplete net-debt bridge, or a security-currency mismatch can all produce perfect arithmetic and a useless answer. Evidence qualification precedes display.
@@ -81,6 +85,12 @@ Parallax scales the rating hurdle to the stock's own realized volatility, measur
 
 - The **floors** stop quiet stocks from receiving a Buy or Sell label for a trivial valuation gap.
 - The **caps** stop volatile stocks from requiring an unreachable target before the system can express a view.
+
+Two limitations come with this and are worth stating plainly.
+
+**Horizons have to match.** An expected return is a return over some period, and a volatility measure is a dispersion over some window. Comparing the two only means something when both are expressed on the same horizon, so the workbook footnote prints the window the hurdle was scaled from.
+
+**A trailing measure is procyclical.** Realized volatility clusters. A volatility spike widens the hurdle, which can soften a Sell toward Hold at the moment downside risk is highest, and a long quiet stretch tightens the hurdle in exactly the conditions that precede a repricing. The floors and caps bound that effect. They do not remove it. A reader comparing two ratings across different volatility regimes should check the printed hurdle rather than assume the labels mean the same thing.
 
 | Rating | Target return condition | Additional evidence condition |
 |---|---|---|
