@@ -60,6 +60,20 @@
         ]
       },
       {
+        "tab": "Macro Reports",
+        "groups": [
+          {
+            "group": "The Product",
+            "pages": [
+              "macro/overview",
+              "macro/methodology",
+              "macro/anatomy",
+              "macro/data-coverage"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Console",
         "groups": [
           {
@@ -202,6 +216,28 @@
               "glossary/quantitative-investing",
               "glossary/return",
               "glossary/systematic-strategy"
+            ]
+          },
+          {
+            "group": "Macro Research Terms",
+            "pages": [
+              "glossary/quantum-score",
+              "glossary/econometrics-phase",
+              "glossary/valuation-state",
+              "glossary/market-entropy",
+              "glossary/psychological-wavelength",
+              "glossary/economic-surprise-index",
+              "glossary/z-score",
+              "glossary/mean-reversion",
+              "glossary/composite-market-sentiment-score",
+              "glossary/sentiment-regime",
+              "glossary/factor-spread",
+              "glossary/factor-effectiveness",
+              "glossary/breadth",
+              "glossary/duration",
+              "glossary/curve-shape",
+              "glossary/tactical-asset-allocation",
+              "glossary/overweight-neutral-underweight"
             ]
           },
           {

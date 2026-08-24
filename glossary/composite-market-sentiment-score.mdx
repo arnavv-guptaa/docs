@@ -1,0 +1,58 @@
+---
+title: 'Composite Market-Sentiment Score'
+description: 'Understanding the composite market-sentiment score - liquidity, momentum, and breadth combined into one risk-appetite measure'
+---
+
+The composite market-sentiment score is a single number summarizing a market's risk appetite, built from three measurable components: **liquidity** (how freely money is flowing and how easily risk can be traded), **momentum** (the direction and strength of recent price trends), and **breadth** (how widely gains or losses are shared across stocks).
+
+## Beginner
+
+### What It Means
+
+Fundamentals say what *should* happen in a market; market internals say what *is* happening. This score reads the internals: whether money is flowing freely, whether trends are firm, and whether gains are broadly shared. Each component is expressed as a [z-score](/glossary/z-score) against its own history, then combined into one number.
+
+### Example
+
+Imagine an economy whose headline data looks fine, but liquidity is quietly draining, the trend is flattening, and each new high is carried by fewer stocks. The fundamentals say "fine"; the internals say "fragile". This score is built to surface that divergence between the internals and the headline data.
+
+### Why It Matters
+
+When the internals confirm the macro story, conviction is warranted. When they diverge, the divergence itself is the finding, and the report says which side is weakening rather than resolving the tension for you.
+
+---
+
+## Advanced
+
+### How to Read It
+
+Positive readings indicate risk-seeking conditions; negative readings indicate risk aversion; the magnitude indicates intensity. The score maps to one of five [sentiment regimes](/glossary/sentiment-regime), from Strong Risk-Off to Strong Risk-On.
+
+### The Component Decomposition
+
+The reports name which component is driving the reading, and the distinction carries real information:
+
+- **Liquidity-led deterioration** means the market's capacity to absorb risk is shrinking
+- **Momentum-led deterioration** means trends are rolling over, visible, but sometimes just consolidation
+- **Breadth-led deterioration** means participation is narrowing while the index holds up
+
+A sentiment decline led by liquidity is a different animal from one led by momentum, and the liquidity and sentiment section draws exactly that distinction.
+
+### Common Misreadings
+
+- **Treating it as a mood survey**: the score is built from measurable market behavior, flows, trends, participation, not from polling anyone
+- **Reading level without direction**: a modestly positive but rapidly falling score is often more informative than a stable negative one
+- **Confusing it with the positioning framework's sentiment pillar**: this score measures one market's internals; the [Psychological Wavelength](/glossary/psychological-wavelength) is a pillar of the cross-asset positioning framework
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Sentiment Regime" href="/glossary/sentiment-regime">
+    The five states the score maps to
+  </Card>
+  <Card title="Breadth" href="/glossary/breadth">
+    The participation component
+  </Card>
+  <Card title="Z-Score" href="/glossary/z-score">
+    How the components are standardized
+  </Card>
+</CardGroup>
