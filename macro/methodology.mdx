@@ -8,10 +8,10 @@ import MacroDisclaimer from '/snippets/macro-disclaimer.mdx';
 Macro Reports are not written from a template and they are not lightly-edited boilerplate. Each report is rebuilt every week from fresh data through a process designed around one question: what would it take for a systematic pipeline to produce research a demanding chief investment officer would sign?
 
 <Note>
-**The short version:** Continuously updated data pipelines feed a three-stage research process with quality gates at every step: specialist analysts, then chief-investment-officer synthesis, then editorial review. The structure follows how an institutional research department is organized, with the same separation between specialist research, synthesis, and review.
+**The short version:** Automated data pipelines feed a three-stage research process with quality gates at every step: specialist analysts, then chief-investment-officer synthesis, then editorial review. The structure follows how an institutional research department is organized, with the same separation between specialist research, synthesis, and review.
 </Note>
 
-The analysts, the synthesis layer and the editorial reviewer are AI systems rather than human staff. They are purpose-built research agents operating under the data disciplines described on this page. Ten agents are involved in each country report. Nine produce it across three stages: seven specialist analysts, one synthesis layer, and one editorial reviewer. A tenth scores every draft at the quality gate and writes none of the report. The global cross-asset report runs a broader analyst panel spanning asset classes and regions.
+The analysts, the synthesis layer and the editorial reviewer are AI systems rather than human staff. They are research agents operating under the data disciplines described on this page. Ten agents are involved in each country report. Nine produce it across three stages: seven specialist analysts, one synthesis layer, and one editorial reviewer. A tenth scores every draft at the quality gate and writes none of the report. The global cross-asset report runs a broader analyst panel spanning asset classes and regions.
 
 **Where the line falls between model and analyst.** Everything written in a report is produced by these agents: the research, the synthesis and the prose.
 
@@ -21,11 +21,11 @@ The word "verified" carries different weight for different inputs, and the disti
 
 Before a single sentence is written, the data layer does its work.
 
-**Automated ingestion, continuously refreshed.** Pipelines pull economic releases, bond market data, currency series, equity factor and sector data, and sentiment and liquidity indicators on their natural frequencies. Market data refreshes daily, and economic releases refresh as they are published. Nothing in a report depends on a human remembering to update a spreadsheet.
+**Automated ingestion.** Pipelines pull economic releases, bond market data, currency series, equity factor and sector data, and sentiment and liquidity indicators on their natural frequencies. Market prices, yields, and currencies are daily series. Economic releases follow their publication calendars. Report inputs come from the ingestion pipeline rather than from manually maintained files.
 
 **Computation before narration.** For each market, the quantitative work is computed first and in parallel, as pure data: factor measurements, spread calculations, z-scores, sentiment composites and technical readings. The writing stage then verbalizes verified numbers; it never computes its own. This separation is what keeps the prose factually anchored.
 
-**Graceful degradation, never fabrication.** If a series is unavailable for a market, the affected analyst is explicitly told the data is missing and instructed to omit it. The system's cardinal rule: a gap in the data produces a silence in the report, never a guess.
+**Graceful degradation, never fabrication.** If a series is unavailable for a market, the affected analyst is explicitly told the data is missing and instructed to omit it. The system's cardinal rule: a gap in the data produces an explicit omission, never a guess.
 
 ## The Three-Stage Process
 
@@ -44,14 +44,14 @@ Every count below refers to the country report; the global cross-asset report us
     Most of the specialists run in parallel, which is how a full multi-section report can be rebuilt from scratch every week.
   </Step>
   <Step title="Chief-Investment-Officer Synthesis">
-    Raw specialist output, however good, reads like a stack of desk notes. The synthesis stage reads all of it and rewrites the report into a single strategic narrative:
+    Raw specialist output, however good, reads like a stack of desk notes. The synthesis layer reads all of it and rewrites the report into a single strategic narrative:
 
-    - **Resolves tensions**: when the rates view and the equity view pull in different directions, the synthesis stage is required to name the tension and come down on one side rather than print both and leave the reader to choose
+    - **Resolves tensions**: when the rates view and the equity view pull in different directions, the synthesis layer is required to name the tension and come down on one side rather than print both and leave the reader to choose
     - **Builds the thesis**: identifies the one or two forces actually driving the market this week and organizes every section around them
     - **Checks against history**: consults the record of prior weeks' views, so shifts in stance are acknowledged and explained rather than silently made
   </Step>
   <Step title="Editorial Review">
-    A final editorial layer runs up to three refinement passes against the house style guide:
+    A final editorial layer runs refinement passes against the house style guide:
 
     - Institutional tone written for CIO-level readers
     - Probabilistic language, "suggests", "indicates", "supports", never false certainty
@@ -64,19 +64,19 @@ Every count below refers to the country report; the global cross-asset report us
 
 ## The Disciplines That Make It Trustworthy
 
-### One Authoritative Fact, Everywhere
+### The Policy Rate Is Fetched Once
 
-The single most common failure of committee-written research is internal contradiction: the rates section quotes one policy rate, the currency section another. Macro Reports removes this by construction for key shared facts such as the policy rate. The policy rate for each market is fetched once from the data library, verified and date-stamped, and injected into every section that discusses monetary policy. Those sections draw on the same verified figure.
+The single most common failure of committee-written research is internal contradiction: the rates section quotes one policy rate, the currency section another. Macro Reports handles this for the policy rate directly. Each market's policy rate is fetched once from the data library, verified and date-stamped, and passed to every section that discusses monetary policy. Those sections all work from the same figure.
 
-Where an authoritative fact is unavailable, every section is told so, and the prohibition on invention applies to all of them equally.
+Where the policy rate is unavailable for a market, every section is told so, and the prohibition on invention applies to all of them equally.
 
 ### Self-Checking Quality Gates
 
-Every analyst draft is scored by a separate quality-review agent before it can enter the report. "Separate" here means a different agent with a different brief, not a human and not an independent source of truth. A second model pass catches format drift, unsupported assertions and missing citations well. It is weaker evidence against a shared misreading of a source than human review would be. The review checks factual discipline (no invented figures, no unsupported claims), analytical quality (does the section actually interpret, or merely recite), and style compliance. Drafts that fall short are regenerated, and only a draft that clears the review reaches the report. If too many sections come back empty, the pipeline fails loudly rather than silently padding the report. Quality is enforced by the process, not hoped for.
+Every analyst draft is scored by a separate quality-review agent before it can enter the report. "Separate" here means a different agent with a different brief, not a human and not an independent source of truth. A second model pass catches format drift, unsupported assertions and missing citations well. It is weaker evidence against a shared misreading of a source than human review would be. The review checks factual discipline (no invented figures, no unsupported claims), analytical quality (does the section actually interpret, or merely recite), and style compliance. Drafts that fall short are regenerated, and only a draft that clears the review reaches the report. If too many sections come back empty, the pipeline fails loudly rather than silently padding the report.
 
 ### Persistent Memory and Continuity
 
-After each report is published, its key views are extracted into a structured memory: factor readings, sector calls, tactical stances and currency positioning. Before the next report is written, the relevant history is retrieved and placed in front of every analyst.
+After each report is published, its key views are extracted into a structured memory. Before the next report is written, the relevant history is retrieved and placed in front of every analyst.
 
 The effect is what clients actually notice: reports that know what they said last week. When a view flips, the report says so and says why. When a trend extends, the report tracks its duration. Week over week, the research reads like a continuing conversation rather than a series of amnesiac snapshots.
 
@@ -86,11 +86,10 @@ Every report is generated with explicit awareness of its publication date. Analy
 
 ## Why This Architecture
 
-The three-stage design mirrors the institutional research workflow it replaces, analysts research, a CIO synthesizes, an editor polishes, because that workflow evolved over decades for good reasons. What the systematic implementation adds is what human teams cannot sustain:
+The three-stage design follows the institutional research workflow: analysts research, a synthesis layer resolves, an editor polishes. That workflow evolved over decades for good reasons. What the systematic implementation adds is what human teams cannot sustain:
 
 - **Every market gets the full process**, not just the flagship ones
 - **Every week starts from fresh data**, not from last week's document
-- **Every shared fact has one source**, enforced by architecture rather than by diligence
 - **Every section is graded**, not skimmed
 
 ## Explore Further

@@ -5,10 +5,10 @@ description: 'The data foundation behind Macro Reports: economic, fixed income, 
 
 import MacroDisclaimer from '/snippets/macro-disclaimer.mdx';
 
-Research is only as good as the data beneath it. Macro Reports sits on a purpose-built ingestion layer that pulls, validates, and organizes market and economic data continuously. No one maintains a spreadsheet to keep the data layer current.
+Research is only as good as the data beneath it. Macro Reports sits on an ingestion layer that pulls, validates, and organizes market and economic data on each source's own publishing frequency.
 
 <Note>
-**The foundation:** Roughly 600 million data points sit beneath the reports. The figure is an inventory, not a headline: daily market series with multi-decade history, covering prices, yields, exchange rates, factor and sector readings and sentiment components, plus the full economic dashboard for every covered market. All of it is ingested and validated by automated pipelines, so every report is generated from data that is current as of the week it is written.
+**The foundation:** Roughly 200 million rows of market and macro data sit beneath the reports. The figure is an inventory, not a headline: daily market series with multi-decade history, covering prices, yields, exchange rates, factor and sector readings and sentiment components, plus the full economic dashboard for every covered market. All of it is ingested and validated by automated pipelines, so every report is generated from data that is current as of the week it is written.
 </Note>
 
 ## Executive Summary
@@ -30,7 +30,7 @@ Research is only as good as the data beneath it. Macro Reports sits on a purpose
   <Card title="Fixed Income" icon="landmark">
     **Coverage**: Government bond yields across maturities, policy rates, and the derived measures that describe the rates environment, including curve shape and monthly and quarterly yield changes.
 
-    **In the reports**: The fixed income section, the authoritative policy-rate fact shared across sections, and the bonds side of the tactical allocation decision.
+    **In the reports**: The fixed income section, the verified policy rate shared across sections, and the bonds side of the tactical allocation decision.
   </Card>
   <Card title="Currencies" icon="money-bill-transfer">
     **Coverage**: Exchange rates and their statistical context, historical distributions, z-scores, and technical readings, for covered markets.
@@ -76,13 +76,11 @@ graph TB
     F --> H[Reports Published]
 ```
 
-**Ingestion on natural frequencies.** Every series is refreshed on the schedule its source publishes: daily for market prices, yields, currencies, and sentiment indicators; monthly and quarterly for economic releases. The pipeline does not wait for a human to notice that new data exists.
+**Ingestion on natural frequencies.** Each series arrives on its natural frequency: daily for market prices, yields, currencies, and sentiment indicators; monthly and quarterly for economic releases. Each run reads the latest data available at generation time.
 
 **Computation before narration.** When a report run begins, the quantitative layer computes everything first and in parallel, as pure data, before a single sentence is drafted: factor readings, spreads, z-scores, sentiment composites and technical measures. The writing stages then work exclusively from these verified inputs. Charts are rendered from the same computed values that drive the text, so a report's exhibits and its narrative stay consistent.
 
-**Validation and graceful degradation.** Inputs are checked as they flow through the pipeline. When a series is unavailable for a market, the system does not improvise: the affected sections are explicitly informed of the gap and instructed to omit the topic. A gap in the data produces a silence in the report, not an invented number, a subscriber will occasionally see a report decline to cite a figure, and that is the discipline working as designed. When too much of a report comes back empty, the pipeline fails loudly rather than silently padding.
-
-**One source of truth for shared facts.** Key facts cited by multiple sections, the policy rate above all, are fetched once, verified and date-stamped, and distributed to every section that needs them. Consistency on those shared facts is enforced by architecture, not by proofreading.
+**Validation and graceful degradation.** Inputs are checked as they flow through the pipeline. When a series is unavailable for a market, the system does not improvise: the affected sections are explicitly informed of the gap and instructed to omit the topic. A gap in the data produces an explicit omission, not an invented number. A subscriber will occasionally see a report decline to cite a figure. That is the discipline working as designed. When too much of a report comes back empty, the pipeline fails loudly rather than silently padding.
 
 ## Market Coverage
 
