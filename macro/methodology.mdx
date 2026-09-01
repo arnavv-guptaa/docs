@@ -1,0 +1,115 @@
+---
+title: 'Macro Report Methodology'
+description: 'How Macro Reports are produced: automated data ingestion, specialist analysis, chief-investment-officer synthesis, and editorial review in a disciplined weekly process'
+---
+
+import MacroDisclaimer from '/snippets/macro-disclaimer.mdx';
+
+Macro Reports are not written from a template and they are not lightly-edited boilerplate. Each report is rebuilt every week from fresh data through a process designed around one question: what would it take for a systematic pipeline to produce research a demanding chief investment officer would sign?
+
+<Note>
+**The short version:** Continuously updated data pipelines feed a three-stage research process with quality gates at every step: specialist analysts, then chief-investment-officer synthesis, then editorial review. The structure follows how an institutional research department is organized, with the same separation between specialist research, synthesis, and review.
+</Note>
+
+The analysts, the synthesis layer and the editorial reviewer are AI systems rather than human staff. They are purpose-built research agents operating under the data disciplines described on this page. Ten agents are involved in each country report. Nine produce it across three stages: seven specialist analysts, one synthesis layer, and one editorial reviewer. A tenth scores every draft at the quality gate and writes none of the report. The global cross-asset report runs a broader analyst panel spanning asset classes and regions.
+
+**Where the line falls between model and analyst.** Everything written in a report is produced by these agents: the research, the synthesis and the prose.
+
+The word "verified" carries different weight for different inputs, and the distinction matters. Numeric series come from the ingestion pipeline and are checked, date-stamped and reconciled before any section sees them. Current-news research is retrieval from public sources, and it carries the risks retrieval always carries: source selection, staleness and interpretation. Numbers in a report trace to the pipeline. Narrative context drawn from news does not carry the same guarantee. The cross-asset pillar scores are the exception: they are set by the research team as an expert input, and the process consumes and applies them consistently rather than deriving them. So the machine does the reading, the writing, and the enforcement of discipline; the house view on cross-asset positioning is human.
+
+## The Data Foundation
+
+Before a single sentence is written, the data layer does its work.
+
+**Automated ingestion, continuously refreshed.** Pipelines pull economic releases, bond market data, currency series, equity factor and sector data, and sentiment and liquidity indicators on their natural frequencies. Market data refreshes daily, and economic releases refresh as they are published. Nothing in a report depends on a human remembering to update a spreadsheet.
+
+**Computation before narration.** For each market, the quantitative work is computed first and in parallel, as pure data: factor measurements, spread calculations, z-scores, sentiment composites and technical readings. The writing stage then verbalizes verified numbers; it never computes its own. This separation is what keeps the prose factually anchored.
+
+**Graceful degradation, never fabrication.** If a series is unavailable for a market, the affected analyst is explicitly told the data is missing and instructed to omit it. The system's cardinal rule: a gap in the data produces a silence in the report, never a guess.
+
+## The Three-Stage Process
+
+Every count below refers to the country report; the global cross-asset report uses a larger analyst set.
+
+<Steps>
+  <Step title="Specialist Analysts">
+    A panel of seven specialist analysts covers the report's domains: news, macro, rates, currency, sentiment, equity, and allocation. Each owns its own territory rather than writing to a general brief, which is why a rates argument reads like it was written by someone who follows rates. Together they produce the nine sections of a country report. The counts differ because a specialist can own more than one section, and the equity specialist owns the factor and sector work.
+
+    Each specialist works the way a good human analyst does:
+
+    - **Researches actively**: searches current news, queries the historical time-series library, and retrieves relevant context from the archive of past reports
+    - **Anchors to data**: writes only from the verified quantitative inputs supplied for its section
+    - **Passes review before advancing**: every draft is scored by an independent quality review covering accuracy, discipline, and style, and a draft that falls short is regenerated rather than published
+
+    Most of the specialists run in parallel, which is how a full multi-section report can be rebuilt from scratch every week.
+  </Step>
+  <Step title="Chief-Investment-Officer Synthesis">
+    Raw specialist output, however good, reads like a stack of desk notes. The synthesis stage reads all of it and rewrites the report into a single strategic narrative:
+
+    - **Resolves tensions**: when the rates view and the equity view pull in different directions, the synthesis stage is required to name the tension and come down on one side rather than print both and leave the reader to choose
+    - **Builds the thesis**: identifies the one or two forces actually driving the market this week and organizes every section around them
+    - **Checks against history**: consults the record of prior weeks' views, so shifts in stance are acknowledged and explained rather than silently made
+  </Step>
+  <Step title="Editorial Review">
+    A final editorial layer runs up to three refinement passes against the house style guide:
+
+    - Institutional tone written for CIO-level readers
+    - Probabilistic language, "suggests", "indicates", "supports", never false certainty
+    - Internal shorthand and system jargon stripped out
+    - Word counts, structure, and formatting standards enforced
+
+    The result reads as one voice rather than a stack of separately authored sections, which is what this stage exists to produce.
+  </Step>
+</Steps>
+
+## The Disciplines That Make It Trustworthy
+
+### One Authoritative Fact, Everywhere
+
+The single most common failure of committee-written research is internal contradiction: the rates section quotes one policy rate, the currency section another. Macro Reports removes this by construction for key shared facts such as the policy rate. The policy rate for each market is fetched once from the data library, verified and date-stamped, and injected into every section that discusses monetary policy. Those sections draw on the same verified figure.
+
+Where an authoritative fact is unavailable, every section is told so, and the prohibition on invention applies to all of them equally.
+
+### Self-Checking Quality Gates
+
+Every analyst draft is scored by a separate quality-review agent before it can enter the report. "Separate" here means a different agent with a different brief, not a human and not an independent source of truth. A second model pass catches format drift, unsupported assertions and missing citations well. It is weaker evidence against a shared misreading of a source than human review would be. The review checks factual discipline (no invented figures, no unsupported claims), analytical quality (does the section actually interpret, or merely recite), and style compliance. Drafts that fall short are regenerated, and only a draft that clears the review reaches the report. If too many sections come back empty, the pipeline fails loudly rather than silently padding the report. Quality is enforced by the process, not hoped for.
+
+### Persistent Memory and Continuity
+
+After each report is published, its key views are extracted into a structured memory: factor readings, sector calls, tactical stances and currency positioning. Before the next report is written, the relevant history is retrieved and placed in front of every analyst.
+
+The effect is what clients actually notice: reports that know what they said last week. When a view flips, the report says so and says why. When a trend extends, the report tracks its duration. Week over week, the research reads like a continuing conversation rather than a series of amnesiac snapshots.
+
+### Temporal Discipline
+
+Every report is generated with explicit awareness of its publication date. Analysts are instructed to treat events after the report date as forthcoming, not as facts, a small discipline that prevents the subtle look-ahead errors that undermine trust in automated research.
+
+## Why This Architecture
+
+The three-stage design mirrors the institutional research workflow it replaces, analysts research, a CIO synthesizes, an editor polishes, because that workflow evolved over decades for good reasons. What the systematic implementation adds is what human teams cannot sustain:
+
+- **Every market gets the full process**, not just the flagship ones
+- **Every week starts from fresh data**, not from last week's document
+- **Every shared fact has one source**, enforced by architecture rather than by diligence
+- **Every section is graded**, not skimmed
+
+## Explore Further
+
+<CardGroup cols={2}>
+  <Card title="Macro Reports" icon="newspaper" href="/macro/overview">
+    The product overview and the value case.
+  </Card>
+  <Card title="Inside a Macro Report" icon="book-open" href="/macro/anatomy">
+    What each of the nine sections delivers.
+  </Card>
+  <Card title="Data and Coverage" icon="database" href="/macro/data-coverage">
+    The ingestion pipelines and data categories.
+  </Card>
+  <Card title="Glossary" icon="book" href="/glossary/overview">
+    The specialized terms used in the reports, defined in plain language.
+  </Card>
+</CardGroup>
+
+---
+
+<MacroDisclaimer />

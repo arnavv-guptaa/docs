@@ -1,0 +1,52 @@
+---
+title: 'Z-Score'
+description: 'Understanding the z-score - how unusual a current value is, measured in standard deviations from its historical average'
+---
+
+A z-score expresses how unusual a current value is: the number of standard deviations it sits away from its historical average. A z-score of zero means "exactly normal"; positive means above average; negative means below.
+
+## Beginner
+
+### What It Means
+
+Raw numbers lack context. Is a currency at 1.10 high or low? A z-score answers instantly: it restates the current level as a distance from that series' own normal, measured in units of its own typical variability. A reading near zero is unremarkable; a reading beyond roughly two in either direction is rare by historical standards.
+
+### Example
+
+Suppose a currency has averaged 1.05 over its history and now trades at 1.10. Whether that is a big move depends entirely on how much the currency usually swings. If its typical swing is half a cent, 1.10 sits ten standard deviations out and the reading is extreme. If its typical swing is five cents, the same level is one standard deviation out and entirely unremarkable.
+
+### Why It Matters
+
+Z-scores put currencies, yields, and sentiment measures on a common scale of "how stretched is this?", which makes readings comparable across completely different series, and turns "the currency is strong" into the more useful "the currency is unusually strong by its own history."
+
+---
+
+## Advanced
+
+### How to Read It
+
+In the reports, large positive z-scores flag strength that may be overextended (overbought), and large negative ones flag weakness that may be overdone (oversold). This connects directly to [mean reversion](/glossary/mean-reversion), with one condition attached: for a series that is anchored to a stable average, the further a z-score stretches from zero, the stronger the tendency to pull back toward it. For a trending series the tendency does not exist, and a stretched reading is not evidence of anything by itself. A currency at a high z-score is performing well *now*, but the report will note that history argues for tempered expectations from that level.
+
+### Common Misreadings
+
+- **Treating an extreme z-score as a reversal signal**: stretched readings can stretch further; the z-score shifts the odds, it does not set a date
+- **Ignoring the lookback window**: a z-score is always relative to the history it was measured against, the same level can look extreme against a short history and ordinary against a long one
+- **Assuming symmetry of meaning**: an extreme reading in a trending series (like a yield during a policy cycle) is less anomalous than the same reading in a range-bound series
+
+### In the Reports
+
+The currency section leans on z-scores most heavily, placing the exchange rate against its own history, and the components of the [composite market-sentiment score](/glossary/composite-market-sentiment-score) are each expressed as z-scores before being combined, which is what makes liquidity, momentum, and breadth comparable.
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Standard Deviation" href="/glossary/standard-deviation">
+    The unit a z-score is measured in
+  </Card>
+  <Card title="Mean Reversion" href="/glossary/mean-reversion">
+    The pull back toward average
+  </Card>
+  <Card title="Composite Market-Sentiment Score" href="/glossary/composite-market-sentiment-score">
+    Built from z-scored components
+  </Card>
+</CardGroup>
