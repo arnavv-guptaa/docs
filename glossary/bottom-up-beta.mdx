@@ -1,0 +1,62 @@
+---
+title: 'Bottom-Up Beta'
+description: 'Understanding bottom-up beta - estimating a company’s systematic risk from comparable businesses rather than from its own share-price regression'
+---
+
+A bottom-up beta estimates a company's sensitivity to market risk from the operating risk of comparable businesses, instead of regressing its own share price against an index.
+
+## Beginner
+
+### What It Means
+
+The usual way to measure beta is to look at how a stock has moved against the market. That works when the stock trades actively and its history is representative. When a share trades thinly, or the listed entity is a poor proxy for the underlying business, the regression produces a number with more noise than signal.
+
+The alternative is to look at companies doing the same thing, strip out the effect of how much each of them borrowed, take a stable central estimate, then add back the target company's own borrowing.
+
+### Example
+
+A newly listed regional operator has 14 months of thin trading history. Rather than trust that regression, you take a set of established operators in the same business, remove their leverage, take the central estimate, and re-apply the target's own capital structure.
+
+### Why It Matters
+
+Beta feeds directly into the discount rate, and the discount rate moves valuation substantially. A beta driven by illiquidity rather than by business risk quietly corrupts everything downstream.
+
+---
+
+## Advanced
+
+### How to Read It
+
+`Unlevered beta = levered beta / [1 + (1 − tax rate) × debt/equity]`
+
+`Relevered beta = operating beta × [1 + (1 − tax rate) × target debt/equity]`
+
+Both steps use market-value debt and equity, and both assume the debt carries no systematic risk of its own. Where leverage is high or the credit is distressed, that assumption understates asset risk.
+
+A bottom-up estimate is not automatically superior to a regression. A global peer set can understate local market segmentation, regulation, or funding risk that a local regression genuinely captures. Both estimates should be shown, and a large gap between them explained rather than averaged.
+
+Two related corrections address measurement noise in a regression beta. Lead-lag adjustment handles nonsynchronous trading, where a thinly traded share reacts to market moves a day late. Statistical shrinkage pulls an imprecise extreme estimate toward a central value.
+
+### Common Misreadings
+
+- **Assuming an industry beta is conservative**: in a large cross-section, substituting one can lower the discount rate rather than raise it.
+- **Reporting beta without its standard error**: a single-stock beta is an estimate with sampling error, not a fixed company characteristic.
+- **Ignoring the index choice**: beta against a local index and against a global index answer different questions.
+
+### In Parallax Reports
+
+Parallax reports the observed company beta, the operating-beta diagnostic and the price-implied discount rate as three distinct pieces of evidence, alongside trading-frequency and explanatory-power statistics. See [Cost of Capital](/methodology/valuation/cost-of-capital).
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Beta" href="/glossary/beta">
+    The underlying concept
+  </Card>
+  <Card title="WACC" href="/glossary/weighted-average-cost-of-capital">
+    Where beta enters the valuation
+  </Card>
+  <Card title="Correlation" href="/glossary/correlation">
+    How co-movement is measured
+  </Card>
+</CardGroup>

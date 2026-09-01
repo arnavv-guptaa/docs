@@ -1,0 +1,103 @@
+---
+title: 'Valuation Framework'
+description: 'How Parallax builds intrinsic value, reads the expectations embedded in market price, and keeps each source of evidence in its own analytical role'
+---
+
+import ValuationDisclaimer from '/snippets/valuation-disclaimer.mdx';
+
+Parallax values companies by reconciling an independently constructed operating forecast with the growth, margins, reinvestment and competitive duration already embedded in the market price. The framework runs at scale across global equity markets, rebuilt from a continuously refreshed data foundation rather than maintained as a set of hand-edited spreadsheets.
+
+<Note>
+**The core idea:** a company can be excellent and still be a poor investment when the price requires even better results. A troubled company can be attractive when the price assumes permanent impairment and the evidence supports recovery. The object of analysis is the gap between expectations and plausible outcomes.
+</Note>
+
+## The Economic Question
+
+Traditional valuation begins with a forecast and ends with a price. Parallax runs the logic in both directions. It first asks what revenue growth, operating margins, reinvestment and competitive duration are already embedded in the market price. It then compares those implied expectations with an independently constructed operating case.
+
+This distinction is the whole framework. It moves the debate away from "my target price versus yours" and toward observable operating expectations that either side can test against evidence.
+
+## The Valuation Identities
+
+Every method in the framework rearranges the same three identities.
+
+| Identity | Definition |
+|---|---|
+| **Enterprise value** | Present value of explicit FCFF + present value of continuing value |
+| **Equity value** | Enterprise value − net debt − senior obligations not already in net debt + other non-operating assets |
+| **Value per share** | Equity value / diluted equivalent shares outstanding |
+
+A DCF forecasts the cash flows and solves for value. A reverse DCF observes value and solves for the operating assumptions. A peer multiple compresses a market DCF into a ratio. A factor score asks whether a stock has historically rewarded return or risk characteristics. Technical analysis asks whether the current price path improves or complicates execution.
+
+## The Sequence
+
+<Steps>
+  <Step title="Fix the valuation date and quoted security">
+    Price, financial statements, analyst estimates, share count and exchange rates must describe the same economic moment.
+  </Step>
+  <Step title="Reconstruct the business">
+    Identify revenue drivers, operating margins, reinvestment needs, financing structure and the accounting choices that obscure them.
+  </Step>
+  <Step title="Build an independent operating case">
+    Start near observable consensus, then make each departure explicit.
+  </Step>
+  <Step title="Read the price backwards">
+    Solve for the growth, margin or competitive duration that the current price requires.
+  </Step>
+  <Step title="Compare distinct sources of evidence">
+    Intrinsic value, peer context, sell-side targets, factor evidence and technical conditions each retain a separate role.
+  </Step>
+</Steps>
+
+## Security Identity Comes First
+
+A valuation can be economically correct and still produce the wrong value per share. Dell Technologies illustrates the point. Its January 2026 filing reported 652.0 million shares across Classes A, B and C, while the listed Class C share count was 323.0 million. All classes participate equally in dividends and undistributed earnings, and Classes A and B convert one for one into Class C. Dividing whole-company value by only the listed Class C shares would nearly double value per share by omitting economically equivalent ownership.
+
+The lesson generalizes. Depositary receipts, dual listings, treasury shares, convertibles and multiple voting classes can all make the ticker-level share count different from the issuer-wide economic denominator. Parallax carries a dated share denominator through the enterprise-to-equity bridge for every company it values.
+
+<Info>
+Source: Dell Technologies Form 10-K for the year ended 30 January 2026, Note 14.
+</Info>
+
+## What a Model Output Is Not
+
+<Warning>
+**The seductive wrong answer:** "The model says 140, so the stock is worth 140."
+
+A model output is conditional. It says that a specified path for growth, margins, reinvestment, discount rates, terminal economics and shares produces 140. The conclusion becomes useful only after the reader can see which assumptions do the work and which observation would disprove them.
+</Warning>
+
+## A Reader Sanity Check
+
+Move one material assumption at a time.
+
+- If a 1.0% change in WACC moves value more than a large change in operating margin, the valuation is primarily a duration bet.
+- If changing the share denominator changes value per share materially, the error is in security identity, not forecasting.
+- If peer and sell-side ranges agree, remember that both may reflect the same market expectations.
+
+## What Would Falsify the Conclusion
+
+A valuation thesis fails when the business driver it depends on fails. Examples include revenue growth below the stated corridor, margins that cannot recover without implausible cost cuts, reinvestment that rises faster than revenue, an equity denominator that no longer reconciles, or a cost of capital that understates observable financing risk.
+
+## How Parallax Applies This
+
+Parallax keeps the forward DCF independent from the reverse DCF. It displays price-implied expectations as a challenge to the forecast, never as an instruction to fit the forecast to price. It keeps intrinsic value, peer context, sell-side context, systematic factor evidence and technical evidence distinct as analytical methods, so agreement is earned rather than manufactured. Where a defined client product combines two of those sources, it discloses its inputs and weights and does not present the result as an intrinsic valuation.
+
+## Where to Go Next
+
+<ValuationDisclaimer />
+
+<CardGroup cols={2}>
+  <Card title="Data and Model Pipeline" icon="database" href="/methodology/valuation/data-pipeline">
+    The data foundation, machine-learning layer and automated checks that let this framework run across global markets every week.
+  </Card>
+  <Card title="Financial Statements" icon="file-invoice" href="/methodology/valuation/financial-statements">
+    Statement reconstruction, accounting adjustments, earnings quality and security identity.
+  </Card>
+  <Card title="Reverse DCF" icon="arrows-left-right" href="/methodology/valuation/reverse-dcf">
+    Turning the current price into a testable set of operating expectations.
+  </Card>
+  <Card title="Interpreting Outputs" icon="chart-line" href="/methodology/valuation/interpreting-outputs">
+    How to read a Parallax valuation range without confusing it with a forecast.
+  </Card>
+</CardGroup>

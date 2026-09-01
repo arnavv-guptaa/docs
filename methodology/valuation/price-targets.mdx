@@ -1,0 +1,174 @@
+---
+title: 'Price Targets and Ratings'
+description: 'How a client price target is built from peer and consensus evidence, why each component must qualify before it counts, and why the rating hurdle scales with a stock’s own volatility'
+---
+
+import ValuationDisclaimer from '/snippets/valuation-disclaimer.mdx';
+
+The client price target begins with a transparent blend of peer evidence and published consensus. Each component must then survive an independent evidence check before it can determine the displayed target or rating.
+
+## The Economic Question
+
+What price best summarizes comparable-company evidence and published analyst expectations, when the two sources can be informative, correlated, and occasionally wrong in different ways?
+
+The answer has two stages. First, calculate each source on a common per-share and currency basis. Second, decide whether both sources have earned the right to determine the client target.
+
+The rating is a separate signal-to-noise judgment. A 12.0% valuation gap is consequential for a stable stock and ordinary for a highly volatile one.
+
+## First-Principles Derivation
+
+`Peer center = a robust, quartile-weighted center of the eligible peer-implied values`
+
+`Sell-side center = the average of the published consensus mean and median`
+
+`Raw target = 50.0% × peer center + 50.0% × sell-side center`
+
+`Expected return = client target / current price − 1`
+
+One term, two senses, so the pages keep them apart. Here it means the return implied by the published target. On the reverse-DCF and cost-of-capital pages it means the return the market appears to require at the current price. The first is an output of this calculation. The second is a diagnostic about the price.
+
+The raw target is always retained as the audit calculation.
+
+Be clear about what the equal weighting is and is not. Peer multiples and sell-side targets are **correlated** sources, because published targets are themselves often built from peer multiples. Averaging them therefore buys no diversification and reduces no error. The weighting exists to stop either source from quietly dominating, and to give the reader a result they can reconstruct in one line.
+
+This is why the blend is a **commercial summary of market evidence and not an intrinsic estimate**. An intrinsic valuation is the DCF, it lives on its own pages, and it is deliberately kept out of this arithmetic. Anyone reading the target as a fair value is reading it wrong.
+
+<Warning>
+The raw calculation is not automatically the client target. A multiple applied to the wrong denominator, a listing-level share count substituted for the issuer-wide total, an incomplete net-debt bridge, or a security-currency mismatch can all produce perfect arithmetic and a useless answer. Evidence qualification precedes display.
+</Warning>
+
+## The Two Component Checks
+
+<Tabs>
+  <Tab title="Peer component">
+    Parallax verifies the security and trading currency, confirms that the selected multiple and the target denominator use the same accounting and time basis, and requires a minimum number of usable issuer observations for the selected metric.
+
+    Enterprise-value methods receive three further checks. Issuer-wide shares must reconcile to the direct denominator evidence. Net debt per share must reconcile to total net debt, shares and the currency conversion. The reporting-to-trading-currency bridge must be explicit.
+  </Tab>
+
+  <Tab title="Sell-side component">
+    Parallax verifies the security and currency, requires a dated observation, and uses only positive per-share consensus statistics. The center is the arithmetic average of the published mean and median when both are available. If only one exists, it is used and disclosed.
+
+    Individual analyst targets are never inferred from summary data.
+  </Tab>
+</Tabs>
+
+Failure of one component does not contaminate the other. It changes which evidence can determine the client target, while the failed component and its reason remain in the audit trail.
+
+## The Reconciliation Decision
+
+Two diagnostic tests identify cases that deserve attribution rather than blind averaging. The first asks whether the raw target and each component sit within a defined band around the current price. The second asks whether one component center is a large multiple of the other.
+
+| Evidence state | Client target | Reason |
+|---|---|---|
+| Both components pass, the raw target is inside the diagnostic band, and the centers are close | The raw equal-weight blend | Both sources are qualified and no source dominates the result |
+| One component fails its evidence check, the other passes and is in-band | The qualified component center | The target uses defensible evidence rather than averaging it with a defective input |
+| Both pass, but one alone causes the extreme or the conflict | The in-band component center | The extreme component stays visible but does not determine the target |
+| Both pass and corroborate the same extreme, or remain irreconcilable | Evidence review | Corroborated extremes may be real, and deserve judgment rather than mechanical deletion |
+| Only one component passes and is itself extreme, or neither passes | No automatic client target | One uncorroborated extreme is insufficient evidence |
+
+An evidence reviewer may approve the raw blend, select the existing peer center, select the existing sell-side center, or reject publication. The reviewer cannot enter a bespoke target. The process resolves which evidence is defensible. It does not turn review into another valuation model.
+
+## Why the Diagnostic Band Is Not a Price Clamp
+
+The band does not alter any valuation. It asks a narrower question: when an answer is far from price, is that distance supported by two independently qualified components, or is one component carrying the entire conclusion?
+
+<Note>
+Parallax never moves a target to the nearest boundary. The raw peer center, sell-side center and equal-weight blend retain their calculated values. A component is either used, excluded with a stated reason, or sent for evidence review.
+
+This preserves the possibility that the market is profoundly wrong, without allowing a unit, denominator or identity error to masquerade as conviction.
+</Note>
+
+## The Volatility-Aware Rating Gradient
+
+A fixed percentage hurdle treats a utility and a pre-revenue biotech as though a given valuation gap means the same thing in both. It does not.
+
+Parallax scales the rating hurdle to the stock's own realized volatility, measured over a defined trailing window. The ordinary hurdle is a fraction of realized volatility and the strong hurdle is a larger multiple of it. Both are bounded by a floor and a cap.
+
+- The **floors** stop quiet stocks from receiving a Buy or Sell label for a trivial valuation gap.
+- The **caps** stop volatile stocks from requiring an unreachable target before the system can express a view.
+
+Two limitations come with this and are worth stating plainly.
+
+**Horizons have to match.** An expected return is a return over some period, and a volatility measure is a dispersion over some window. Comparing the two only means something when both are expressed on the same horizon, so the workbook footnote prints the window the hurdle was scaled from.
+
+**A trailing measure is procyclical.** Realized volatility clusters. A volatility spike widens the hurdle, which can soften a Sell toward Hold at the moment downside risk is highest, and a long quiet stretch tightens the hurdle in exactly the conditions that precede a repricing. The floors and caps bound that effect. They do not remove it. A reader comparing two ratings across different volatility regimes should check the printed hurdle rather than assume the labels mean the same thing.
+
+| Rating | Target return condition | Additional evidence condition |
+|---|---|---|
+| **Strong Buy** | At or above the positive strong hurdle | Both qualified components are used, and both clear the positive ordinary hurdle |
+| **Buy** | At or above the positive ordinary hurdle | None |
+| **Hold** | Between the positive and negative ordinary hurdles | None |
+| **Sell** | At or below the negative ordinary hurdle | None |
+| **Strong Sell** | At or below the negative strong hurdle | Both qualified components are used, and both clear the negative ordinary hurdle |
+
+A target based on one qualified component can be Buy, Hold or Sell. It can never be Strong Buy or Strong Sell. Strong ratings require two-source corroboration in the same direction.
+
+When realized volatility is missing, invalid, or supported by too few observations, Parallax falls back to a fixed hurdle convention. The workbook footnote prints the actual hurdles applied to that company, and states whether they were scaled from realized volatility or drawn from the fallback convention.
+
+## A Worked Target and Rating
+
+An illustrative security trades at 30.0. The peer center is 40.0. The consensus mean is 33.0 and the median is 35.0, producing a sell-side center of 34.0. Both components pass their checks, the centers are close, and the raw target is in-band.
+
+`Client target = 0.5 × 40.0 + 0.5 × 34.0 = 37.0`
+
+The target is 23.3% above the current price. At a moderate level of realized volatility, that gap clears the ordinary hurdle and the rating is a Buy. At a very high level of realized volatility, the same gap sits inside the wider hurdle and the rating is a Hold.
+
+The valuation did not change. What changed is the strength of the signal relative to the stock's normal price variation.
+
+## An Extreme-Result Repair
+
+Consider a security where the peer center lands at many multiples of the current price while the sell-side center sits close to it. The raw equal-weight blend inherits the extreme, and the two centers conflict by a wide margin.
+
+Nothing is moved to the nearest boundary. The extreme peer result and the raw blend both remain available for challenge. The client target uses the in-band component, and the rating is recalculated from it. Because a single component determines the target, a Strong rating is unavailable.
+
+## What Is Deliberately Excluded
+
+DCF, APV, factor scores, technical indicators and the 52-week range do not enter this price target.
+
+DCF remains valuable research. Factor scores describe systematic return characteristics. Technicals inform timing. The trading range provides context. None of them enters the arithmetic.
+
+This exclusion is a commercial and methodological choice. The client target must be concise, current and reconstructable from evidence that fits on one page. More elaborate methods stay available for deeper analysis, without making the product target impossible to explain.
+
+## The One-Page Reconstruction Test
+
+The workbook shows the current price and date; each peer, the selected multiple and the peer-implied share value; outlier treatment; the distributional statistics and the peer center; the consensus mean and median; the raw blend; each component's evidence status; any exclusion; the client target; realized volatility; the rating hurdles applied; and the final label.
+
+Calculations retain full precision. Client figures display one digit after the decimal point.
+
+<Info>
+The reader should be able to reproduce both the raw calculation and the client result with a calculator, then identify every judgment that separates them.
+</Info>
+
+## The Seductive Wrong Answer
+
+<Warning>
+"The raw blend is far from price, so cut it back to something reasonable."
+
+That destroys information and hides the source of the disagreement. The correct response is to test each component's identity, currency, denominator, shares, net debt and date; determine which component drives the result; preserve every raw value; and use only evidence that survives. A distant target supported by two sound components is a case for review, not for automatic dilution.
+</Warning>
+
+## A Reader Sanity Check
+
+Recalculate the peer and sell-side centers separately. Confirm that the peer multiple and target denominator use the same basis, that issuer-wide shares and net debt support any enterprise-value translation, and that both sources refer to the same security, currency and date. Then ask whether one component alone causes an extreme. Finally, compare the rating hurdle with realized volatility, and confirm that any Strong label has two-source support.
+
+## What Would Falsify the Conclusion
+
+The peer cohort no longer represents the relevant economics; duplicate listings survive; the target denominator and peer multiple use inconsistent periods; shares or net debt do not reconcile; analyst summaries are stale or unavailable; too few usable issuer observations support the selected metric; price, peer evidence, analyst targets and volatility refer to incompatible dates; or the workbook cannot reproduce the engine result at declared precision.
+
+## How Parallax Applies This
+
+Parallax publishes the component centers, the raw blend, the evidence checks, the selected client target, the volatility-scaled hurdles and the calculation trail. Raw values are never clipped or overwritten. An excluded component remains visible with its exclusion reason.
+
+Human review is reserved for cases where two qualified sources corroborate an extreme or remain irreconcilable, and the reviewer can choose only among existing evidence or reject publication. The investor can reconstruct the answer, challenge the evidence, and disagree with the conclusion.
+
+<ValuationDisclaimer />
+
+<CardGroup cols={2}>
+  <Card title="Relative Valuation" icon="scale-balanced" href="/methodology/valuation/relative-valuation">
+    How the peer evidence behind the target is assembled.
+  </Card>
+  <Card title="Interpreting Outputs" icon="chart-line" href="/methodology/valuation/interpreting-outputs">
+    Reading the published range and rating as an investor.
+  </Card>
+</CardGroup>

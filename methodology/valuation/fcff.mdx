@@ -1,0 +1,71 @@
+---
+title: 'FCFF Construction'
+description: 'Building free cash flow to the firm from operating profit, tax, depreciation, capital expenditure and working capital'
+---
+
+Free cash flow to the firm measures the cash available to debt and equity investors after tax, and after the capital expenditure and working-capital investment required to sustain and expand operations.
+
+## The Economic Question
+
+What cash can the operating assets distribute after taxes and reinvestment, before deciding how the business is financed? This is the question FCFF answers. It is most useful for non-financial operating companies whose debt is a financing choice rather than an operating input.
+
+## First-Principles Derivation
+
+`FCFF = EBIT(1 − tax rate) + D&A − capital expenditure − change in operating working capital`
+
+`Enterprise value = sum of discounted FCFF + discounted continuing value`
+
+Depreciation is added back because it is non-cash. Capital expenditure is deducted because assets wear out and growth needs capacity. Working capital is deducted when operations absorb cash and added when they release cash. The tax rate applies to operating profit, independent of the current financing mix.
+
+## Model Mechanics
+
+<AccordionGroup>
+  <Accordion title="Capital expenditure and depreciation">
+    A mature asset base may sustain capital expenditure near depreciation. A growth business may require capital expenditure well above depreciation. A capital-light business may invest through R&D, customer acquisition or content that appears in operating expense. The cash-flow model must capture the economic investment wherever accounting places it.
+  </Accordion>
+
+  <Accordion title="Working capital">
+    Forecast receivables, inventory and payables from operating drivers rather than a single unexplained percentage. A bounded estimate can be used when detail is thin, but the bound remains visible and is tested against history.
+  </Accordion>
+
+  <Accordion title="Stock-based compensation">
+    Adding stock-based compensation back to operating cash does not make it free. Either treat it as an economic operating cost, or carry the dilution through the share denominator. Doing neither overstates value.
+  </Accordion>
+</AccordionGroup>
+
+## A Worked Case
+
+An industrial company reports EBIT of 200.0, a 25.0% operating tax rate, depreciation of 40.0, capital expenditure of 65.0 and a 15.0 increase in operating working capital.
+
+NOPAT is 150.0 and FCFF is 110.0.
+
+If the model mistakenly treats the 15.0 working-capital investment as a source of cash, FCFF rises to 140.0. That is a 27.3% overstatement before any terminal compounding is applied.
+
+## The Seductive Wrong Answer
+
+<Warning>
+"EBITDA is cash flow."
+
+EBITDA omits taxes, working capital, capital expenditure and the replacement cost of assets. It can be useful for comparing operating scale, but it does not measure distributable cash. The omission becomes most dangerous in capital-intensive and leveraged companies.
+</Warning>
+
+## A Reader Sanity Check
+
+Reconcile FCFF to the cash-flow statement over at least three annual periods. Compare capital expenditure with depreciation, revenue growth and capacity. Compare working-capital investment with the change in sales. If cash conversion improves sharply, identify the specific operating source.
+
+## What Would Falsify the Conclusion
+
+Maintenance capital expenditure proves materially higher than modelled, supplier financing reverses, receivables age, inventory turns deteriorate, or recurring stock-based compensation produces dilution beyond the forecast denominator.
+
+## How Parallax Applies This
+
+Parallax reconstructs FCFF from operating profit, tax, depreciation, capital expenditure and working capital. It flags capital-expenditure-to-depreciation and working-capital boundaries for explanation. Those warnings do not alter the math. They tell the reader where forecast risk is concentrated.
+
+<CardGroup cols={2}>
+  <Card title="Cost of Capital" icon="percent" href="/methodology/valuation/cost-of-capital">
+    Discounting those cash flows at a currency-matched opportunity cost.
+  </Card>
+  <Card title="Transition-Stage Valuation" icon="chart-line-up" href="/methodology/valuation/transition-stage">
+    What to do when explicit-period FCFF stays negative.
+  </Card>
+</CardGroup>

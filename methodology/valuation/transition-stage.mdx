@@ -1,0 +1,85 @@
+---
+title: 'Transition-Stage Valuation'
+description: 'Valuing companies whose explicit-period free cash flow stays negative, where timing and financing of the transition carry the value'
+---
+
+When explicit-period FCFF remains negative, valuation depends on the timing and financing of the transition to positive operating economics, rather than on an immediate steady-state cash-flow assumption.
+
+## The Economic Question
+
+How much of current enterprise value is supported by near-term cash flow, how much depends on a later recovery, and what growth, margin and competitive duration does the market price require?
+
+This is the appropriate frame for an early-stage platform, a recent IPO, a recovery situation, or a capital-intensive buildout.
+
+## First-Principles Derivation
+
+`Observed enterprise value = current equity value + net debt + senior obligations − non-operating assets`
+
+`Observed enterprise value = PV of explicit cash burn + PV of transition cash flow + PV of continuing value`
+
+The current price fixes the left side. A reverse DCF solves for one operating variable at a time on the right side, commonly revenue growth, year-five operating margin or competitive-advantage duration. Other assumptions remain visible and independently set.
+
+## Model Mechanics
+
+<Steps>
+  <Step title="Build the ordinary forecast">
+    Construct the standard five-year operating forecast from operating evidence.
+  </Step>
+  <Step title="Classify the case">
+    If FCFF remains negative in every explicit year, classify the company as a transition or recovery case.
+  </Step>
+  <Step title="Extend the operating path">
+    Extend the forecast beyond the explicit period and require an observable crossover to positive FCFF.
+  </Step>
+  <Step title="Bridge enterprise value">
+    Reconcile enterprise value across the original explicit period, the extension and continuing value.
+  </Step>
+  <Step title="Solve the expectation boundaries">
+    Solve price-implied growth and margin boundaries without replacing the independent forecast.
+  </Step>
+  <Step title="Apply a named risk stress">
+    Test a higher WACC as an explicit, labelled stress and require that it reduce value.
+  </Step>
+  <Step title="Name the falsifiers">
+    Identify the first two operating observations that would invalidate the path.
+  </Step>
+</Steps>
+
+If the price-implied assumptions sit outside the model corridor, the result is still useful. It says the market requires an outcome beyond the independently defined range.
+
+## A Real-World Edge Case
+
+A pre-scale satellite network can trade at an enterprise value dominated by future network economics while current FCFF is deeply negative. A conventional five-year DCF may label every scenario unattractive because the business has not reached commercial density. A peer range may also be distorted by scarce comparables and narrative premiums.
+
+The disciplined response is neither automatic rejection nor price justification. It is to show the customer count, revenue per user, launch cadence, capacity utilization, gross margin and capital intensity that the price requires. The investor can then disagree with those expectations using operating evidence.
+
+## The Seductive Wrong Answer
+
+<Warning>
+"Negative cash flow means no intrinsic value."
+
+Many valuable businesses consume cash while building assets, distribution or a customer network. The analytical burden is higher because more value lies further in the future. The correct response is a wider expectations map, a higher risk stress and explicit financing needs. It is not a blank panel.
+</Warning>
+
+## A Reader Sanity Check
+
+Calculate the present value of cash burn before breakeven. Compare it with cash on hand and committed financing. Identify the first positive FCFF year and the operating assumptions that create it. Then calculate what share of enterprise value remains in continuing value after the extension.
+
+## What Would Falsify the Conclusion
+
+The business misses customer or capacity milestones, gross margin fails to improve with scale, capital expenditure remains structurally above the path, financing dilutes existing shareholders beyond the model, or the positive FCFF crossover disappears under modest operating stress.
+
+## How Parallax Applies This
+
+Parallax treats all-negative explicit FCFF as a reclassification trigger. It preserves the raw DCF, builds a quantified transition assessment, extends the forecast, solves price-implied expectations, and runs the higher-WACC stress.
+
+An intrinsic range appears only when the extended path reaches positive FCFF, the expectations boundaries resolve, and the higher-WACC stress reduces value. Limited liability means a negative Bear value is displayed as zero, while the raw negative value remains in the underlying calculation record.
+
+<CardGroup cols={2}>
+  <Card title="Reverse DCF" icon="arrows-left-right" href="/methodology/valuation/reverse-dcf">
+    Expressing the current price as a testable set of operating expectations.
+  </Card>
+  <Card title="Scenario Design" icon="code-branch" href="/methodology/valuation/scenarios">
+    How Bear, Base and Bull cases are constructed and bounded.
+  </Card>
+</CardGroup>

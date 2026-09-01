@@ -1,0 +1,122 @@
+---
+title: 'Data and Model Pipeline'
+description: 'The data foundation, machine-learning layer, and automated evidence checks that let a full valuation framework run across global markets rather than one company at a time'
+---
+
+A valuation framework is only as good as the evidence beneath it and the discipline that keeps that evidence honest. The analytical framework described in these pages is textbook practitioner finance. What makes it operable across thousands of securities, in many currencies and accounting regimes, every week, is the pipeline underneath it.
+
+<Note>
+**The short version:** automated ingestion keeps the statement, market and estimate data current. A machine-learning layer predicts forward financial-statement line items such as operating margins, produces the factor signals the models consume, and adapts how that evidence is weighted. An automated routing layer sends every company to the valuation method its balance sheet actually justifies. Evidence checks then decide what is publishable. Nothing in the process depends on an analyst remembering to refresh a spreadsheet.
+</Note>
+
+## Why the Pipeline Is the Hard Part
+
+A single analyst can reconstruct one company's statements, estimate a bottom-up beta, build a five-year forecast and solve a reverse DCF. Doing that consistently across a global coverage universe creates a different set of problems. Note that every company is processed, and not every company ends up with a publishable intrinsic range. The evidence checks below decide which outputs survive, and for some issuers the answer is that a method is unavailable.
+
+- **Alignment.** Price, statements, estimates, share count and exchange rates must describe the same economic moment for every company, not just the one being examined.
+- **Comparability.** Accounting bases, reporting perimeters and fiscal calendars differ across markets. A peer multiple is meaningless when numerator and denominator sit on different bases.
+- **Method selection.** A bank, a REIT, a mine and a software company do not share a valuation model. Choosing correctly, every time, is a routing problem.
+- **Degradation.** Evidence is sometimes missing or unusable. The system must know the difference between a defensible answer and a filled panel.
+
+These are engineering problems as much as finance problems. They are where the framework either scales or quietly breaks.
+
+## The Data Foundation
+
+<CardGroup cols={2}>
+  <Card title="Financial statements" icon="file-invoice-dollar">
+    Aligned annual and interim periods across income statement, balance sheet and cash flow, reconstructed onto a common operating and financing basis.
+  </Card>
+  <Card title="Market data" icon="chart-line">
+    Daily prices, volumes, returns and volatility with multi-decade history, plus market-value capital weights and exchange rates.
+  </Card>
+  <Card title="Rates and risk inputs" icon="percent">
+    Dated sovereign curves, credit spreads, equity risk premiums and country risk evidence, carried with the date they were observed.
+  </Card>
+  <Card title="Estimates and consensus" icon="users">
+    Published analyst estimates and summary statistics, used as a market baseline and as one clearly labelled evidence source among several.
+  </Card>
+</CardGroup>
+
+**Ingestion on natural frequencies.** Every series refreshes on the schedule its source publishes. Market data moves daily. Statements and estimates move as they are filed and revised. The valuation layer reads from that base rather than from a snapshot someone took once.
+
+**Point-in-time discipline.** Each production run fixes one retrieval date, so current-snapshot evidence is never mixed across calendar boundaries. A valuation, its peer evidence, its consensus statistics and its volatility measure all refer to the same day. This is what makes a result reproducible and a historical comparison meaningful.
+
+## Where Machine Learning Enters
+
+Machine learning does specific jobs in this framework. It does not replace the valuation identities and it does not choose the answer.
+
+| Layer | What the models do | What they do not do |
+|---|---|---|
+| **Statement forecasting** | Predict forward financial-statement line items, including operating margins, that seed the operating case, so a forecast starts from a data-driven baseline rather than a blank sheet | Set the final operating assumptions, which remain visible and inspectable |
+| **Factor signals** | Combine many underlying metrics into each factor score through a precision-weighted ensemble, so noisier inputs carry less weight | Forecast company cash flows or produce a price target |
+| **Score integration** | Adapt the weighting of factor evidence to the prevailing market regime within disclosed bounds | Override the valuation range or the evidence checks |
+| **Anomaly detection** | Flag trading, flow and data patterns that deserve attention before evidence is used | Delete an inconvenient observation |
+
+<Warning>
+**The seductive wrong answer:** "The model is machine learning, so the output is objective."
+
+A learned model still encodes the objective it was trained against and the data it saw. The discipline that matters is what the output is allowed to do. In this framework, a learned estimate can seed a forecast, weight a signal or raise a flag. It cannot silently become an intrinsic valuation input, and it cannot fit a forecast to the current price.
+</Warning>
+
+## Automated Method Routing
+
+Every company is routed to an economic archetype before any model runs. The archetype determines the primary intrinsic lens, the peer-metric family and the companion variable the reader should check. A bank is valued on equity economics because deposits and borrowings are operating raw material. A resource company is valued on a finite reserve life rather than a perpetual annuity. A holding company is valued look-through rather than on consolidated revenue.
+
+Routing is automated because consistency is the point. A human analyst under time pressure reaches for the metric that is populated. The pipeline reaches for the metric the business model justifies, and labels any lower-order proxy it has to fall back on.
+
+See [Archetype Conventions](/methodology/valuation/archetypes) for what each archetype means.
+
+## Evidence Checks and Graceful Degradation
+
+Before any valuation output is published, its components must survive automated evidence checks. These verify that the security, currency and date are consistent, that a multiple and its target denominator sit on the same accounting and time basis, that the enterprise-to-equity bridge reconciles, and that enough usable observations exist to support the statistic being displayed.
+
+The important design decision is what happens on failure.
+
+<Steps>
+  <Step title="A failing component does not contaminate the others">
+    Each evidence source is checked on its own. One defective input changes which evidence can determine the result, and its failure reason stays in the audit trail.
+  </Step>
+  <Step title="Raw values are never clipped or overwritten">
+    Every calculated figure is retained even when it is excluded from the published result. A distant answer is preserved for challenge rather than quietly pulled toward something comfortable.
+  </Step>
+  <Step title="Missing evidence produces a silence, not an invention">
+    When the evidence cannot support a method, the output says the method is unavailable and names what is missing. It does not substitute an economically unrelated metric to fill a panel.
+  </Step>
+  <Step title="Exceptional cases are escalated, not averaged away">
+    Where two qualified sources corroborate an extreme result, or remain irreconcilable, the case goes to human evidence review. The reviewer chooses among existing evidence or declines publication. The reviewer cannot enter a bespoke number.
+  </Step>
+</Steps>
+
+## The Reconstruction Test
+
+The pipeline is built so that a reader can reproduce the result. Given revenue, margin, reinvestment, WACC, terminal growth, net debt and diluted shares, a reader should be able to reproduce the order of magnitude of intrinsic value with a calculator. Given the peer evidence and consensus statistics, a reader should be able to reproduce the market-evidence result and identify every judgment that separates the raw calculation from the published one.
+
+Calculations retain full precision internally. Displayed client figures are rounded for readability.
+
+<Info>
+This reconstruction property is the reason the framework can be audited at all. A model no one can reproduce cannot be challenged, and evidence no one can challenge is not evidence.
+</Info>
+
+## What the Pipeline Deliberately Does Not Do
+
+- It does not fit a forecast to the market price. The reverse DCF is a challenge to the forecast, never an instruction to it.
+- It does not average correlated methods into a single composite fair value. A defined client product may still combine two compatible sources for a stated purpose, provided it names its inputs, weights and exclusions and does not present itself as an intrinsic valuation.
+- It does not invent chart patterns, price levels or targets that the supplied metrics do not contain.
+- It does not delete an inconvenient peer because its label looks wrong. Outliers are flagged, explained and kept in the evidence.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Scoring Methodology" icon="calculator" href="/methodology/scoring">
+    How factor scores are calculated and integrated into an overall recommendation.
+  </Card>
+  <Card title="Financial Statements" icon="file-invoice" href="/methodology/valuation/financial-statements">
+    The statement reconstruction that the pipeline performs before any forecast begins.
+  </Card>
+  <Card title="Archetype Conventions" icon="sitemap" href="/methodology/valuation/archetypes">
+    How a company's balance sheet determines which valuation method applies.
+  </Card>
+  <Card title="Interpreting Outputs" icon="chart-line" href="/methodology/valuation/interpreting-outputs">
+    What the pipeline finally publishes, and how to read it.
+  </Card>
+</CardGroup>

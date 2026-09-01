@@ -1,0 +1,61 @@
+---
+title: 'Continuing Value'
+description: 'Understanding continuing value - the value of everything beyond the explicit forecast period, and why perpetual growth is never free'
+---
+
+Continuing value, also called terminal value, is the value of everything that happens after the detailed forecast ends. In most valuations it is the largest single component.
+
+## Beginner
+
+### What It Means
+
+A model might forecast the next five years in detail. The business does not stop in year six. Continuing value summarizes the whole remaining life in one number, by assuming the company has settled into a mature, steady state.
+
+### Example
+
+A mature company will generate 96 of free cash flow **next year**, its investors require 8%, and it grows 3% forever. Continuing value is 96 / (0.08 − 0.03) = 1,920.
+
+Small changes in that growth rate matter a great deal. They are also not free: growing faster requires more reinvestment, which lowers the 96. Raising the growth rate on its own, while holding cash flow at 96, overstates the answer. The Advanced section below shows why.
+
+### Why It Matters
+
+Because continuing value usually dominates, the assumptions inside it deserve more scrutiny than the detailed years that precede it. A model can look rigorous for five years and hide all its optimism in the terminal step.
+
+---
+
+## Advanced
+
+### How to Read It
+
+`Continuing value at year n = FCFF in year n+1 / (WACC − perpetual growth)`
+
+`Year n+1 FCFF = NOPAT in year n+1 × (1 − perpetual growth / mature ROIC)`
+
+The second identity is the one most often skipped. Growth requires reinvestment even in perpetuity. A model that raises perpetual growth without raising reinvestment manufactures cash from arithmetic.
+
+Perpetual growth must stay below WACC, and within a plausible nominal growth range for the valuation currency. A company cannot outgrow its economy forever.
+
+### Common Misreadings
+
+- **Holding final-year cash flow constant while applying growth**: this omits the capital needed to grow and inflates continuing value materially.
+- **Treating an exit multiple as an independent method**: it is a market cross-check. Translate it back into the growth and return assumptions it implies.
+- **Rejecting a model because terminal value exceeds 100% of enterprise value**: when the explicit period consumes cash, that result is arithmetically necessary. It signals a transition case, not a broken model.
+- **Assuming a permanent ROIC far above WACC**: competition erodes excess returns unless a durable advantage can be named.
+
+### In Parallax Reports
+
+Parallax treats terminal concentration as a duration warning that tells the reader how much of the conclusion rests on distant economics. Where terminal value exceeds enterprise value, the case is routed to transition analysis rather than discarded. See [Continuing Value and Competitive Fade](/methodology/valuation/continuing-value).
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Return on Invested Capital" href="/glossary/return-on-invested-capital">
+    What fades toward equilibrium
+  </Card>
+  <Card title="WACC" href="/glossary/weighted-average-cost-of-capital">
+    The rate perpetual growth must stay below
+  </Card>
+  <Card title="Enterprise Value" href="/glossary/enterprise-value">
+    What continuing value is a component of
+  </Card>
+</CardGroup>

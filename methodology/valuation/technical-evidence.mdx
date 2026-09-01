@@ -1,0 +1,77 @@
+---
+title: 'Technical Evidence and Execution'
+description: 'Using trend, momentum, participation and volatility for timing, sizing and risk, without letting a chart become a valuation'
+---
+
+import ValuationDisclaimer from '/snippets/valuation-disclaimer.mdx';
+
+A chart cannot determine intrinsic value. It can show whether price, participation and volatility confirm the timing of a thesis, or argue for patience.
+
+## The Economic Question
+
+What does the current price path say about trend, momentum, participation, volatility and practical risk levels?
+
+Technical evidence operates over days and months. It refines entry, sizing, stop distance and review levels. It does not forecast long-run cash flow, and it does not override factor or valuation evidence.
+
+## First-Principles Derivation
+
+Price aggregates information and positioning. Moving averages describe trend state. RSI and MACD describe momentum from different angles. Volume tests participation. ATR and realized volatility scale risk. Support and resistance are observed zones where prior supply and demand interacted, not precise physical laws.
+
+`ATR as a share of price = average true range / current price`
+
+`Distance to a reference level = (reference level − current price) / current price`
+
+An overbought reading is a warning about asymmetry, not a sell signal. An oversold reading is a warning about stress, not a buy signal. Trends can remain stretched for longer than a mechanical oscillator expects.
+
+## Model Mechanics
+
+| Technical evidence | Question | Connection to Parallax evidence |
+|---|---|---|
+| **Trend** | Where is price relative to 20, 50 and 200-day averages? | Tests whether current price structure confirms or complicates Momentum |
+| **Momentum** | Are RSI and MACD strengthening, cooling or diverging? | Separates short-term acceleration from the intermediate factor horizon |
+| **Price action** | Where are the nearest support and resistance bands? | Frames entry, invalidation and review levels |
+| **Volume** | Does participation confirm the move? | Supports or weakens Tactical evidence |
+| **Volatility** | How wide are ordinary daily moves? | Informs sizing, stop distance and Defensive interpretation |
+
+<Note>
+Parallax calculates these indicators directly from supplied price and volume history. Narrative interpretation uses only those metrics. The system does not invent chart patterns, divergences, price levels or targets.
+</Note>
+
+## A Report Case
+
+Consider a large-cap security showing a short-term recovery inside a weaker long-term trend. It sits several percent above its 20-day and 50-day averages, but below its 200-day average. Its 30-day return is strongly positive while its 90-day return is negative. RSI is elevated but not extreme, MACD is constructive, price sits just below observed 30-day resistance and well above support, and annualized volatility is high.
+
+The disciplined conclusion is "improving short-term timing within an incomplete long-term repair." It does not raise fair value. It says that an investor holding a fundamental thesis faces nearby resistance, elevated volatility, and a long-term trend that still needs confirmation.
+
+## The Seductive Wrong Answer
+
+<Warning>
+"Bullish MACD confirms the Buy rating."
+
+A MACD crossover describes a change in price momentum. It cannot confirm margins, cash flow, cost of capital or intrinsic value. It can support near-term timing while a low Quality score or a demanding reverse DCF remains unresolved.
+</Warning>
+
+## A Reader Sanity Check
+
+State the time horizon before interpreting the chart. Compare the technical trend with the Momentum score, and the volatility regime with the Defensive score. Use support and resistance as bands rather than exact levels. Scale stop distance and position size to ATR. If the technical conclusion requires an indicator that is not printed, it does not belong.
+
+## What Would Falsify the Conclusion
+
+Price breaks the named support or resistance band with contrary participation; moving-average structure changes; momentum reverses; or volatility expands enough to invalidate the position-size assumption.
+
+Technical falsifiers update timing. They do not mechanically rewrite the DCF.
+
+## How Parallax Applies This
+
+Parallax uses technical analysis for timing, execution and risk management. It states explicitly whether the chart confirms the factor view, complicates it, or argues for waiting. The technical section produces no standalone recommendation and no price target.
+
+<ValuationDisclaimer />
+
+<CardGroup cols={2}>
+  <Card title="Reconciling Evidence" icon="diagram-project" href="/methodology/valuation/reconciliation">
+    Assigning each method its role when the methods disagree.
+  </Card>
+  <Card title="Risk Management" icon="shield" href="/methodology/risk-management">
+    The portfolio-level risk framework.
+  </Card>
+</CardGroup>

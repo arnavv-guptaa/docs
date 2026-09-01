@@ -1,0 +1,58 @@
+---
+title: 'Tukey Trimean'
+description: 'Understanding the trimean - a robust average that resists extreme observations without deleting them from the evidence'
+---
+
+The trimean is a robust measure of the center of a distribution. It weights the median twice and each quartile once, so extreme observations influence the result without dominating it.
+
+## Beginner
+
+### What It Means
+
+The arithmetic mean is easily dragged around by one unusual observation. The median ignores the shape of the distribution entirely. The trimean sits between them: it is anchored on the median but still notices whether the distribution leans high or low.
+
+### Example
+
+Eight comparable companies imply per-share values of 2.7, 24.0, 39.3, 40.5, 46.7, 53.8, 67.8 and 84.2. The mean is 44.9, pulled down by the 2.7 observation. The median is 43.6. The quartiles are 35.5 and 57.3, so the trimean is (35.5 + 2 × 43.6 + 57.3) / 4 = 45.0.
+
+The very low and very high observations remain in the evidence. Neither one determines the answer.
+
+### Why It Matters
+
+Peer valuation distributions are frequently skewed. One story stock or one distressed name can move an average enough to change a conclusion. A robust center keeps that from happening without anyone quietly deleting the inconvenient company.
+
+---
+
+## Advanced
+
+### How to Read It
+
+`Trimean = (Q1 + 2 × median + Q3) / 4`
+
+The quartiles above use the linear-interpolation convention that is the default in R, NumPy, pandas and Excel's `QUARTILE.INC`. Tukey's original hinges are computed slightly differently and give a marginally different result on small samples, so the convention should always be stated alongside the statistic.
+
+The construction is deliberate. Anchoring on the median provides resistance to outliers. Including both quartiles preserves information about skew that a bare median discards. The statistic comes from Tukey's *Exploratory Data Analysis* (1977).
+
+### Common Misreadings
+
+- **Confusing robustness with deletion**: the trimean achieves resistance through weighting. Winsorizing or dropping observations achieves it by destroying evidence.
+- **Using it on a very small sample**: quartiles are unstable when only a handful of observations exist, so small samples call for observed extremes instead.
+- **Treating a robust center as more correct**: it is more stable. If the extreme observations are telling you something real, stability is not the same as accuracy, which is why they stay visible.
+
+### In Parallax Reports
+
+Parallax retains flagged outliers in the peer evidence and reports leave-one-out and unflagged centers as stability diagnostics alongside the primary statistic. Those diagnostics challenge the center. They do not silently replace it. See [Relative Valuation and Peer Evidence](/methodology/valuation/relative-valuation).
+
+### Related Terms
+
+<CardGroup cols={3}>
+  <Card title="Standard Deviation" href="/glossary/standard-deviation">
+    A dispersion measure with no outlier resistance
+  </Card>
+  <Card title="Relative Valuation" href="/methodology/valuation/relative-valuation">
+    Where the trimean centres peer evidence
+  </Card>
+  <Card title="Enterprise Value" href="/glossary/enterprise-value">
+    What peer multiples translate into
+  </Card>
+</CardGroup>
