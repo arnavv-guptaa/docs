@@ -3,19 +3,19 @@ title: 'News Intelligence'
 description: 'Automated market-moving event detection with per-stock scenario analysis and portfolio-aware impact assessment, including ETF look-through'
 ---
 
-import MacroDisclaimer from '/snippets/macro-disclaimer.mdx';
+import NewsDisclaimer from '/snippets/news-disclaimer.mdx';
 
-News Intelligence monitors company disclosures and news sources across major Asian and US equity markets, detects market-moving events as they break, and assesses what each event means for the portfolio you actually hold. The output is a filtered stream of portfolio-relevant assessments, so you read fewer items and each one matters more.
+News Intelligence scans company disclosures and news sources across major Asian and US equity markets, identifies potentially market-moving events, and assesses what each event means for the portfolio you actually hold. Scans run on a schedule or on demand; this is not a continuous real-time feed. The output is a filtered stream of portfolio-relevant assessments.
 
 For the methodology behind the pipeline, including how events are validated before they reach you, see **[News Intelligence Methodology](/methodology/news-intelligence)**.
 
 ## From Event to Portfolio Impact
 
 <CardGroup cols={3}>
-  <Card title="Continuous Monitoring" icon="satellite-dish">
+  <Card title="Scheduled and On-Demand Scans" icon="satellite-dish">
     **Coverage**: Company disclosures and financial news sources across major Asian and US equity markets
 
-    **Always on**: Automated monitoring runs continuously, so events are detected as they break rather than at the next research cycle
+    **Cadence**: Automated scans run on configured schedules, with on-demand scans where enabled. Detection and delivery depend on the scan schedule and processing time.
   </Card>
 
   <Card title="Event Detection and Validation" icon="filter">
@@ -89,7 +89,7 @@ This is the step that separates News Intelligence from a news feed. Every assess
 News Intelligence is fully automated and systematic: every item passes through the same detection, validation, and assessment sequence before it is surfaced. It is an input to your judgment, and the reasoning behind each assessment is visible so it can be challenged. See **[why you can rely on it](/methodology/news-intelligence#why-you-can-rely-on-it)** in the methodology documentation.
 </Note>
 
-<MacroDisclaimer />
+<NewsDisclaimer />
 
 ---
 

@@ -3,7 +3,7 @@ title: 'News Intelligence'
 description: 'How Parallax turns market news into portfolio-specific impact assessments through automated event detection, scenario analysis, and reconciliation against actual holdings'
 ---
 
-import MacroDisclaimer from '/snippets/macro-disclaimer.mdx';
+import NewsDisclaimer from '/snippets/news-disclaimer.mdx';
 
 Most news tools answer the question "what happened?" Parallax News Intelligence answers a harder one: "what does this mean for the portfolio I actually hold?" This page explains how the pipeline works, why it is built the way it is, and why you can rely on what it surfaces.
 
@@ -19,7 +19,7 @@ News Intelligence is built around a simple principle: **relevance is defined by 
 
 ## How the Pipeline Works
 
-Every item follows the same automated sequence. No step is discretionary and no step is skipped, so the output is repeatable: the same event and the same portfolio produce the same assessment.
+Items are processed through an automated sequence of detection, validation, assessment, and portfolio reconciliation. A consistent process does not guarantee identical assessments: model outputs can vary between runs, and results depend on the available news and holdings data.
 
 ```mermaid
 graph LR
@@ -32,8 +32,8 @@ graph LR
 
 | Step | What happens |
 |------|--------------|
-| **Monitor** | Continuous automated monitoring of company disclosures and news sources across major Asian and US equity markets |
-| **Detect** | Keyword and relevance scoring surfaces potentially market-moving items as they break |
+| **Monitor** | Scheduled and on-demand scans of company disclosures and news sources across major Asian and US equity markets |
+| **Detect** | Keyword and relevance scoring identifies potentially market-moving items returned by each scan |
 | **Validate** | A relevance and freshness check filters out stale, duplicated, or immaterial items before anything is scored |
 | **Assess** | For each event that passes, automated analysis produces bull, base, and bear scenarios with probability-weighted price impact for the affected security |
 | **Reconcile** | The assessed impact is mapped against actual portfolio holdings, including look-through into ETF constituents, so indirect exposure is captured alongside direct positions |
@@ -53,7 +53,7 @@ News Intelligence is fully automated, and the trust case rests on the discipline
 
 <CardGroup cols={2}>
   <Card title="Systematic methodology" icon="gears">
-    Every item passes through the same detection, validation, and assessment sequence. The process is repeatable and auditable: identical inputs produce identical outputs, which is a property no discretionary review process can offer.
+    The pipeline applies a consistent detection, validation, and assessment process. Scenario probabilities and price impacts are estimates, not guaranteed outcomes. Review the evidence and assumptions behind each assessment.
   </Card>
   <Card title="Validation before delivery" icon="filter">
     Multiple automated checks stand between a raw headline and your dashboard. Items are scored for relevance, checked for freshness, and reconciled against holdings before anything is surfaced. Noise is filtered out early, by design.
@@ -72,7 +72,7 @@ The practical output is a shorter reading list with higher stakes per item. Inst
 
 The system monitors, detects, assesses, and surfaces. Decisions remain yours: News Intelligence is an input to judgment, and it is designed so that the reasoning behind every assessment is visible enough to be challenged.
 
-<MacroDisclaimer />
+<NewsDisclaimer />
 
 ## Next Steps
 
