@@ -1,11 +1,12 @@
 ---
-title: 'News Intelligence'
+title: 'Console News Intelligence'
+sidebarTitle: 'News Intelligence'
 description: 'Automated market-moving event detection with per-stock scenario analysis and portfolio-aware impact assessment, including ETF look-through'
 ---
 
 import NewsDisclaimer from '/snippets/news-disclaimer.mdx';
 
-News Intelligence scans company disclosures and news sources across major Asian and US equity markets, identifies potentially market-moving events, and assesses what each event means for the portfolio you actually hold. Scans run on a schedule or on demand; this is not a continuous real-time feed. The output is a filtered stream of portfolio-relevant assessments.
+News Intelligence scans company disclosures and news sources across major Asian and US equity markets, identifies potentially market-moving events, and assesses what each event means for the portfolio you actually hold. Scans run on a schedule or on demand. The output is a filtered stream of portfolio-relevant assessments.
 
 For the methodology behind the pipeline, including how events are validated before they reach you, see **[News Intelligence Methodology](/methodology/news-intelligence)**.
 
@@ -15,7 +16,7 @@ For the methodology behind the pipeline, including how events are validated befo
   <Card title="Scheduled and On-Demand Scans" icon="satellite-dish">
     **Coverage**: Company disclosures and financial news sources across major Asian and US equity markets
 
-    **Cadence**: Automated scans run on configured schedules, with on-demand scans where enabled. Detection and delivery depend on the scan schedule and processing time.
+    **Cadence**: Automated scans run on a schedule or on demand.
   </Card>
 
   <Card title="Event Detection and Validation" icon="filter">
@@ -25,7 +26,7 @@ For the methodology behind the pipeline, including how events are validated befo
   </Card>
 
   <Card title="Scenario Analysis" icon="chart-line">
-    **Per-stock assessment**: Each detected event produces bull, base, and bear scenarios with probability-weighted price impact
+    **Per-stock assessment**: Each validated event is assessed through bull, base, and bear scenarios with probability-weighted price impact
 
     **Narrative context**: Automated enrichment explains the reasoning behind the scenario math in plain language
   </Card>
@@ -33,7 +34,7 @@ For the methodology behind the pipeline, including how events are validated befo
 
 ## Portfolio-Aware Impact Assessment
 
-This is the step that separates News Intelligence from a news feed. Every assessed event is reconciled against actual portfolio holdings before it is surfaced.
+Assessed events are mapped to actual portfolio holdings, connecting the event analysis to direct and indirect exposure.
 
 <Tabs>
   <Tab title="Direct Holdings">
@@ -54,14 +55,14 @@ This is the step that separates News Intelligence from a news feed. Every assess
     - Direct and indirect exposure to the same event are assessed together
 
     **Why it matters**:
-    - Indirect positions are where portfolio-relevant events are most often missed
-    - Constituent-level reconciliation closes that gap systematically
+    - ETF constituents can create exposure beyond the directly held securities
+    - Constituent-level reconciliation brings that exposure into the assessment
   </Tab>
 
   <Tab title="Scenario Detail">
     **Explicit scenario structure**:
     - Bull, base, and bear cases for each event, each with an estimated price impact and an assigned probability
-    - A probability-weighted view rather than a single opaque score
+    - A probability-weighted view with visible scenario assumptions
     - The reasoning is shown, so you can challenge an assumption and still use the framework
 
     **Qualitative enrichment**:
@@ -86,7 +87,7 @@ This is the step that separates News Intelligence from a news feed. Every assess
 </CardGroup>
 
 <Note>
-News Intelligence is fully automated and systematic: every item passes through the same detection, validation, and assessment sequence before it is surfaced. It is an input to your judgment, and the reasoning behind each assessment is visible so it can be challenged. See **[why you can rely on it](/methodology/news-intelligence#why-you-can-rely-on-it)** in the methodology documentation.
+News Intelligence is fully automated and systematic: every item passes through the same detection, validation, and assessment sequence before it is surfaced. It is an input to your judgment, and the reasoning behind each assessment is visible so it can be challenged. See the **[research process](/methodology/news-intelligence#research-process)** in the methodology documentation.
 </Note>
 
 <NewsDisclaimer />

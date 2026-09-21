@@ -19,7 +19,7 @@ The very low and very high observations remain in the evidence. Neither one dete
 
 ### Why It Matters
 
-Peer valuation distributions are frequently skewed. One story stock or one distressed name can move an average enough to change a conclusion. A robust center keeps that from happening without anyone quietly deleting the inconvenient company.
+Peer valuation distributions are frequently skewed. One story stock or one distressed name can move an average enough to change a conclusion. A robust center reduces sensitivity to extreme observations while retaining them in the evidence.
 
 ---
 
@@ -35,8 +35,8 @@ The construction is deliberate. Anchoring on the median provides resistance to o
 
 ### Common Misreadings
 
-- **Confusing robustness with deletion**: the trimean achieves resistance through weighting. Winsorizing or dropping observations achieves it by destroying evidence.
-- **Using it on a very small sample**: quartiles are unstable when only a handful of observations exist, so small samples call for observed extremes instead.
+- **Confusing robustness with deletion**: the trimean is calculated from quartiles and the median. Winsorization changes extreme values, while trimming excludes them from a calculation; each approach should be disclosed.
+- **Using it on a very small sample**: quartiles are unstable when only a handful of observations exist, so interpret the center alongside the sample size and observed range.
 - **Treating a robust center as more correct**: it is more stable. If the extreme observations are telling you something real, stability is not the same as accuracy, which is why they stay visible.
 
 ### In Parallax Reports

@@ -1,21 +1,18 @@
 ---
 title: 'Portfolio Tracker Overview'
-description: 'Persistent, continuously-updated portfolios with incremental daily analytics'
+description: 'Persistent portfolios with scheduled and on-demand incremental analytics'
 ---
 
 The **Portfolio Tracker** turns a one-shot portfolio analysis into a *persistent*
 object that Parallax keeps current for you. Unlike
 [`/v1/portfolio/analyze`](/api-reference/portfolio/analyze) — which recomputes a
 portfolio's entire history on every call — a tracked portfolio is stored once and then
-advanced day-by-day by **appending only new days**. This makes daily dashboards and
-long-running monitoring fast and cheap.
+advanced day-by-day by **appending only new days**. This reduces repeated computation for daily dashboards and ongoing monitoring.
 
 <Note>
 Under the hood, each tracked portfolio keeps a **`seed_state` boundary** (the last
 persisted per-RIC value and benchmark level). Incremental updates extend the analytics
-from that boundary instead of recomputing from inception, so a day-by-day build produces
-exactly the same result as a single from-inception run — for both the portfolio and its
-benchmark.
+from that boundary, carrying forward portfolio and benchmark values across updates.
 </Note>
 
 ## Lifecycle

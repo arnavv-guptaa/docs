@@ -1,6 +1,6 @@
 ---
 title: 'Price Targets and Ratings'
-description: 'How a client price target is built from peer and consensus evidence, why each component must qualify before it counts, and why the rating hurdle scales with a stock’s own volatility'
+description: 'How client price targets are built from qualified peer and consensus evidence, with rating hurdles scaled to individual stock volatility'
 ---
 
 import ValuationDisclaimer from '/snippets/valuation-disclaimer.mdx';
@@ -31,10 +31,10 @@ The raw target is always retained as the audit calculation.
 
 Peer multiples and sell-side targets are **correlated** sources, because published targets are themselves often built from peer multiples. Averaging them does not establish independent corroboration or guarantee lower error. Any error reduction depends on the sources' biases, error variances and error correlation. Equal weighting keeps both contributions explicit and gives the reader a result they can reconstruct in one line.
 
-This is why the blend is a **commercial summary of market evidence and not an intrinsic estimate**. An intrinsic valuation is the DCF, it lives on its own pages, and it is deliberately kept out of this arithmetic. Anyone reading the target as a fair value is reading it wrong.
+The blend summarizes **peer and sell-side market evidence**. The DCF provides a separate intrinsic valuation based on operating assumptions and discounted cash flows. Keeping the two measures distinct lets readers compare market expectations with the fundamental case.
 
 <Warning>
-The raw calculation is not automatically the client target. A multiple applied to the wrong denominator, a listing-level share count substituted for the issuer-wide total, an incomplete net-debt bridge, or a security-currency mismatch can all produce perfect arithmetic and a useless answer. Evidence qualification precedes display.
+The raw calculation is not automatically the client target. A multiple applied to the wrong denominator, a listing-level share count substituted for the issuer-wide total, an incomplete net-debt bridge, or a security-currency mismatch can all distort the result. Evidence checks assess these inputs before a target is displayed.
 </Warning>
 
 ## The Two Component Checks
@@ -67,9 +67,9 @@ Two diagnostic tests identify cases that deserve attribution rather than blind a
 | Both pass and corroborate the same extreme, or remain irreconcilable | Evidence review | Corroborated extremes may be real, and deserve judgment rather than mechanical deletion |
 | Only one component passes and is itself extreme, or neither passes | No automatic client target | One uncorroborated extreme is insufficient evidence |
 
-An evidence reviewer may approve the raw blend, select the existing peer center, select the existing sell-side center, or reject publication. The reviewer cannot enter a bespoke target. The process resolves which evidence is defensible. It does not turn review into another valuation model.
+An evidence reviewer may approve the raw blend, select the existing peer center, select the existing sell-side center, or reject publication. The reviewer cannot enter a bespoke target. Review determines which existing evidence supports publication.
 
-## Why the Diagnostic Band Is Not a Price Clamp
+## How the Diagnostic Band Is Used
 
 The band does not alter any valuation. It asks a narrower question: when an answer is far from price, is that distance supported by two independently qualified components, or is one component carrying the entire conclusion?
 
@@ -122,9 +122,9 @@ Consider a security where the peer center lands at many multiples of the current
 
 Nothing is moved to the nearest boundary. The extreme peer result and the raw blend both remain available for challenge. The client target uses the in-band component, and the rating is recalculated from it. Because a single component determines the target, a Strong rating is unavailable.
 
-## What Is Deliberately Excluded
+## Related Evidence
 
-DCF, APV, factor scores, technical indicators and the 52-week range do not enter this price target.
+DCF, [APV](/glossary/adjusted-present-value), factor scores, technical indicators and the 52-week range do not enter this price target.
 
 DCF remains valuable research. Factor scores describe systematic return characteristics. Technicals inform timing. The trading range provides context. None of them enters the arithmetic.
 
@@ -140,19 +140,17 @@ Calculations retain full precision. Client figures display one digit after the d
 The reader should be able to reproduce both the raw calculation and the client result with a calculator, then identify every judgment that separates them.
 </Info>
 
-## The Seductive Wrong Answer
+## Interpretation Note
 
-<Warning>
-"The raw blend is far from price, so cut it back to something reasonable."
+<Note>
+A large gap between the raw target and market price prompts checks of each component's identity, currency, denominator, share count, net debt and date. The process retains raw values and reviews the evidence supporting the gap before selecting a published target.
+</Note>
 
-That destroys information and hides the source of the disagreement. The correct response is to test each component's identity, currency, denominator, shares, net debt and date; determine which component drives the result; preserve every raw value; and use only evidence that survives. A distant target supported by two sound components is a case for review, not for automatic dilution.
-</Warning>
-
-## A Reader Sanity Check
+## How to Assess the Result
 
 Recalculate the peer and sell-side centers separately. Confirm that the peer multiple and target denominator use the same basis, that issuer-wide shares and net debt support any enterprise-value translation, and that both sources refer to the same security, currency and date. Then ask whether one component alone causes an extreme. Finally, compare the rating hurdle with realized volatility, and confirm that any Strong label has two-source support.
 
-## What Would Falsify the Conclusion
+## When to Reassess
 
 The peer cohort no longer represents the relevant economics; duplicate listings survive; the target denominator and peer multiple use inconsistent periods; shares or net debt do not reconcile; analyst summaries are stale or unavailable; too few usable issuer observations support the selected metric; price, peer evidence, analyst targets and volatility refer to incompatible dates; or the workbook cannot reproduce the engine result at declared precision.
 

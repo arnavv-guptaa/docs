@@ -1,6 +1,6 @@
 ---
 title: 'Continuing Value'
-description: 'Understanding continuing value - the value of everything beyond the explicit forecast period, and why perpetual growth is never free'
+description: 'Understanding continuing value - the value of everything beyond the explicit forecast period, and how growth and reinvestment shape mature cash flows'
 ---
 
 Continuing value, also called terminal value, is the value of everything that happens after the detailed forecast ends. In most valuations it is the largest single component.
@@ -29,9 +29,9 @@ Because continuing value usually dominates, the assumptions inside it deserve mo
 
 `Continuing value at year n = FCFF in year n+1 / (WACC − perpetual growth)`
 
-`Year n+1 FCFF = NOPAT in year n+1 × (1 − perpetual growth / mature ROIC)`
+`Year n+1 FCFF = NOPAT in year n+1 × (1 − perpetual growth / mature incremental ROIC)`
 
-The second identity is the one most often skipped. Growth requires reinvestment even in perpetuity. A model that raises perpetual growth without raising reinvestment manufactures cash from arithmetic.
+Under stable operating assumptions, perpetual growth requires reinvestment at the assumed mature incremental return on capital. Assess growth and reinvestment together when evaluating continuing value.
 
 Perpetual growth must stay below WACC, and within a plausible nominal growth range for the valuation currency. A company cannot outgrow its economy forever.
 
@@ -39,7 +39,7 @@ Perpetual growth must stay below WACC, and within a plausible nominal growth ran
 
 - **Holding final-year cash flow constant while applying growth**: this omits the capital needed to grow and inflates continuing value materially.
 - **Treating an exit multiple as an independent method**: it is a market cross-check. Translate it back into the growth and return assumptions it implies.
-- **Rejecting a model because terminal value exceeds 100% of enterprise value**: when the explicit period consumes cash, that result is arithmetically necessary. It signals a transition case, not a broken model.
+- **Rejecting a model because continuing value exceeds 100% of enterprise value**: when the explicit period consumes cash, continuing value must exceed enterprise value. This reflects transition cash flows rather than an invalid model.
 - **Assuming a permanent ROIC far above WACC**: competition erodes excess returns unless a durable advantage can be named.
 
 ### In Parallax Reports

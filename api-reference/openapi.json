@@ -2528,7 +2528,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Resolve Portfolio",
-        "description": "Resolve a dirty portfolio into a clean one that passes /validate.\n\nSame body as /track. Applies deterministic clean-up rules (canonicalize\nsymbols to RICs, drop unresolvable symbols + future-dated rows, dedup,\ndrop non-positive weights, renormalize each date to sum 1.0), then re-runs\nthe SAME validator /track uses to prove the result is clean.\n\nReturns a discriminated status (HTTP 200 in all three cases — this is a\ndry-run that never persists):\n  - status \"clean\":        input already valid, returned unchanged.\n  - status \"resolved\":     input was dirty, the returned `portfolio` is the\n                           fixed definition (pass it straight to /track).\n  - status \"unresolvable\": the portfolio is broken beyond automatic repair\n                           (e.g. nothing old enough to track, or every date\n                           emptied out). `validation.errors` says why.\nEvery edit is itemized in `changes` / `dropped` — nothing is altered\nsilently.",
+        "description": "Resolve a portfolio definition and validate the result.\n\nAccepts the same body as /track. Normalizes symbols to RICs, removes unresolvable symbols and future-dated rows, deduplicates entries, removes non-positive weights, and renormalizes weights for each date to sum to 1.0. The result is checked with the same validator used by /track.\n\nReturns HTTP 200 with one of three statuses without persisting changes:\n- \"clean\": the input is valid and returned unchanged.\n- \"resolved\": the returned portfolio contains the corrected definition for submission to /track.\n- \"unresolvable\": the definition requires further changes; see validation.errors for details.\n\nReview the changes and dropped entries before submitting the resolved portfolio.",
         "operationId": "resolve_portfolio_v1_portfolio_resolve_post",
         "requestBody": {
           "content": {
@@ -4610,7 +4610,7 @@
           "DCF"
         ],
         "summary": "Get Dcf",
-        "description": "Bear/Base/Bull DCF valuation from the latest calibrated run.\n\nSource is dcf_calibrated (written by dcf_engine/). The response contract is\nunchanged from the dcf_outputs era — only the numbers improve. Set\nDCF_SOURCE=legacy to fall back to dcf_outputs (rollback switch).",
+        "description": "Bear, Base and Bull discounted cash flow valuations from the latest calibrated run.",
         "operationId": "get_dcf_v1_dcf_get",
         "security": [
           {

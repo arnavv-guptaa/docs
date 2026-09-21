@@ -3,7 +3,7 @@ title: 'Continuing Value and Competitive Fade'
 description: 'Mature economics after the explicit forecast, why perpetual growth is never free, and how to read terminal concentration'
 ---
 
-Continuing value summarizes the mature economics that follow the explicit forecast: sustainable growth, margins, reinvestment, return on capital, and the rate at which competitive advantage converges toward equilibrium.
+[Continuing value](/glossary/continuing-value) summarizes the mature economics that follow the explicit forecast: sustainable growth, margins, reinvestment, return on capital, and the rate at which competitive advantage converges toward equilibrium.
 
 ## The Economic Question
 
@@ -13,9 +13,9 @@ A terminal assumption is credible only when the company can finance its growth, 
 
 ## First-Principles Derivation
 
-`Continuing value at year n = FCFF in year n+1 / (WACC − perpetual growth)`
+`Continuing value at year n = FCFF in year n+1 / ([WACC](/glossary/weighted-average-cost-of-capital) − perpetual growth)`
 
-`Year n+1 FCFF = NOPAT in year n+1 × (1 − perpetual growth / mature incremental ROIC)`
+`Year n+1 [FCFF](/glossary/free-cash-flow-to-firm) = [NOPAT](/glossary/nopat) in year n+1 × (1 − perpetual growth / mature incremental [ROIC](/glossary/return-on-invested-capital))`
 
 The return in that denominator is the return on **new** capital in the mature state, not the average across the whole capital base. The two converge once a business is genuinely at steady state, and they diverge while it is still getting there.
 
@@ -28,7 +28,7 @@ Margins fade toward a mature level that reflects competition. ROIC fades toward 
 An exit multiple is a market cross-check, not an independent terminal method. It should be translated back into the growth and return assumptions it implies. Otherwise the model replaces one unexplained number with another.
 
 <Note>
-**Terminal concentration is a duration diagnostic.** A high terminal share of enterprise value means the conclusion depends heavily on distant economics. When explicit FCFF is negative, terminal value can exceed 100.0% of enterprise value, because the present value of the explicit period is negative. That result is mathematically possible and calls for transition analysis. It is not by itself a reason to discard the valuation.
+**Terminal concentration is a duration diagnostic.** A high terminal share of [enterprise value](/glossary/enterprise-value) means the conclusion depends heavily on distant economics. When explicit FCFF is negative, terminal value can exceed 100.0% of enterprise value, because the present value of the explicit period is negative. That result is mathematically possible and calls for transition analysis. It is not by itself a reason to discard the valuation.
 </Note>
 
 ## A Worked Case
@@ -37,19 +37,17 @@ A mature company produces 120.0 of NOPAT, earns 15.0% on incremental capital and
 
 If the analyst instead holds FCFF at 120.0 while also applying 3.0% growth, continuing value rises to 2,472.0. The extra 494.4 comes entirely from omitting the capital needed to grow.
 
-## The Seductive Wrong Answer
+## Interpretation Note
 
-<Warning>
-"Terminal value is 110.0% of enterprise value, therefore the DCF is broken."
+<Note>
+When the explicit forecast consumes cash, the present value of continuing value can exceed total enterprise value. Assess the path to positive cash generation, the discount rate used for transition risk, and the operating assumptions connecting the explicit forecast to maturity.
+</Note>
 
-If the explicit forecast consumes cash, terminal value must exceed total enterprise value for the sum to remain positive. The correct questions are whether cash generation crosses into positive territory through a visible operating path, whether the discount rate reflects transition risk, and whether the terminal step avoids an unexplained cliff.
-</Warning>
-
-## A Reader Sanity Check
+## How to Assess the Result
 
 Compare the final explicit year with the first terminal year. Revenue growth, margin, tax, capital intensity and working capital should cross the boundary smoothly. Translate the continuing value into an implied exit multiple and compare it with mature peers. Then change mature ROIC and perpetual growth together, not independently.
 
-## What Would Falsify the Conclusion
+## When to Reassess
 
 The business lacks the reinvestment capacity required by perpetual growth; final-year margins depend on temporary scarcity; mature ROIC stays far above WACC without a durable advantage; or terminal FCFF jumps from a negative explicit figure without an evidenced recovery path.
 
@@ -62,6 +60,6 @@ Parallax treats terminal concentration as a warning that identifies duration ris
     Valuing a company whose explicit-period cash flow is negative throughout.
   </Card>
   <Card title="Scenario Design" icon="code-branch" href="/methodology/valuation/scenarios">
-    Building Bear, Base and Bull cases that differ in operating drivers, not in dials.
+    Building Bear, Base and Bull cases that reflect different operating assumptions.
   </Card>
 </CardGroup>

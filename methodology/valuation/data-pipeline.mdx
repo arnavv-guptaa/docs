@@ -1,24 +1,24 @@
 ---
 title: 'Data and Model Pipeline'
-description: 'The data foundation, machine-learning layer, and automated evidence checks that let a full valuation framework run across global markets rather than one company at a time'
+description: 'Data foundation, machine-learning models, and evidence checks that scale the Parallax valuation framework across global equity markets'
 ---
 
-A valuation framework is only as good as the evidence beneath it and the discipline that keeps that evidence honest. The analytical framework described in these pages is textbook practitioner finance. What makes it operable across thousands of securities, in many currencies and accounting regimes, every week, is the pipeline underneath it.
+The data pipeline supports consistent valuation across securities, currencies and accounting regimes. It prepares the financial inputs, routes companies to suitable methods, and checks the evidence used in published results.
 
 <Note>
-**The short version:** automated ingestion keeps the statement, market and estimate data current. A machine-learning layer predicts forward financial-statement line items such as operating margins, produces the factor signals the models consume, and adapts how that evidence is weighted. An automated routing layer sends every company to the valuation method its balance sheet actually justifies. Evidence checks then decide what is publishable. Nothing in the process depends on an analyst remembering to refresh a spreadsheet.
+**The short version:** automated ingestion keeps the statement, market and estimate data current. A machine-learning layer predicts forward financial-statement line items such as operating margins, produces the factor signals the models consume, and adapts how that evidence is weighted. An automated routing layer sends every company to the valuation method its balance sheet actually justifies. Evidence checks then decide what is publishable. The workflow brings data preparation, model routing and publication checks into a common process.
 </Note>
 
-## Why the Pipeline Is the Hard Part
+## Consistency Across Markets
 
-A single analyst can reconstruct one company's statements, estimate a bottom-up beta, build a five-year forecast and solve a reverse DCF. Doing that consistently across a global coverage universe creates a different set of problems. Note that every company is processed, and not every company ends up with a publishable intrinsic range. The evidence checks below decide which outputs survive, and for some issuers the answer is that a method is unavailable.
+Applying a valuation framework across markets requires consistent treatment of data, accounting conventions and business models. Method availability depends on the evidence available for each issuer.
 
 - **Alignment.** Price, statements, estimates, share count and exchange rates must describe the same economic moment for every company, not just the one being examined.
 - **Comparability.** Accounting bases, reporting perimeters and fiscal calendars differ across markets. A peer multiple is meaningless when numerator and denominator sit on different bases.
 - **Method selection.** A bank, a REIT, a mine and a software company do not share a valuation model. Choosing correctly, every time, is a routing problem.
-- **Degradation.** Evidence is sometimes missing or unusable. The system must know the difference between a defensible answer and a filled panel.
+- **Evidence availability.** Publication checks assess whether the available inputs support each method.
 
-These are engineering problems as much as finance problems. They are where the framework either scales or quietly breaks.
+The pipeline applies these requirements throughout data preparation and valuation.
 
 ## The Data Foundation
 
@@ -52,37 +52,35 @@ Machine learning does specific jobs in this framework. It does not replace the v
 | **Score integration** | Adapt the weighting of factor evidence to the prevailing market regime within disclosed bounds | Override the valuation range or the evidence checks |
 | **Anomaly detection** | Flag trading, flow and data patterns that deserve attention before evidence is used | Delete an inconvenient observation |
 
-<Warning>
-**The seductive wrong answer:** "The model is machine learning, so the output is objective."
-
-A learned model still encodes the objective it was trained against and the data it saw. The discipline that matters is what the output is allowed to do. In this framework, a learned estimate can seed a forecast, weight a signal or raise a flag. It cannot silently become an intrinsic valuation input, and it cannot fit a forecast to the current price.
-</Warning>
+<Note>
+Machine-learning estimates reflect their training data and objectives. In this framework, they provide forecast baselines, signal weights and review flags. The operating assumptions and valuation calculations remain available for inspection.
+</Note>
 
 ## Automated Method Routing
 
 Every company is routed to an economic archetype before any model runs. The archetype determines the primary intrinsic lens, the peer-metric family and the companion variable the reader should check. A bank is valued on equity economics because deposits and borrowings are operating raw material. A resource company is valued on a finite reserve life rather than a perpetual annuity. A holding company is valued look-through rather than on consolidated revenue.
 
-Routing is automated because consistency is the point. A human analyst under time pressure reaches for the metric that is populated. The pipeline reaches for the metric the business model justifies, and labels any lower-order proxy it has to fall back on.
+Automated routing selects metrics appropriate to the business model. Where the available evidence supports a proxy, the output labels it accordingly.
 
 See [Archetype Conventions](/methodology/valuation/archetypes) for what each archetype means.
 
-## Evidence Checks and Graceful Degradation
+## Publication Checks
 
 Before any valuation output is published, its components must survive automated evidence checks. These verify that the security, currency and date are consistent, that a multiple and its target denominator sit on the same accounting and time basis, that the enterprise-to-equity bridge reconciles, and that enough usable observations exist to support the statistic being displayed.
 
-The important design decision is what happens on failure.
+The checks determine which components support the published result.
 
 <Steps>
-  <Step title="A failing component does not contaminate the others">
+  <Step title="Each component is assessed independently">
     Each evidence source is checked on its own. One defective input changes which evidence can determine the result, and its failure reason stays in the audit trail.
   </Step>
   <Step title="Raw values are never clipped or overwritten">
-    Every calculated figure is retained even when it is excluded from the published result. A distant answer is preserved for challenge rather than quietly pulled toward something comfortable.
+    Every calculated figure is retained even when it is excluded from the published result. Readers can inspect the original calculation alongside the publication decision.
   </Step>
-  <Step title="Missing evidence produces a silence, not an invention">
+  <Step title="Method availability is explained">
     When the evidence cannot support a method, the output says the method is unavailable and names what is missing. It does not substitute an economically unrelated metric to fill a panel.
   </Step>
-  <Step title="Exceptional cases are escalated, not averaged away">
+  <Step title="Exceptional cases receive evidence review">
     Where two qualified sources corroborate an extreme result, or remain irreconcilable, the case goes to human evidence review. The reviewer chooses among existing evidence or declines publication. The reviewer cannot enter a bespoke number.
   </Step>
 </Steps>
@@ -94,15 +92,15 @@ The pipeline is built so that a reader can reproduce the result. Given revenue, 
 Calculations retain full precision internally. Displayed client figures are rounded for readability.
 
 <Info>
-This reconstruction property is the reason the framework can be audited at all. A model no one can reproduce cannot be challenged, and evidence no one can challenge is not evidence.
+The calculation trail helps readers assess the inputs, assumptions and publication decisions behind each result.
 </Info>
 
-## What the Pipeline Deliberately Does Not Do
+## Analytical Roles
 
-- It does not fit a forecast to the market price. The reverse DCF is a challenge to the forecast, never an instruction to it.
-- It does not average correlated methods into a single composite fair value. A defined client product may still combine two compatible sources for a stated purpose, provided it names its inputs, weights and exclusions and does not present itself as an intrinsic valuation.
-- It does not invent chart patterns, price levels or targets that the supplied metrics do not contain.
-- It does not delete an inconvenient peer because its label looks wrong. Outliers are flagged, explained and kept in the evidence.
+- The forward forecast sets out the operating case. The reverse DCF provides a separate comparison with price-implied expectations.
+- Intrinsic valuation and market-evidence targets have distinct roles. A target that combines compatible sources identifies its inputs, weights and exclusions.
+- Technical interpretation is grounded in the supplied price and volume metrics.
+- Peer outliers are flagged and explained, with the observations retained in the evidence.
 
 ## Related Pages
 

@@ -3,7 +3,7 @@ title: 'Cost of Capital'
 description: 'Building a currency-matched discount rate across developed and emerging markets, and diagnosing beta when trading is thin or markets are partly segmented'
 ---
 
-Cost of capital combines a currency-matched base rate with priced operating, financial and country risk. The arithmetic is simple. The difficult work is deciding which risks are already present in each input, and whether the observed beta represents the economic exposure being valued.
+[Cost of capital](/glossary/weighted-average-cost-of-capital) combines a currency-matched base rate with priced operating, financial and country risk. The arithmetic is simple. The difficult work is deciding which risks are already present in each input, and whether the observed beta represents the economic exposure being valued.
 
 ## The Economic Question
 
@@ -26,7 +26,7 @@ Weights are based on market values because the discount rate measures current op
 ## Two Internally Consistent Country-Risk Conventions
 
 <Warning>
-Using a raw sovereign yield together with a full country premium can count the same risk twice. Pick one convention and hold it.
+Using a raw sovereign yield together with a full country premium can count the same risk twice. Apply a consistent convention throughout the calculation.
 </Warning>
 
 <Tabs>
@@ -52,9 +52,9 @@ The base curve, equity risk premium and country adjustment are dated market inpu
 
 ### Regression beta
 
-A single-stock beta is an estimate with sampling error, not a company characteristic engraved in stone. Lead-lag corrections address nonsynchronous trading, and statistical shrinkage reduces the influence of an imprecise extreme estimate. Standard error, explanatory power, trading frequency and the choice of market index belong beside the beta, not in a footnote.
+A single-stock beta is an estimate with sampling error and sensitivity to the estimation period. Lead-lag corrections address nonsynchronous trading, and statistical shrinkage reduces the influence of an imprecise extreme estimate. Standard error, explanatory power, trading frequency and the choice of market index belong beside the beta, not in a footnote.
 
-### Operating or bottom-up beta
+### Operating or [bottom-up beta](/glossary/bottom-up-beta)
 
 A bottom-up beta begins with companies exposed to similar operating risks, removes each peer's financial leverage, takes a stable central estimate, then applies the target capital structure.
 
@@ -78,7 +78,7 @@ Country exposure follows the source and convertibility of operating cash flows, 
 
 ## Evidence From a Population Audit
 
-To test its rate conventions, Parallax rebuilt a large cross-section of corporate FCFF valuations from their frozen cash flows before changing any rate assumption. Reproduction error was effectively zero, so subsequent changes could be attributed to the rate convention rather than to model drift.
+To test its rate conventions, Parallax rebuilt a large cross-section of corporate [FCFF](/glossary/free-cash-flow-to-firm) valuations from their frozen cash flows before changing any rate assumption. Reproduction error was effectively zero, so subsequent changes could be attributed to the rate convention rather than to model drift.
 
 That work rejected two appealing shortcuts.
 
@@ -90,17 +90,15 @@ That work rejected two appealing shortcuts.
 
 The implication is that the right repair is conditional on market integration, trading quality and operating exposure. There is no universally safe substitution.
 
-A population median also conceals the cases that matter. Two companies in the same market and industry can carry similar recorded discount rates while their price-implied rates differ by roughly a factor of two. That difference is a direction to revisit both the covariance estimate and the operating path. Treating the entire gap as a beta error would let the discount rate absorb questions that belong in margins, reinvestment and continuing value.
+A population median also conceals the cases that matter. Two companies in the same market and industry can carry similar recorded discount rates while their price-implied rates differ by roughly a factor of two. That difference is a direction to revisit both the covariance estimate and the operating path. Treating the entire gap as a beta error would let the discount rate absorb questions that belong in margins, reinvestment and [continuing value](/glossary/continuing-value).
 
-## The Seductive Wrong Answer
+## Interpretation Note
 
-<Warning>
-"Replace beta with an industry beta and use the local 10-year bond. The emerging-market problem is solved."
+<Note>
+An industry beta and a local sovereign yield capture different aspects of risk. Check whether the yield already includes a sovereign spread accounted for elsewhere, and whether the beta reflects relevant market segmentation and liquidity exposure. Assess operating downside through revenue, margin, reinvestment and scenario assumptions.
+</Note>
 
-Each change can be defensible, but neither is conservative by construction. The sovereign yield may already contain the spread carried elsewhere in the model, and the industry beta may remove local segmentation and liquidity exposure. A discount rate is not a valuation throttle. Operating downside belongs first in revenue, margin, reinvestment and scenario assumptions.
-</Warning>
-
-## A Reader Sanity Check
+## How to Assess the Result
 
 - Confirm that the risk-free rate, inflation and cash flows use the same currency.
 - State whether sovereign risk sits in the base rate or in a separate premium, and prevent duplication.
@@ -111,7 +109,7 @@ Each change can be defensible, but neither is conservative by construction. The 
 - Solve the market-implied rate with the operating forecast fixed, then decide which operating or rate assumption deserves review.
 - Check that the base case has been revalued under higher discount rates, and that every fixed rate is labelled as a stress rather than as an estimated cost of capital.
 
-## What Would Falsify the Conclusion
+## When to Reassess
 
 The rate build fails if current sovereign yields, equity risk pricing, debt spreads or leverage differ materially from the inputs; if the beta is dominated by nonsynchronous or sparse trading; if the operating peer set does not share the target's risk; if the country-risk convention counts the same spread twice; or if the forecast currency and discount-rate currency diverge.
 

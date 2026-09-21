@@ -5,9 +5,8 @@ description: 'How the Parallax MCP server authenticates clients — OAuth sign-i
 
 The Parallax MCP server implements the
 [MCP Authorization specification](https://modelcontextprotocol.io/specification/basic/authorization)
-(OAuth 2.1). For almost every client this means: **connect the URL, click through a
-one-time browser sign-in, done.** Credentials are managed by the client — you never paste
-an API key into a config file.
+(OAuth 2.1). In a client that supports OAuth, connect the server URL and sign in through
+your browser. The client manages the access token for subsequent requests.
 
 ## OAuth sign-in (recommended)
 
@@ -32,7 +31,7 @@ When a client first connects to `https://mcp.chicago.global/api/mcp`:
   </Step>
   <Step title="Token issued">
     The client receives an access token and uses it as a bearer token on every MCP
-    request. The server currently supports the authorization-code grant, not a refresh-token grant. Re-authorize the connector if its token stops working.
+    request.
   </Step>
 </Steps>
 
@@ -85,7 +84,9 @@ reachable without a session so machine clients can complete discovery and regist
   </Accordion>
   <Accordion title="401 Unauthorized on tool calls">
     Your token expired or wasn't sent. Re-authorize the connector, or (for programmatic
-    use) obtain a valid replacement token for your `Authorization` header.
+    use) obtain a valid replacement token for your `Authorization` header. The server supports
+    the authorization-code grant; clients should reauthorize when a replacement is needed
+    rather than request a refresh-token grant.
   </Accordion>
   <Accordion title="Paid tool returns an error">
     Some tools (e.g. full research reports) are billable and require an entitled account.

@@ -1,6 +1,6 @@
 ---
 title: 'Scenario Design and Falsification'
-description: 'Building Bear, Base and Bull cases that differ in operating drivers rather than in discount-rate dials, and stating what would prove each case wrong'
+description: 'Building Bear, Base and Bull cases that reflect different operating assumptions, and stating what would prove each case wrong'
 ---
 
 import ValuationDisclaimer from '/snippets/valuation-disclaimer.mdx';
@@ -17,7 +17,7 @@ The future is uncertain and expected returns cannot be observed directly. Precis
 
 Bear, Base and Bull cases should differ in the small set of drivers that define the business: volume, price, margin, reinvestment, financing and competitive duration. Each case carries its own internally consistent path. The spread in value is the consequence of those paths.
 
-`Margin of safety = independently supported value − price paid`
+`[Margin of safety](/glossary/margin-of-safety) = independently supported value − price paid`
 
 Margin of safety absorbs analytical error, bad luck and adverse change. It is not a fixed percentage attached to every stock. Greater duration, leverage, accounting uncertainty and financing dependence all require a wider cushion.
 
@@ -33,7 +33,7 @@ Margin of safety absorbs analytical error, bad luck and adverse change. It is no
   </Accordion>
 
   <Accordion title="Adjusted present value">
-    APV separates all-equity operating value from financing side effects. It is useful when leverage changes materially, tax shields are unstable, or subsidized financing matters. For a stable capital structure, APV often resembles a WACC DCF because both discount the same operating economics. Similarity is expected. It is not an additional vote of confidence.
+    [APV](/glossary/adjusted-present-value) separates all-equity operating value from financing side effects. It is useful when leverage changes materially, tax shields are unstable, or subsidized financing matters. For a stable capital structure, APV often resembles a [WACC](/glossary/weighted-average-cost-of-capital) DCF because both discount the same operating economics. Similarity is expected. It is not an additional vote of confidence.
   </Accordion>
 </AccordionGroup>
 
@@ -45,19 +45,17 @@ That result does not automatically make the IPO a Strong Sell. The valuation exp
 
 IPOs often arrive with favorable sentiment, fresh capital and conservative near-term guidance. They also have limited public history and elevated expectations. The methodology has to represent both facts.
 
-## The Seductive Wrong Answer
+## Interpretation Note
 
-<Warning>
-"Use WACC plus 3.0% for Bear and WACC minus 3.0% for Bull."
+<Note>
+Bear, Base and Bull cases describe different operating outcomes for demand, pricing, margins, reinvestment and financing. Discount-rate stresses supplement those cases by examining changes in risk pricing.
+</Note>
 
-Changing only the discount rate turns economic uncertainty into a finance dial. The Bear case should explain weaker customers, price, margin, reinvestment or financing. Rate stress supplements that operating case when risk pricing itself is uncertain.
-</Warning>
+## How to Assess the Result
 
-## A Reader Sanity Check
+Write one sentence describing the operating world in each case, without mentioning price. Then identify the two reported metrics that would move the company from Base toward Bear or Bull. Each case should connect its valuation to a clear set of operating assumptions.
 
-Write one sentence describing the operating world in each case, without mentioning price. Then identify the two reported metrics that would move the company from Base toward Bear or Bull. If the cases cannot be described in operating language, the range is decoration.
-
-## What Would Falsify the Conclusion
+## When to Reassess
 
 The cases change unrelated assumptions in contradictory directions; the Bear omits the central downside mechanism; the Bull requires no extra reinvestment; or the range stays narrow despite high duration and financing risk.
 
