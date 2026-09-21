@@ -9,11 +9,13 @@
   },
   "favicon": "/favicon.svg",
   "metadata": {
-    "og:site_name": "Parallax",
     "timestamp": true
   },
   "seo": {
-    "indexing": "navigable"
+    "indexing": "navigable",
+    "metatags": {
+      "og:site_name": "Parallax"
+    }
   },
   "navigation": {
     "tabs": [

@@ -10,9 +10,9 @@ portfolio's entire history on every call — a tracked portfolio is stored once 
 advanced day-by-day by **appending only new days**. This reduces repeated computation for daily dashboards and ongoing monitoring.
 
 <Note>
-Under the hood, each tracked portfolio keeps a **`seed_state` boundary** (the last
-persisted per-RIC value and benchmark level). Incremental updates extend the analytics
-from that boundary, carrying forward portfolio and benchmark values across updates.
+Each tracked portfolio keeps a boundary marking the last persisted per-RIC value and
+benchmark level. Incremental updates extend the analytics from that boundary,
+carrying forward portfolio and benchmark values across updates.
 </Note>
 
 ## Lifecycle

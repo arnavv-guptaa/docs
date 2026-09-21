@@ -4670,7 +4670,7 @@
           "Multiples"
         ],
         "summary": "Get Multiples",
-        "description": "Peer-multiples price target served from dcf_outputs (the canonical\ndaily-batch source shared with /v1/dcf and the stock report).",
+        "description": "Peer-multiples price target from the same daily-batch pricing\npipeline used by /v1/dcf and the stock report.",
         "operationId": "get_multiples_v1_multiples__symbol__get",
         "security": [
           {
@@ -4709,11 +4709,11 @@
             "required": false,
             "schema": {
               "type": "boolean",
-              "description": "Accepted for backward compat, ignored — dcf_outputs refreshes daily upstream.",
+              "description": "Accepted for backward compat, ignored — the source refreshes daily upstream.",
               "default": false,
               "title": "Refresh"
             },
-            "description": "Accepted for backward compat, ignored — dcf_outputs refreshes daily upstream."
+            "description": "Accepted for backward compat, ignored — the source refreshes daily upstream."
           }
         ],
         "responses": {
