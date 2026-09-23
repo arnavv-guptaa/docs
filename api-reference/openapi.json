@@ -4262,7 +4262,7 @@
           "ETF"
         ],
         "summary": "Etf Scores",
-        "description": "Get ETF scores (value, quality, momentum, defensive, tactical, total + recommendation).",
+        "description": "Get ETF scores (value, quality, momentum, defensive, tactical, total). The recommendation label is returned only to KYC-verified organizations; see https://docs.chicago.global/problems/kyc-required.",
         "operationId": "etf_scores_v1_etf_scores_get",
         "security": [
           {

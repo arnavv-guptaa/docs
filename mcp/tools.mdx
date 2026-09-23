@@ -9,6 +9,11 @@ Tools marked **async** use background jobs. The MCP server normally waits for th
 by polling internally. Call `check_job_status` only when a tool returns a `job_id`
 without a completed result. Most jobs complete in seconds to a few minutes.
 
+Recommendation labels (`STRONG BUY` to `STRONG SELL`) and sell-side analyst recommendations
+are returned only when the connected account's organization is
+[KYC-verified](/problems/kyc-required). Other accounts get the same factor scores without the
+label, and a tool that returns only recommendation data answers with a `kyc_required` error.
+
 <Note>
 Symbols use **RIC** format (e.g. `AAPL.O`, `JPM.N`, `2330.TW`). Use `search_stocks` /
 `search_etfs` to resolve a symbol first if you're unsure.
@@ -23,7 +28,7 @@ Symbols use **RIC** format (e.g. `AAPL.O`, `JPM.N`, `2330.TW`). Use `search_stoc
 | `get_peer_snapshot` | Score a stock against its peers — the default "tell me about X" tool. Returns Quality/Value/Momentum/Defensive/Tactical plus a peer comparison. | Free | Fast |
 | `get_score_analysis` | Historical factor-score trends (how Quality/Value/Momentum/Defensive/Tactical evolved). | Free | Instant |
 | `get_financials` | Financial statements & ratios — `statement`: `income`, `balance_sheet`, `cash_flow`, `ratios`, `summary`. | Free | Instant |
-| `get_stock_outlook` | Analyst outlook — `aspect`: `analyst_targets`, `recommendations`, `risk_return`, `dividends`. | Free | Instant |
+| `get_stock_outlook` | Analyst outlook — `aspect`: `analyst_targets`, `recommendations`, `risk_return`, `dividends`. The `recommendations` aspect requires a [KYC-verified organization](/problems/kyc-required). | Free | Instant |
 | `get_technical_analysis` | Trend, momentum (RSI, MACD), support/resistance, volume, volatility. | Free | Async (~15–30s) |
 | `get_financial_analysis` | Deep financial analysis using Palepu's framework (profitability, liquidity, solvency, valuation). | Free | Async (~2–5m) |
 | `get_stock_report` | Full Chicago Global research report with PDF/HTML links. | **Paid** | Async (~1–2m) |
@@ -43,8 +48,8 @@ Symbols use **RIC** format (e.g. `AAPL.O`, `JPM.N`, `2330.TW`). Use `search_stoc
 | Tool | What it does | Cost | Timing |
 |------|--------------|------|--------|
 | `search_etfs` | Find an ETF by symbol or name (typo-tolerant). | Free | Instant |
-| `etf_search` | Filter ETFs by name, market, currency, score range, or recommendation. | Free | Instant |
-| `etf_profile` | ETF profile and factor scores + recommendation (accepts a plain ticker like `SPY`). | Free | Instant |
+| `etf_search` | Filter ETFs by name, market, currency, or score range. | Free | Instant |
+| `etf_profile` | ETF profile and factor scores (accepts a plain ticker like `SPY`). | Free | Instant |
 | `etf_holdings` | Top holdings with portfolio weights and per-holding factor scores. | Free | Instant |
 | `etf_daily_price` | Daily OHLCV price data for one or more ETFs. | Free | Instant |
 | `get_etf_report` | Full ETF research report. | **Paid** | Async |

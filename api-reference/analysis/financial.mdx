@@ -53,7 +53,6 @@ When the job completes, `GET /v1/jobs/{job_id}` returns:
         "Services segment growing at 15% CAGR provides recurring revenue...",
         "Net cash position of $51B provides strategic flexibility..."
       ],
-      "recommendedAction": "BUY",
       "confidenceLevel": "HIGH",
       "targetPriceRange": "$195-220 based on DCF and comparable analysis"
     },
@@ -117,7 +116,7 @@ The analysis covers the following areas:
 
 | Section | Description |
 |---------|-------------|
-| **Executive Summary** | Investment thesis, recommendation, target price |
+| **Executive Summary** | Investment thesis, key highlights, evidence confidence, target price range |
 | **Business Strategy** | Competitive position, moats, business model, risks |
 | **Accounting Quality** | Earnings quality, red flags, policy assessment |
 | **Financial Performance** | Profitability, liquidity, solvency, efficiency |
@@ -145,7 +144,6 @@ const interval = setInterval(async () => {
 
   if (status.status === 'completed') {
     clearInterval(interval);
-    console.log('Recommendation:', status.result.executiveSummary.recommendedAction);
     console.log('Thesis:', status.result.executiveSummary.investmentThesis);
   } else if (status.status === 'failed') {
     clearInterval(interval);
