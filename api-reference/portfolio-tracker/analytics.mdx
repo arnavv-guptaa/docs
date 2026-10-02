@@ -2,3 +2,9 @@
 title: 'Get Analytics'
 openapi: 'GET /v1/portfolio/{portfolio_key}/analytics'
 ---
+
+`analytics` has the same sections as an [Analyze Portfolio](/api-reference/portfolio/analyze)
+result, including `analytics_version`: the version of the analytics calculation
+that produced it. When the calculation changes, the version increases and each
+tracked portfolio's analytics are recomputed on its next read, so you always get
+results from the current calculation.
