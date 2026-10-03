@@ -13,7 +13,8 @@ This endpoint uses **async job processing** for generating comprehensive stock r
 4. **Get Report URLs**: The completed job contains URLs to PDF, HTML, and JSON reports
 
 <Note>
-Report generation typically takes 5-10 minutes. Reports include financial analysis, valuation metrics, AI-generated insights, and more.
+Reports include financial analysis, factor scores and AI-generated insights.
+They contain no recommendation labels, for any organization.
 </Note>
 
 ## Request Body
@@ -24,7 +25,8 @@ Report generation typically takes 5-10 minutes. Reports include financial analys
 | `force` | boolean | No | `false` | Force regeneration even if recent report exists |
 
 <Warning>
-If `force` is `false` and a recent report exists (generated within the last 30 days), the cached report URLs will be returned immediately.
+If `force` is `false` and a report using the current template was generated today
+in Singapore time, its cached URLs are returned.
 </Warning>
 
 ## Response (202 Accepted)

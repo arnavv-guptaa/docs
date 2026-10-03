@@ -4262,7 +4262,7 @@
           "ETF"
         ],
         "summary": "Etf Scores",
-        "description": "Get ETF scores (value, quality, momentum, defensive, tactical, total + recommendation).",
+        "description": "Get ETF scores (value, quality, momentum, defensive, tactical, total). The recommendation label is returned only to KYC-verified organizations; see https://docs.chicago.global/problems/kyc-required.",
         "operationId": "etf_scores_v1_etf_scores_get",
         "security": [
           {
@@ -4783,6 +4783,75 @@
             }
           }
         }
+      }
+    },
+    "/v1/etf-report": {
+      "post": {
+        "tags": [
+          "v1",
+          "ETF Reports"
+        ],
+        "summary": "Etf Report",
+        "description": "Generate a comprehensive ETF report (ASYNC — returns job_id immediately).\n\nRenders via the archetype-routed etf_report engine (a1 macro / a2 credit /\na3 equity / a4 wrapper) → designed HTML → PDF. Poll GET /v1/jobs/{job_id};\nwhen status=\"completed\" the result carries pdf_url, html_url, json_url.\n\n**Workflow:**\n1. POST /etf-report → job_id (returns in <1s)\n2. Poll GET /jobs/{job_id}\n3. status=\"completed\" → result has pdf_url / html_url / json_url",
+        "operationId": "etf_report_v1_etf_report_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ETFReportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Job created successfully",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Fund known-unsupported (etf_report_map) — no job created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     }
   },
@@ -5553,6 +5622,27 @@
           "message"
         ],
         "title": "ValidationIssueResponse"
+      },
+      "ETFReportRequest": {
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "title": "Symbol",
+            "description": "ETF symbol/RIC identifier",
+            "example": "SPY"
+          },
+          "force": {
+            "type": "boolean",
+            "title": "Force",
+            "description": "Force regeneration even if recent report exists",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "symbol"
+        ],
+        "title": "ETFReportRequest"
       }
     },
     "securitySchemes": {

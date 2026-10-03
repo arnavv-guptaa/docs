@@ -176,6 +176,10 @@ When the job completes, `GET /v1/jobs/{job_id}` returns:
 Response shown is abbreviated. Full response includes all fields listed above, plus detailed timeseries for allocations, drawdowns, rolling metrics, and more.
 </Note>
 
+<Note>
+Per-holding `recommendation` labels are returned only to [KYC-verified organizations](/problems/kyc-required). For other organizations the field is omitted from each holding.
+</Note>
+
 ## Example: Polling for Results
 
 ```javascript

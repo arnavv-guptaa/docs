@@ -93,6 +93,14 @@ Use [List Jobs](/api-reference/jobs/list) to enumerate recent jobs, and
 |--------|-------------|
 | `X-Request-ID` | Unique ID for the request. Include it when reporting an issue so we can trace it. |
 | `X-Credits-Remaining` | Credits left on your key after a billable request (when applicable). |
+| `Cache-Control` / `Vary` | Responses that depend on your organization's [KYC verification](/problems/kyc-required) are `private, no-store` and vary by `Authorization`. |
+
+## Recommendation labels
+
+Recommendation labels (`STRONG BUY` to `STRONG SELL`) are returned only to
+[KYC-verified organizations](/problems/kyc-required). For other organizations the
+`recommendation` field is left out and every numeric score remains, so treat it as optional.
+Stock, ETF, portfolio and CIO reports never include recommendation labels, for any organization.
 
 ## Response codes
 
@@ -100,6 +108,8 @@ Use [List Jobs](/api-reference/jobs/list) to enumerate recent jobs, and
 |------|-------------|
 | 200 | Success |
 | 401 | Unauthorized — invalid or missing API key |
+| 402 | Insufficient credits for this request |
+| 403 | Forbidden — for recommendation data, `code: "kyc_required"` means your organization is not [KYC-verified](/problems/kyc-required) |
 | 404 | Not found |
 | 422 | Validation error — check the request body |
 | 429 | Rate limit exceeded — slow down and retry |
