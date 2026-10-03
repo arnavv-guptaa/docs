@@ -95,6 +95,15 @@ The completed analysis includes:
 | `market_contribution` | P&L attribution by market |
 | `time_period_returns` | MTD, YTD, 1Y, inception returns |
 | `daily_summary` | Equity curve with benchmark comparison (`benchmark_value_base`) and cumulative return (`cumulative_return`) |
+| `analytics_version` | Version of the analytics calculation that produced this result. Always included, whatever `fields` selects |
+
+In the three contribution sections, `contribution_pct` is each row's contribution
+to the portfolio return, as a decimal: its P&L divided by `initial_value`
+(`0.0353` = 3.53 percentage points). The rows sum to the portfolio's return, and a
+row's sign always matches its own P&L.
+
+`analytics_version` increases whenever the calculation's output changes. If you
+store results, compare it with a fresh result to know when yours are out of date.
 
 ## Example Response
 
