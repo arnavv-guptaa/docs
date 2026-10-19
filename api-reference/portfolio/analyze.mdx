@@ -34,7 +34,7 @@ Use the [Portfolio Tracker](/api-reference/portfolio-tracker/overview) endpoints
 | `initial_value` | number | No | `10000` | Starting portfolio value |
 | `include_transaction_costs` | boolean | No | `false` | Apply market-specific transaction costs |
 | `transaction_cost_config` | object | No | Default rates | Custom transaction cost rates by market |
-| `fields` | array | No | All fields | Select specific response fields |
+| `fields` | array | No | All public sections | Select specific response fields |
 
 <Note>
 The default benchmark is **`ACWI.OQ`** (MSCI ACWI ETF). If a benchmark symbol can't be
@@ -58,7 +58,8 @@ Weights should sum to 1.0 for each date. They will be normalized if not.
 
 ## Field Selection
 
-Use the optional `fields` parameter to return only specific data sections. If omitted, all fields are returned.
+Use the optional `fields` parameter to return only specific public data sections.
+If omitted, the API returns its default set of public sections.
 
 ```json
 {
@@ -80,7 +81,6 @@ The completed analysis includes:
 | Field | Description |
 |-------|-------------|
 | `portfolio_summary` | Final value, total return, P&L breakdown, transaction costs |
-| `turnover_analysis` | Turnover metrics, rebalance frequency, costs by market |
 | `performance_metrics` | Sharpe, Sortino, VaR, volatility, drawdown |
 | `rolling_metrics` | 30/60/90-day rolling Sharpe, beta, correlation |
 | `drawdown_analysis` | Drawdown episodes and recovery times |
@@ -96,6 +96,9 @@ The completed analysis includes:
 | `time_period_returns` | MTD, YTD, 1Y, inception returns |
 | `daily_summary` | Equity curve with benchmark comparison (`benchmark_value_base`) and cumulative return (`cumulative_return`) |
 | `analytics_version` | Version of the analytics calculation that produced this result. Always included, whatever `fields` selects |
+
+`turnover_analysis` cannot be selected with `fields`. To obtain turnover metrics,
+omit `fields` and inspect the sections returned in the default result.
 
 In the three contribution sections, `contribution_pct` is each row's contribution
 to the portfolio return, as a decimal: its P&L divided by `initial_value`
@@ -195,7 +198,7 @@ const interval = setInterval(async () => {
     clearInterval(interval);
     console.error('Failed:', status.error);
   } else {
-    console.log(`Progress: ${status.progress?.percent}%`);
+    console.log('Progress:', status.progress);
   }
 }, 3000);
 ```

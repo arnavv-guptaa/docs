@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Parallax API",
-    "description": "Parallax by Chicago Global — AI-powered investment research and portfolio analytics. Multi-factor scoring, portfolio analysis and tracking, financial statements, analyst estimates, ETF analytics, valuation (DCF & multiples), macro and market telemetry, and AI-generated research reports.",
+    "description": "Parallax by Chicago Global — AI-powered investment research and portfolio analytics. Multi-factor scoring, portfolio analysis and tracking, financial statements, analyst estimates, ETF analytics, valuation (DCF & multiples), macro and market telemetry, and AI-generated research reports. Credits can be fractional. Per-symbol reads cost 0.05 credits per submitted symbol; see each operation for its price. A 503 indicates an availability failure, not data age.",
     "version": "1.1.0"
   },
   "servers": [
@@ -23,7 +23,7 @@
           "Stock Reports"
         ],
         "summary": "Stock Report",
-        "description": "Generate comprehensive stock report (ASYNC - returns job_id immediately).\n\nThis endpoint creates a background job for report generation. The actual generation\nhappens asynchronously without blocking. Use GET /jobs/{job_id} to check status.\n\n**Response Format:**\n```json\n{\n    \"job_id\": \"uuid-string\",\n    \"status\": \"pending\",\n    \"symbol\": \"AAPL.O\",\n    \"check_url\": \"/v1/jobs/{job_id}\",\n    \"estimated_duration_seconds\": 300\n}\n```\n\n**Workflow:**\n1. POST /stock-report → Get job_id (returns in <1 second)\n2. Poll GET /jobs/{job_id} every 5-10 seconds\n3. When status=\"completed\", result contains pdf_url, html_url, json_url\n\n**Example:**\n```bash\n# Start generation\ncurl -X POST \"https://api/v1/stock-report\" \\\n     -H \"Authorization: Bearer key\" \\\n     -d '{\"symbol\":\"AAPL.O\",\"force\":false}'\n\n# Check status\ncurl \"https://api/v1/jobs/{job_id}\" -H \"Authorization: Bearer key\"\n```",
+        "description": "Generate comprehensive stock report (ASYNC - returns job_id immediately).\n\nThis endpoint creates a background job for report generation. The actual generation\nhappens asynchronously without blocking. Use GET /v1/jobs/{job_id} to check status.\n\n**Response Format:**\n```json\n{\n    \"job_id\": \"uuid-string\",\n    \"status\": \"pending\",\n    \"symbol\": \"AAPL.O\",\n    \"check_url\": \"/v1/jobs/{job_id}\",\n    \"estimated_duration_seconds\": 300\n}\n```\n\n**Workflow:**\n1. POST /stock-report → Get job_id (returns in <1 second)\n2. Poll GET /v1/jobs/{job_id} every 5-10 seconds\n3. When status=\"completed\", result contains pdf_url, html_url, json_url\n\n**Example:**\n```bash\n# Start generation\ncurl -X POST \"https://api.chicago.global/v1/stock-report\" \\\n     -H \"Authorization: Bearer key\" \\\n     -d '{\"symbol\":\"AAPL.O\",\"force\":false}'\n\n# Check status\ncurl \"https://api.chicago.global/v1/jobs/{job_id}\" -H \"Authorization: Bearer key\"\n```\n\n**Credits:** 10 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "stock_report_v1_stock_report_post",
         "requestBody": {
           "content": {
@@ -76,6 +76,16 @@
                 }
               }
             }
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -92,7 +102,7 @@
           "Financial Statements"
         ],
         "summary": "Income Statement",
-        "description": "Get income statement data for a given symbol",
+        "description": "Get income statement data for a given symbol\n\n**Credits:** 0.05 credits per symbol. A comma-separated symbol list costs 0.05 multiplied by the number of submitted symbols. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "income_statement_v1_income_statement_get",
         "security": [
           {
@@ -151,6 +161,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -168,6 +187,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -179,7 +208,7 @@
           "Financial Statements"
         ],
         "summary": "Balance Sheet",
-        "description": "Get balance sheet data for a given symbol",
+        "description": "Get balance sheet data for a given symbol\n\n**Credits:** 0.05 credits per symbol. A comma-separated symbol list costs 0.05 multiplied by the number of submitted symbols. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "balance_sheet_v1_balance_sheet_get",
         "security": [
           {
@@ -238,6 +267,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -255,6 +293,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -266,7 +314,7 @@
           "Financial Statements"
         ],
         "summary": "Cash Flow",
-        "description": "Get cash flow statement data for a given symbol",
+        "description": "Get cash flow statement data for a given symbol\n\n**Credits:** 0.05 credits per symbol. A comma-separated symbol list costs 0.05 multiplied by the number of submitted symbols. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "cash_flow_v1_cash_flow_get",
         "security": [
           {
@@ -325,6 +373,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -342,6 +399,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -353,7 +420,7 @@
           "Financial Statements"
         ],
         "summary": "Key Ratios",
-        "description": "Get key financial ratios for a given symbol",
+        "description": "Get key financial ratios for a given symbol\n\n**Credits:** 0.05 credits per symbol. A comma-separated symbol list costs 0.05 multiplied by the number of submitted symbols. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "key_ratios_v1_key_ratios_get",
         "security": [
           {
@@ -383,11 +450,11 @@
               "type": "integer",
               "maximum": 2,
               "minimum": 1,
-              "description": "Frequency: 1 for Annual, 2 for Quarterly",
+              "description": "Accepts 1 or 2 for API consistency. Returns annual ratios regardless of this value.",
               "default": 1,
               "title": "Freq"
             },
-            "description": "Frequency: 1 for Annual, 2 for Quarterly"
+            "description": "Accepts 1 or 2 for API consistency. Returns annual ratios regardless of this value."
           },
           {
             "name": "symbol",
@@ -412,6 +479,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -429,6 +505,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -440,7 +526,7 @@
           "News & Analysis"
         ],
         "summary": "Get News",
-        "description": "Get latest news articles and links for a given symbol",
+        "description": "Get latest news articles and links for a given symbol\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_news_v1_news_get",
         "security": [
           {
@@ -485,6 +571,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -502,6 +597,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -513,7 +618,7 @@
           "Company Data"
         ],
         "summary": "Company Info",
-        "description": "Get company information for one or multiple symbols.",
+        "description": "Get company information for one or multiple symbols.\n\n**Credits:** 0.05 credits per symbol. A comma-separated symbol list costs 0.05 multiplied by the number of submitted symbols. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "company_info_v1_company_info_get",
         "security": [
           {
@@ -544,6 +649,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -561,6 +675,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -572,7 +696,7 @@
           "Company Data"
         ],
         "summary": "Peers",
-        "description": "Get peer comparison data for a given symbol including the company and its peers.\n\nResponse: list of peer rows ordered by MKTCAP_B DESC. The row matching\nthe resolved target symbol carries `is_target: true`; all other rows\ncarry `is_target: false`. Clients should identify the target by this\nflag rather than by position.",
+        "description": "Get peer comparison data ordered by market capitalization, largest first. The requested stock has is_target: true; peers have is_target: false. Identify the requested stock by this flag rather than its position.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "peers_v1_peers_get",
         "security": [
           {
@@ -603,6 +727,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -620,6 +753,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -631,7 +774,7 @@
           "Analysis"
         ],
         "summary": "Peers Analysis",
-        "description": "Get AI-generated peers comparison analysis (ASYNC - returns job_id immediately).\n\nCreates a background job for AI-powered peer comparison. Analysis typically takes 30-60 seconds.\nUse GET /jobs/{job_id} to check status and retrieve results.",
+        "description": "Get AI-generated peers comparison analysis (ASYNC - returns job_id immediately).\n\nCreates a background job for AI-powered peer comparison. Analysis typically takes 30-60 seconds.\nUse GET /v1/jobs/{job_id} to check status and retrieve results.\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "peers_analysis_v1_peers_analysis_post",
         "security": [
           {
@@ -679,6 +822,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -690,7 +843,7 @@
           "Price Data"
         ],
         "summary": "Daily Price",
-        "description": "Get daily price data for one or multiple symbols. If dates not provided, returns latest price.",
+        "description": "Get daily price data for one or multiple symbols. If dates not provided, returns latest price.\n\n**Credits:** 0.05 credits per symbol. A comma-separated symbol list costs 0.05 multiplied by the number of submitted symbols. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "daily_price_v1_daily_price_get",
         "security": [
           {
@@ -711,13 +864,13 @@
                   "type": "null"
                 }
               ],
-              "description": "Start date in YYYY-MM-DD format",
+              "description": "Date in YYYY-MM-DD format. Supply both start_date and end_date for history, or omit both for the latest day. Supplying only one returns HTTP 400.",
               "examples": [
                 "2024-01-01"
               ],
               "title": "Start Date"
             },
-            "description": "Start date in YYYY-MM-DD format"
+            "description": "Date in YYYY-MM-DD format. Supply both start_date and end_date for history, or omit both for the latest day. Supplying only one returns HTTP 400."
           },
           {
             "name": "end_date",
@@ -732,13 +885,13 @@
                   "type": "null"
                 }
               ],
-              "description": "End date in YYYY-MM-DD format",
+              "description": "Date in YYYY-MM-DD format. Supply both start_date and end_date for history, or omit both for the latest day. Supplying only one returns HTTP 400.",
               "examples": [
                 "2024-12-31"
               ],
               "title": "End Date"
             },
-            "description": "End date in YYYY-MM-DD format"
+            "description": "Date in YYYY-MM-DD format. Supply both start_date and end_date for history, or omit both for the latest day. Supplying only one returns HTTP 400."
           },
           {
             "name": "symbol",
@@ -763,6 +916,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -780,6 +942,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -791,7 +963,7 @@
           "Price Data"
         ],
         "summary": "Rolling Volatility",
-        "description": "Get rolling volatility for a symbol over a specified date range.",
+        "description": "Get rolling volatility for a symbol over a specified date range.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "rolling_volatility_v1_rolling_volatility_get",
         "security": [
           {
@@ -878,6 +1050,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -895,6 +1076,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -906,7 +1097,7 @@
           "Price Data"
         ],
         "summary": "Rolling Drawdown",
-        "description": "Get rolling drawdown for a symbol over a specified date range.",
+        "description": "Get rolling drawdown for a symbol over a specified date range.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "rolling_drawdown_v1_rolling_drawdown_get",
         "security": [
           {
@@ -993,6 +1184,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -1010,6 +1210,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1021,7 +1231,7 @@
           "Score Data"
         ],
         "summary": "Historical Scores",
-        "description": "Get historical scores for a symbol (default: 1 year = 52 weeks).",
+        "description": "Get historical scores for a symbol (default: 1 year = 52 weeks).\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "historical_scores_v1_historical_scores_get",
         "security": [
           {
@@ -1066,6 +1276,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -1083,6 +1302,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1094,7 +1323,7 @@
           "Score Data"
         ],
         "summary": "Score Analysis",
-        "description": "Get AI-generated score analysis (ASYNC - returns job_id immediately).\n\nCreates a background job for AI-powered score analysis. Analysis typically takes 30-60 seconds.\nUse GET /jobs/{job_id} to check status and retrieve results.",
+        "description": "Get AI-generated score analysis (ASYNC - returns job_id immediately).\n\nCreates a background job for AI-powered score analysis. Analysis typically takes 30-60 seconds.\nUse GET /v1/jobs/{job_id} to check status and retrieve results.\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "score_analysis_v1_score_analysis_post",
         "security": [
           {
@@ -1142,6 +1371,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1153,7 +1392,7 @@
           "Score Data"
         ],
         "summary": "Score Metrics",
-        "description": "Get calculated score metrics for a symbol.",
+        "description": "Get calculated score metrics for a symbol.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "score_metrics_v1_score_metrics_get",
         "security": [
           {
@@ -1184,6 +1423,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -1201,6 +1449,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1212,7 +1470,7 @@
           "Price Data"
         ],
         "summary": "Returns Calendar",
-        "description": "Get returns calendar for a symbol (monthly, yearly returns).",
+        "description": "Get returns calendar for a symbol (monthly, yearly returns).\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "returns_calendar_v1_returns_calendar_get",
         "security": [
           {
@@ -1267,6 +1525,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -1284,6 +1551,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1295,7 +1572,7 @@
           "News & Analysis"
         ],
         "summary": "News Analysis",
-        "description": "Get AI-generated news analysis (ASYNC - returns job_id immediately).\n\nCreates a background job for news analysis. Typically takes 30-90 seconds.\nUse GET /jobs/{job_id} to check status and retrieve results.",
+        "description": "Get AI-generated news analysis (ASYNC - returns job_id immediately).\n\nCreates a background job for news analysis. Typically takes 30-90 seconds.\nUse GET /v1/jobs/{job_id} to check status and retrieve results.\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "news_analysis_v1_news_analysis_post",
         "security": [
           {
@@ -1357,6 +1634,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1368,7 +1655,7 @@
           "Company Data"
         ],
         "summary": "Company Background",
-        "description": "Get company background/history information for a symbol (async job).\n\nThis endpoint returns immediately with a job_id. Use GET /v1/jobs/{job_id} to check status.\nTypical processing time: 2-3 minutes.",
+        "description": "Get company background/history information for a symbol (async job).\n\nThis endpoint returns immediately with a job_id. Use GET /v1/jobs/{job_id} to check status.\nTypical processing time: 2-3 minutes.\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "company_background_v1_company_background_post",
         "security": [
           {
@@ -1416,6 +1703,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1427,7 +1724,7 @@
           "Analysis"
         ],
         "summary": "Financial Analysis",
-        "description": "Get comprehensive financial analysis (ASYNC - returns job_id immediately).\n\nCreates a background job for deep financial analysis using Krishna Palepu's framework.\nAnalysis typically takes 2-5 minutes.\nUse GET /jobs/{job_id} to check status and retrieve results.",
+        "description": "Get comprehensive financial analysis (ASYNC - returns job_id immediately).\n\nCreates a background job for deep financial analysis using Krishna Palepu's framework.\nAnalysis typically takes 2-5 minutes.\nUse GET /v1/jobs/{job_id} to check status and retrieve results.\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "financial_analysis_v1_financial_analysis_post",
         "security": [
           {
@@ -1475,6 +1772,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1486,7 +1793,7 @@
           "Financial Data"
         ],
         "summary": "Financial Summary",
-        "description": "Get financial summary text for a symbol.",
+        "description": "Get financial summary text for a symbol.\n\n**Credits:** 0.05 credits per symbol. A comma-separated symbol list costs 0.05 multiplied by the number of submitted symbols. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "financial_summary_v1_financial_summary_get",
         "security": [
           {
@@ -1517,6 +1824,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -1534,6 +1850,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1545,7 +1871,7 @@
           "Financial Data"
         ],
         "summary": "Dividend History",
-        "description": "Get dividend history for a symbol.",
+        "description": "Get dividend history for a symbol.\n\n**Credits:** 0.05 credits per symbol. A comma-separated symbol list costs 0.05 multiplied by the number of submitted symbols. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "dividend_history_v1_dividend_history_get",
         "security": [
           {
@@ -1596,6 +1922,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -1613,6 +1948,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1624,7 +1969,7 @@
           "Financial Data"
         ],
         "summary": "Divyield History",
-        "description": "Get dividend yield history for a symbol (daily yield data).",
+        "description": "Get dividend yield history for a symbol (daily yield data).\n\n**Credits:** 0.05 credits per symbol. A comma-separated symbol list costs 0.05 multiplied by the number of submitted symbols. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "divyield_history_v1_divyield_history_get",
         "security": [
           {
@@ -1697,6 +2042,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -1714,6 +2068,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1725,7 +2089,7 @@
           "Technical Analysis"
         ],
         "summary": "Technical Analysis",
-        "description": "Get comprehensive technical analysis (ASYNC - returns job_id immediately).\n\nCreates a background job for technical analysis including:\n- Executive summary with key metrics\n- Trend analysis (moving averages, price patterns)\n- Momentum indicators (RSI, MACD)\n- Price action analysis (support/resistance)\n- Volume analysis\n- Volatility assessment\n- Risk assessment\n\nAnalysis typically takes 15-30 seconds.\nUse GET /jobs/{job_id} to check status and retrieve results.",
+        "description": "Get comprehensive technical analysis (ASYNC - returns job_id immediately).\n\nCreates a background job for technical analysis including:\n- Executive summary with key metrics\n- Trend analysis (moving averages, price patterns)\n- Momentum indicators (RSI, MACD)\n- Price action analysis (support/resistance)\n- Volume analysis\n- Volatility assessment\n- Risk assessment\n\nAnalysis typically takes 15-30 seconds.\nUse GET /v1/jobs/{job_id} to check status and retrieve results.\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "technical_analysis_v1_technical_analysis_post",
         "security": [
           {
@@ -1785,6 +2149,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1796,7 +2170,7 @@
           "Score Data"
         ],
         "summary": "Sector Avg Scores",
-        "description": "Get average scores for sectors.\n- No sector, no market → global averages for all sectors\n- No sector, market provided → all sectors in that market\n- Sector provided, no market → global avg for that sector\n- Both provided → avg of sector in that market",
+        "description": "Get average scores for sectors.\n- No sector, no market → global averages for all sectors\n- No sector, market provided → all sectors in that market\n- Sector provided, no market → global avg for that sector\n- Both provided → avg of sector in that market\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "sector_avg_scores_v1_sector_avg_scores_get",
         "security": [
           {
@@ -1854,6 +2228,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -1871,6 +2254,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1882,7 +2275,7 @@
           "Financial Ratios"
         ],
         "summary": "Current Ratios",
-        "description": "Get current financial ratios for a symbol.",
+        "description": "Get current financial ratios for a symbol.\n\n**Credits:** 0.05 credits per symbol. A comma-separated symbol list costs 0.05 multiplied by the number of submitted symbols. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "current_ratios_v1_current_ratios_get",
         "security": [
           {
@@ -1913,6 +2306,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -1930,6 +2332,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1941,7 +2353,7 @@
           "Financial Ratios"
         ],
         "summary": "Altman Zscore",
-        "description": "Get Altman Z-Score data for a symbol.",
+        "description": "Get Altman Z-Score data for a symbol.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "altman_zscore_v1_altman_zscore_get",
         "security": [
           {
@@ -1992,6 +2404,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -2009,6 +2430,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -2020,7 +2451,7 @@
           "Financial Ratios"
         ],
         "summary": "Piotroski Fscore",
-        "description": "Get Piotroski F-Score data for a symbol.",
+        "description": "Get Piotroski F-Score data for a symbol.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "piotroski_fscore_v1_piotroski_fscore_get",
         "security": [
           {
@@ -2071,6 +2502,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -2088,6 +2528,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -2099,7 +2549,7 @@
           "Analysis"
         ],
         "summary": "Risk Return Profile",
-        "description": "Get risk-return profile for a symbol and its peers (1-year return and volatility).",
+        "description": "Get risk-return profile for a symbol and its peers (1-year return and volatility).\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "risk_return_profile_v1_risk_return_profile_get",
         "security": [
           {
@@ -2130,6 +2580,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -2147,6 +2606,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -2158,7 +2627,7 @@
           "Analysis"
         ],
         "summary": "Macro Context",
-        "description": "Get macroeconomic context for a specific country (async job).\n\nThis endpoint returns immediately with a job_id. Use GET /v1/jobs/{job_id} to check status.\nTypical processing time: 2-3 minutes.",
+        "description": "Get macroeconomic context for a specific country (async job).\n\nThis endpoint returns immediately with a job_id. Use GET /v1/jobs/{job_id} to check status.\nTypical processing time: 2-3 minutes.\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "macro_context_v1_macro_context_post",
         "security": [
           {
@@ -2205,6 +2674,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -2216,7 +2695,7 @@
           "Validation"
         ],
         "summary": "Validate Symbol Endpoint",
-        "description": "Validate if a stock symbol exists and return the resolved RIC",
+        "description": "Validate if a stock symbol exists and return the resolved RIC\n\n**Credits:** Free (0 credits).",
         "operationId": "validate_symbol_endpoint_v1_validate_symbol_get",
         "security": [
           {
@@ -2275,7 +2754,7 @@
           "Jobs"
         ],
         "summary": "List Jobs",
-        "description": "List background jobs with optional filtering.\n\nUseful for monitoring and debugging.",
+        "description": "List background jobs with optional filtering.\n\nUseful for monitoring and debugging.\n\n**Credits:** Free (0 credits).",
         "operationId": "list_jobs_v1_jobs_get",
         "security": [
           {
@@ -2369,7 +2848,7 @@
           "Jobs"
         ],
         "summary": "Get Job Status",
-        "description": "Get status of a background job.\n\nUse this endpoint to check the status of long-running operations like:\n- Stock report generation (/stock-report)\n- Score analysis (/score-analysis-async)\n- News analysis (/news-analysis-async)\n- Financial analysis (/financial-analysis-async)\n\nStatus values:\n- pending: Job created, not started yet\n- processing: Job is currently running (check 'progress' field for details)\n- completed: Job finished successfully (result contains the data)\n- failed: Job failed (error contains the error message)\n\nExample:\n    POST /v1/stock-report -> {\"job_id\": \"abc-123\", \"status\": \"pending\"}\n    GET /v1/jobs/abc-123 -> {\"status\": \"processing\", \"progress\": \"Generating PDF...\"}\n    GET /v1/jobs/abc-123 -> {\"status\": \"completed\", \"result\": {...}}",
+        "description": "Get status of a background job.\n\nUse this endpoint to check the status of long-running operations like:\n- Stock report generation (/stock-report)\n- Score analysis (/v1/score-analysis)\n- News analysis (/v1/news-analysis)\n- Financial analysis (/v1/financial-analysis)\n\nStatus values:\n- pending: Job created, not started yet\n- processing: Job is currently running (check 'progress' field for details)\n- completed: Job finished successfully (result contains the data)\n- failed: Job failed (error contains the error message)\n\nExample:\n    POST /v1/stock-report -> {\"job_id\": \"abc-123\", \"status\": \"pending\"}\n    GET /v1/jobs/abc-123 -> {\"status\": \"processing\", \"progress\": \"Generating PDF...\"}\n    GET /v1/jobs/abc-123 -> {\"status\": \"completed\", \"result\": {...}}\n\n**Credits:** Free (0 credits).",
         "operationId": "get_job_status_v1_jobs__job_id__get",
         "security": [
           {
@@ -2422,7 +2901,7 @@
           "Portfolio"
         ],
         "summary": "Analyze Portfolio",
-        "description": "Analyze a portfolio with multi-currency support, rebalancing, and comprehensive metrics (ASYNC - returns job_id immediately).\n\nThis endpoint creates a background job for portfolio analysis. The actual analysis\nhappens asynchronously without blocking. Use GET /jobs/{job_id} to check status.\n\n**Response Format:**\n```json\n{\n    \"job_id\": \"uuid-string\",\n    \"status\": \"pending\",\n    \"check_url\": \"/v1/jobs/{job_id}\",\n    \"estimated_duration_seconds\": 90\n}\n```\n\n**Workflow:**\n1. POST /portfolio/analyze -> Get job_id (returns in <1 second)\n2. Poll GET /jobs/{job_id} every 3-5 seconds\n3. When status=\"completed\", result contains full analysis\n\n**Portfolio Analysis Includes:**\n- Performance metrics (returns, Sharpe, Sortino, etc.)\n- Risk metrics (volatility, drawdown, VaR, etc.)\n- Attribution analysis (by security, sector, market, currency)\n- Rolling metrics (30/60/90-day windows)\n- Benchmark comparison\n- Transaction history and rebalancing details\n\n**Portfolio Format:**\n- Each holding requires: date, symbol, and weight (as decimal)\n- Weights should sum to 1.0 for each date\n- Multiple dates can be provided for rebalancing\n\n**Field Selection (Optional):**\nUse the `fields` parameter to return only specific data sections. If omitted, all fields are returned.\n\nAvailable fields: `portfolio_parameters`, `portfolio_input`, `data_quality`, `portfolio_summary`,\n`performance_metrics`, `rolling_metrics`, `drawdown_analysis`, `portfolio_scores`, `concentration_metrics`,\n`transactions`, `company_info`, `latest_holdings`, `market_allocation`, `sector_allocation`,\n`currency_allocation`, `company_contribution`, `sector_contribution`, `market_contribution`,\n`time_period_returns`, `monthly_returns`, `annual_returns`, `daily_summary`.\n`portfolio_daily` is excluded from the default response because it is too large.\n\n**Example Request:**\n```json\n{\n  \"start_date\": \"2024-01-01\",\n  \"end_date\": \"2024-11-01\",\n  \"base_currency\": \"USD\",\n  \"benchmark\": \"SPY\",\n  \"initial_value\": 10000,\n  \"portfolio\": [\n    {\"date\": \"2024-01-01\", \"symbol\": \"AAPL\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"MSFT\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"GOOGL\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"AMZN\", \"weight\": 0.25}\n  ],\n  \"fields\": [\"portfolio_summary\", \"performance_metrics\", \"latest_holdings\"]\n}\n```\n\n**Example:**\n```bash\n# Start analysis\ncurl -X POST \"https://api/v1/portfolio/analyze\" \\\n     -H \"Authorization: Bearer key\" \\\n     -d '{\"start_date\":\"2024-01-01\",...}'\n\n# Check status\ncurl \"https://api/v1/jobs/{job_id}\" -H \"Authorization: Bearer key\"\n```",
+        "description": "Analyze a portfolio with multi-currency support, rebalancing, and comprehensive metrics (ASYNC - returns job_id immediately).\n\nThis endpoint creates a background job for portfolio analysis. The actual analysis\nhappens asynchronously without blocking. Use GET /v1/jobs/{job_id} to check status.\n\n**Response Format:**\n```json\n{\n    \"job_id\": \"uuid-string\",\n    \"status\": \"pending\",\n    \"check_url\": \"/v1/jobs/{job_id}\",\n    \"estimated_duration_seconds\": 90\n}\n```\n\n**Workflow:**\n1. POST /portfolio/analyze -> Get job_id (returns in <1 second)\n2. Poll GET /v1/jobs/{job_id} every 3-5 seconds\n3. When status=\"completed\", result contains full analysis\n\n**Portfolio Analysis Includes:**\n- Performance metrics (returns, Sharpe, Sortino, etc.)\n- Risk metrics (volatility, drawdown, VaR, etc.)\n- Attribution analysis (by security, sector, market, currency)\n- Rolling metrics (30/60/90-day windows)\n- Benchmark comparison\n- Transaction history and rebalancing details\n\n**Portfolio Format:**\n- Each holding requires: date, symbol, and weight (as decimal)\n- Weights should sum to 1.0 for each date\n- Multiple dates can be provided for rebalancing\n\n**Field Selection (Optional):**\nUse the `fields` parameter to return only specific data sections. If omitted, all fields are returned.\n\nAvailable fields: `portfolio_parameters`, `portfolio_input`, `data_quality`, `portfolio_summary`,\n`performance_metrics`, `rolling_metrics`, `drawdown_analysis`, `portfolio_scores`, `concentration_metrics`,\n`transactions`, `company_info`, `latest_holdings`, `market_allocation`, `sector_allocation`,\n`currency_allocation`, `company_contribution`, `sector_contribution`, `market_contribution`,\n`time_period_returns`, `monthly_returns`, `annual_returns`, `daily_summary`.\n\n**Example Request:**\n```json\n{\n  \"start_date\": \"2024-01-01\",\n  \"end_date\": \"2024-11-01\",\n  \"base_currency\": \"USD\",\n  \"benchmark\": \"SPY\",\n  \"initial_value\": 10000,\n  \"portfolio\": [\n    {\"date\": \"2024-01-01\", \"symbol\": \"AAPL\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"MSFT\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"GOOGL\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"AMZN\", \"weight\": 0.25}\n  ],\n  \"fields\": [\"portfolio_summary\", \"performance_metrics\", \"latest_holdings\"]\n}\n```\n\n**Example:**\n```bash\n# Start analysis\ncurl -X POST \"https://api.chicago.global/v1/portfolio/analyze\" \\\n     -H \"Authorization: Bearer key\" \\\n     -d '{\"start_date\":\"2024-01-01\",...}'\n\n# Check status\ncurl \"https://api.chicago.global/v1/jobs/{job_id}\" -H \"Authorization: Bearer key\"\n```\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "analyze_portfolio_v1_portfolio_analyze_post",
         "requestBody": {
           "content": {
@@ -2458,6 +2937,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -2474,7 +2963,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Validate Portfolio",
-        "description": "Dry-run validation for a new portfolio definition (same body as /track).\n\nReturns every validation error and warning without persisting anything.\nUse this client-side before calling /track to fix all issues in one pass.",
+        "description": "Dry-run validation for a new portfolio definition (same body as /track).\n\nReturns every validation error and warning without persisting anything.\nUse this client-side before calling /track to fix all issues in one pass.\n\n**Credits:** Free (0 credits).",
         "operationId": "validate_portfolio_v1_portfolio_validate_post",
         "requestBody": {
           "content": {
@@ -2528,7 +3017,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Resolve Portfolio",
-        "description": "Resolve a portfolio definition and validate the result.\n\nAccepts the same body as /track. Normalizes symbols to RICs, removes unresolvable symbols and future-dated rows, deduplicates entries, removes non-positive weights, and renormalizes weights for each date to sum to 1.0. The result is checked with the same validator used by /track.\n\nReturns HTTP 200 with one of three statuses without persisting changes:\n- \"clean\": the input is valid and returned unchanged.\n- \"resolved\": the returned portfolio contains the corrected definition for submission to /track.\n- \"unresolvable\": the definition requires further changes; see validation.errors for details.\n\nReview the changes and dropped entries before submitting the resolved portfolio.",
+        "description": "Resolve a portfolio definition and validate the result.\n\nAccepts the same body as /track. Normalizes symbols to RICs, removes unresolvable symbols and future-dated rows, deduplicates entries, removes non-positive weights, and renormalizes weights for each date to sum to 1.0. The result is checked with the same validator used by /track.\n\nReturns HTTP 200 with one of three statuses without persisting changes:\n- \"clean\": the input is valid and returned unchanged.\n- \"resolved\": the returned portfolio contains the corrected definition for submission to /track.\n- \"unresolvable\": the definition requires further changes; see validation.errors for details.\n\nReview the changes and dropped entries before submitting the resolved portfolio.\n\n**Credits:** Free (0 credits).",
         "operationId": "resolve_portfolio_v1_portfolio_resolve_post",
         "requestBody": {
           "content": {
@@ -2580,7 +3069,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Validate Portfolio Update",
-        "description": "Dry-run validation for an update (same optional fields as /update).\n\nMerges the payload onto the stored registry + holdings, then validates the\nresulting definition — the same snapshot /update would persist if accepted.",
+        "description": "Validate an update without applying changes. Accepts the same optional fields as /update and validates the resulting portfolio definition.\n\n**Credits:** Free (0 credits).",
         "operationId": "validate_portfolio_update_v1_portfolio__portfolio_key__validate_post",
         "security": [
           {
@@ -2645,7 +3134,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Track Portfolio",
-        "description": "Register a tracked portfolio and kick off its initial analytics in the\nbackground, returning the portfolio_key immediately (no compute wait).",
+        "description": "Register a tracked portfolio and kick off its initial analytics in the\nbackground, returning the portfolio_key immediately (no compute wait).\n\n**Credits:** Free (0 credits).",
         "operationId": "track_portfolio_v1_portfolio_track_post",
         "requestBody": {
           "content": {
@@ -2697,7 +3186,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Update Portfolio",
-        "description": "Update a tracked portfolio's holdings/params, then recompute its analytics\nin the background. Returns immediately (the holdings change + series clear are\ncheap and synchronous; the engine rebuild runs off the request path).",
+        "description": "Update a tracked portfolio's holdings or parameters and refresh its analytics in the background. Returns immediately with an analytics_job_id for polling.\n\n**Credits:** Free (0 credits).",
         "operationId": "update_portfolio_v1_portfolio__portfolio_key__update_post",
         "security": [
           {
@@ -2760,7 +3249,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Increment Portfolio",
-        "description": "Extend a tracked portfolio's analytics to yesterday. No request body —\nholdings and params are unchanged. Compute runs as a background job.",
+        "description": "Extend a tracked portfolio's analytics to yesterday. No request body —\nholdings and params are unchanged. Compute runs as a background job.\n\n**Credits:** Free (0 credits).",
         "operationId": "increment_portfolio_v1_portfolio__portfolio_key__increment_post",
         "security": [
           {
@@ -2813,7 +3302,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Get Portfolio",
-        "description": "Get portfolio metadata.",
+        "description": "Get portfolio metadata.\n\n**Credits:** Free (0 credits).",
         "operationId": "get_portfolio_v1_portfolio__portfolio_key__get",
         "security": [
           {
@@ -2864,7 +3353,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Delete Portfolio",
-        "description": "Delete a tracked portfolio and all its data.",
+        "description": "Delete a tracked portfolio and all its data.\n\n**Credits:** Free (0 credits).",
         "operationId": "delete_portfolio_v1_portfolio__portfolio_key__delete",
         "security": [
           {
@@ -2917,7 +3406,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Get Portfolio Analytics",
-        "description": "Read the derived analytics for a tracked portfolio. Fast and read-only —\nno compute. Returns a discriminated status:\n  - {status: \"ready\", analytics}  when the series is computed\n  - {status: \"not_computed\"} (200) when the portfolio exists but its series\n    is empty (a background compute hasn't landed) — the client triggers a\n    rebuild and polls, rather than dead-ending on a 404\n  - 404 only when the portfolio genuinely doesn't exist.",
+        "description": "Read analytics from a tracked portfolio's stored series. If cached analytics are missing or use an older calculation version, derive updated analytics from those series. Returns status ready with analytics, or status not_computed with HTTP 200 while the initial series is unavailable. Missing or inaccessible portfolios return HTTP 404.\n\n**Credits:** 1 credit per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_portfolio_analytics_v1_portfolio__portfolio_key__analytics_get",
         "security": [
           {
@@ -2942,6 +3431,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -2959,6 +3457,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -2970,7 +3478,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Get Portfolio Holdings",
-        "description": "Get the portfolio DEFINITION: every holding in the registry across all\nrebalance dates, with the as-defined weights (date, symbol, weight). This is\nthe portfolio exactly as the user/builder set it — the source of truth for\nthe definition. For the latest COMPUTED state (drifted weights) use\n/holdings/latest.",
+        "description": "Get every holding in the portfolio definition across all rebalance dates, with the submitted date, symbol, and weight. For the most recent computed holdings and drifted weights, use /holdings/latest.\n\n**Credits:** Free (0 credits).",
         "operationId": "get_portfolio_holdings_v1_portfolio__portfolio_key__holdings_get",
         "security": [
           {
@@ -3023,7 +3531,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Get Portfolio Holdings Latest",
-        "description": "Get the latest COMPUTED holdings from ClickHouse — the portfolio's current\nstate on its most recent computed day, with drifted weights / ending values.\nFor the as-defined definition (all rebalance dates) use /holdings.\n\nDiscriminated status, matching /analytics:\n  - {status: \"ready\", holdings}   when the series is computed\n  - {status: \"not_computed\", holdings: []} (200) when the portfolio exists but\n    its series is empty (a background compute hasn't landed)\n  - 404 only when the portfolio genuinely doesn't exist.",
+        "description": "Get the latest computed holdings — the portfolio's current\nstate on its most recent computed day, with drifted weights / ending values.\nFor the as-defined definition (all rebalance dates) use /holdings.\n\nDiscriminated status, matching /analytics:\n  - {status: \"ready\", holdings}   when the series is computed\n  - {status: \"not_computed\", holdings: []} (200) when the portfolio exists but\n    its series is empty (a background compute hasn't landed)\n  - 404 only when the portfolio genuinely doesn't exist.\n\n**Credits:** Free (0 credits).",
         "operationId": "get_portfolio_holdings_latest_v1_portfolio__portfolio_key__holdings_latest_get",
         "security": [
           {
@@ -3076,7 +3584,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Get Portfolio Summary",
-        "description": "Get daily summary time series for a tracked portfolio from ClickHouse.\n\nDiscriminated status, matching /analytics:\n  - {status: \"ready\", daily_summary}   when the series is computed\n  - {status: \"not_computed\", daily_summary: []} (200) when the portfolio\n    exists but its series is empty (a background compute hasn't landed)\n  - 404 only when the portfolio genuinely doesn't exist.",
+        "description": "Get daily summary time series for a tracked portfolio.\n\nDiscriminated status, matching /analytics:\n  - {status: \"ready\", daily_summary}   when the series is computed\n  - {status: \"not_computed\", daily_summary: []} (200) when the portfolio\n    exists but its series is empty (a background compute hasn't landed)\n  - 404 only when the portfolio genuinely doesn't exist.\n\n**Credits:** 1 credit per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_portfolio_summary_v1_portfolio__portfolio_key__summary_get",
         "security": [
           {
@@ -3101,6 +3609,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -3118,6 +3635,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -3129,7 +3656,7 @@
           "Portfolio Analytics"
         ],
         "summary": "Portfolio Report",
-        "description": "Generate a PDF/HTML portfolio report from analyzer output (ASYNC - returns job_id immediately).\n\nThis endpoint creates a background job for report generation. The actual generation\nhappens asynchronously without blocking. Use GET /jobs/{job_id} to check status.\n\n**Request Body:**\n- `portfolio_data`: The complete result from the /analyzer endpoint\n- `format`: Output format - \"pdf\" (default), \"html\", or \"both\"\n\n**Response Format:**\n```json\n{\n    \"job_id\": \"port-uuid-string\",\n    \"status\": \"pending\",\n    \"format\": \"pdf\",\n    \"check_url\": \"/v1/jobs/{job_id}\",\n    \"estimated_duration_seconds\": 60\n}\n```\n\n**Workflow:**\n1. POST /portfolioreport -> Get job_id (returns in <1 second)\n2. Poll GET /jobs/{job_id} every 2-5 seconds\n3. When status=\"completed\", result contains pdf_url, html_url, expires_at\n\n**Report includes:**\n- Executive Summary with key metrics\n- Portfolio Value vs Benchmark chart\n- Drawdown Analysis\n- Sector & Market Allocation pie charts\n- Top Holdings bar chart\n- Monthly Returns heatmap\n- Rolling Sharpe Ratio chart\n- Period returns (MTD, YTD, 1Y, etc.)\n\n**Note:** Report URLs expire after 24 hours.\n\n**Example:**\n```bash\n# First get analyzer result\nRESULT=$(curl -X POST \"https://api/v1/analyzer\" ...)\n\n# Start report generation\ncurl -X POST \"https://api/v1/portfolioreport\" \\\n     -H \"Authorization: Bearer YOUR_KEY\" \\\n     -H \"Content-Type: application/json\" \\\n     -d '{\"portfolio_data\": '\"$RESULT\"', \"format\": \"pdf\"}'\n\n# Check status\ncurl \"https://api/v1/jobs/{job_id}\" -H \"Authorization: Bearer YOUR_KEY\"\n```",
+        "description": "Generate a PDF or HTML portfolio report from a completed /v1/portfolio/analyze job. Supply its result object as portfolio_data. Returns a job_id and check_url; poll GET /v1/jobs/{job_id} for report URLs and expires_at.\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "portfolio_report_v1_portfolioreport_post",
         "requestBody": {
           "content": {
@@ -3182,6 +3709,16 @@
                 }
               }
             }
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -3198,7 +3735,7 @@
           "CIO Report"
         ],
         "summary": "Generate Cio Report",
-        "description": "Generate a Chief Investment Officer report (ASYNC - returns job_id immediately).",
+        "description": "Generate a Chief Investment Officer report (ASYNC - returns job_id immediately).\n\n**Credits:** 10 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "generate_cio_report_v1_cio_report_post",
         "requestBody": {
           "content": {
@@ -3234,6 +3771,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -3250,7 +3797,7 @@
           "Assessment"
         ],
         "summary": "Create Assessment",
-        "description": "Generate an impact assessment report using Perplexity AI (ASYNC - returns job_id immediately).\n\nThis endpoint creates a background job for assessment generation. Use GET /jobs/{job_id}\nto check status and retrieve results.\n\n**Research Modes:**\n- `fast`: Uses sonar-pro model (quick web search)\n- `default`: Uses sonar-reasoning-pro model (balanced analysis)\n- `deep`: Uses sonar-deep-research model (thorough research)\n\n**Request Body:**\n- `prompt`: Full prompt including scenario, portfolio/stock data, and analysis instructions\n- `system_prompt`: Optional custom system prompt (defaults to Parallax AI analyst)\n- `model`: Research mode - \"fast\", \"default\", or \"deep\"\n- `max_tokens`: Max response tokens (default 8000)\n- `temperature`: Model temperature (default 0.4)\n\n**Response Format:**\n```json\n{\n    \"job_id\": \"assess-uuid-string\",\n    \"status\": \"pending\",\n    \"model\": \"default\",\n    \"check_url\": \"/v1/jobs/{job_id}\",\n    \"estimated_duration_seconds\": 60\n}\n```\n\n**Result Format (when complete):**\n```json\n{\n    \"success\": true,\n    \"content\": \"# Impact Report\\n...\",\n    \"search_results\": [...],\n    \"model_used\": \"sonar-reasoning-pro\"\n}\n```\n\n**Example Prompt:**\n```\nANALYSIS TEMPLATE INSTRUCTIONS:\n1. Executive Summary (risk/opportunity classification)\n2. Direct Impact Analysis by sector\n3. Strategic Recommendations\n\nPORTFOLIO CONTEXT:\n- Name: Tech Portfolio\n- Holdings: AAPL (25%), MSFT (25%), GOOGL (20%)\n\nSCENARIO: What if the Fed raises interest rates by 50 basis points?\n```",
+        "description": "Generate an impact assessment report. Supply prompt with the scenario and portfolio or stock context. Choose fast, default, or deep research with model. Returns a job_id and check_url immediately; poll GET /v1/jobs/{job_id} for the result.\n\n**Credits:** 5 credits for `fast` or `default`; 10 credits for `deep`. Charged when the job completes successfully. Polling is free.",
         "operationId": "create_assessment_v1_assessment_post",
         "requestBody": {
           "content": {
@@ -3303,6 +3850,16 @@
                 }
               }
             }
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -3319,7 +3876,7 @@
           "Macro Reports"
         ],
         "summary": "Get Macro Report",
-        "description": "Fetch macro economic report for a market.\n\n- **format=json**: Returns JSON report URL (optionally with content)\n- **format=pdf**: Returns PDF report URL\n- **include_content=true**: Embeds full JSON report content in response",
+        "description": "Fetch macro economic report for a market.\n\n- **format=json**: Returns JSON report URL (optionally with content)\n- **format=pdf**: Returns PDF report URL\n- **include_content=true**: Embeds full JSON report content in response\n\n**Credits:** 5 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_macro_report_v1_macro_report_get",
         "security": [
           {
@@ -3388,6 +3945,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -3405,6 +3971,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -3416,7 +3992,7 @@
           "Macro Reports"
         ],
         "summary": "List Macro Markets",
-        "description": "List all markets with available macro reports.",
+        "description": "List all markets with available macro reports.\n\n**Credits:** Free (0 credits).",
         "operationId": "list_macro_markets_v1_macro_report_markets_get",
         "responses": {
           "200": {
@@ -3448,7 +4024,7 @@
           "Builder"
         ],
         "summary": "Builder",
-        "description": "Build a thematic stock universe (ASYNC - returns job_id immediately).\n\nAccepts a natural language query (e.g., \"top 50 EV companies in Asia\",\n\"fintech startups\", \"gene therapy pure plays\"). An LLM interprets the query\nto extract the theme, filters, and parameters, then searches ~65K company\ndescriptions to find relevant stocks ranked by relevance score.\n\nTypically takes 15-40 seconds. Use GET /jobs/{job_id} to check status and retrieve results.",
+        "description": "Build a thematic stock universe from a natural-language query, returning relevant stocks ranked for the request. Returns a job_id immediately. Poll GET /v1/jobs/{job_id} for the result.\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "builder_v1_builder_post",
         "requestBody": {
           "content": {
@@ -3484,6 +4060,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -3500,7 +4086,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry Summary",
-        "description": "Quick daily market snapshot — always ~2KB, no large payloads.\n\nReturns: `regime_tag`, `signals`, `metadata`, `raw_tape`, `divergences`",
+        "description": "Quick daily market snapshot — always ~2KB, no large payloads.\n\nReturns: `regime_tag`, `signals`, `metadata`, `raw_tape`, `divergences`\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_telemetry_summary_v1_telemetry_summary_get",
         "security": [
           {
@@ -3534,6 +4120,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -3551,6 +4146,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -3562,7 +4167,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry Baskets",
-        "description": "Thematic basket performance — filtered and sorted slice of all 400 baskets.\n\nDefault response (top 20 by daily, no members): ~8KB.\nFull 400 baskets with members: ~800KB — use `limit=400&include_members=true` explicitly.\n\n**Basket fields:** name, basket_id, market, quadrant, daily, wtd, mtd, ytd,\nscores, n_stocks, momentum_1m, momentum_6m, daily_zscore, is_priced_in,\nconfirmed_in, n_confirmed_markets. Members added when `include_members=true`.",
+        "description": "Thematic basket performance — filtered and sorted slice of all 400 baskets.\n\nDefault response (top 20 by daily, no members): ~8KB.\nFull 400 baskets with members: ~800KB — use `limit=400&include_members=true` explicitly.\n\n**Basket fields:** name, basket_id, market, quadrant, daily, wtd, mtd, ytd,\nscores, n_stocks, momentum_1m, momentum_6m, daily_zscore, is_priced_in,\nconfirmed_in, n_confirmed_markets. Members added when `include_members=true`.\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_telemetry_baskets_v1_telemetry_baskets_get",
         "security": [
           {
@@ -3670,6 +4275,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -3687,6 +4301,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -3698,7 +4322,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry Basket Detail",
-        "description": "Single basket detail including member stock list (~1.1KB).\n\nResolve `basket_id` from `GET /telemetry/baskets` first.\n\n**Chain pattern:** summary → baskets list → basket detail (members)",
+        "description": "Single basket detail including member stock list (~1.1KB).\n\nResolve `basket_id` from `GET /telemetry/baskets` first.\n\n**Chain pattern:** summary → baskets list → basket detail (members)\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_telemetry_basket_detail_v1_telemetry_baskets__basket_id__get",
         "security": [
           {
@@ -3741,6 +4365,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -3758,6 +4391,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -3769,7 +4412,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry Macro",
-        "description": "Macro lens — per-market breakdown with aggregate stats, top/bottom baskets, distributions.\n\n- **No `market` param** → all 38 markets (~43.5KB). Each market has: aggregate_daily/wtd/mtd/ytd,\n  n_baskets, size_tier, total_market_cap_usd, top/bottom performers per period, return distribution.\n- **`market=GB`** → full detail for one country (~1.1KB).\n\nAlso returns `regime_tag` and `signals` for context.",
+        "description": "Macro lens — per-market breakdown with aggregate stats, top/bottom baskets, distributions.\n\n- **No `market` param** → all 38 markets (~43.5KB). Each market has: aggregate_daily/wtd/mtd/ytd,\n  n_baskets, size_tier, total_market_cap_usd, top/bottom performers per period, return distribution.\n- **`market=GB`** → full detail for one country (~1.1KB).\n\nAlso returns `regime_tag` and `signals` for context.\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_telemetry_macro_v1_telemetry_macro_get",
         "security": [
           {
@@ -3821,6 +4464,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -3838,6 +4490,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -3849,7 +4511,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry Factor",
-        "description": "Factor lens — momentum, value, quality, size, defensive, tactical factor performance.\n\n**Default (~2.2KB):** `factors`, `commentary`, `split_methods`\n\n**Opt-in large fields:**\n- `portfolios` (~107KB total, ~2–3KB with `market=US`)\n- `timeseries` (~592KB) — explicit opt-in only\n- `correlations` (~767KB) — explicit opt-in only\n\n`commentary` sub-keys: `regime`, `dominant_factor`, `headline`, `paragraphs`, `model`, `generated_at`",
+        "description": "Factor lens — momentum, value, quality, size, defensive, tactical factor performance.\n\n**Default (~2.2KB):** `factors`, `commentary`, `split_methods`\n\n**Opt-in large fields:**\n- `portfolios` (~107KB total, ~2–3KB with `market=US`)\n- `timeseries` (~592KB) — explicit opt-in only\n- `correlations` (~767KB) — explicit opt-in only\n\n`commentary` sub-keys: `regime`, `dominant_factor`, `headline`, `paragraphs`, `model`, `generated_at`\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_telemetry_factor_v1_telemetry_factor_get",
         "security": [
           {
@@ -3922,6 +4584,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -3939,6 +4610,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -3950,7 +4631,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry",
-        "description": "Get daily market telemetry for a given report date (legacy field-selection endpoint).\n\n**Prefer the focused sub-endpoints:**\n- `GET /telemetry/summary` — regime, signals, divergences (~2KB)\n- `GET /telemetry/baskets` — thematic baskets with filters\n- `GET /telemetry/macro` — per-market macro breakdown\n- `GET /telemetry/factor` — factor lens\n\n**Default fields** (~60KB): `regime_tag`, `raw_tape`, `metadata`, `signals`, `markets`, `commentary`, `divergences`\n\n**Large fields** (opt-in): `baskets` (~800KB), `factor_view` (~1.47MB)\n\n**Dot notation for commentary sub-fields:**\n`commentary.headline`, `commentary.mechanism`, `commentary.paragraphs`,\n`commentary.narrative_text`, `commentary.market_notes`, `commentary.model`,\n`commentary.generated_at`, `commentary.compliance_violations`\n\n**Dot notation for factor_view sub-fields:**\n`factor_view.factors`, `factor_view.commentary`, `factor_view.split_methods`,\n`factor_view.portfolios` (~107KB), `factor_view.timeseries` (~592KB), `factor_view.correlations` (~767KB)",
+        "description": "Get daily market telemetry for a given report date (legacy field-selection endpoint).\n\n**Prefer the focused sub-endpoints:**\n- `GET /telemetry/summary` — regime, signals, divergences (~2KB)\n- `GET /telemetry/baskets` — thematic baskets with filters\n- `GET /telemetry/macro` — per-market macro breakdown\n- `GET /telemetry/factor` — factor lens\n\n**Default fields** (~60KB): `regime_tag`, `raw_tape`, `metadata`, `signals`, `markets`, `commentary`, `divergences`\n\n**Large fields** (opt-in): `baskets` (~800KB), `factor_view` (~1.47MB)\n\n**Dot notation for commentary sub-fields:**\n`commentary.headline`, `commentary.mechanism`, `commentary.paragraphs`,\n`commentary.narrative_text`, `commentary.market_notes`, `commentary.model`,\n`commentary.generated_at`, `commentary.compliance_violations`\n\n**Dot notation for factor_view sub-fields:**\n`factor_view.factors`, `factor_view.commentary`, `factor_view.split_methods`,\n`factor_view.portfolios` (~107KB), `factor_view.timeseries` (~592KB), `factor_view.correlations` (~767KB)\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_telemetry_v1_telemetry_get",
         "security": [
           {
@@ -4015,6 +4696,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -4032,6 +4722,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4043,7 +4743,7 @@
           "ETF"
         ],
         "summary": "Etf Validate",
-        "description": "Validate if an ETF symbol exists and return the resolved RIC.",
+        "description": "Validate if an ETF symbol exists and return the resolved RIC.\n\n**Credits:** Free (0 credits).",
         "operationId": "etf_validate_v1_etf_validate_get",
         "security": [
           {
@@ -4102,7 +4802,7 @@
           "ETF"
         ],
         "summary": "Etf Profile",
-        "description": "Get ETF profile with metadata and optional scores.",
+        "description": "Get ETF profile with metadata and optional scores.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "etf_profile_v1_etf_profile_get",
         "security": [
           {
@@ -4116,14 +4816,19 @@
             "required": true,
             "schema": {
               "type": "string",
-              "description": "ETF symbol(s). Single or comma-separated",
+              "description": "One ETF ticker or RIC per request.",
               "examples": [
                 "SPY",
                 "SPY,QQQ,IWM"
               ],
               "title": "Symbol"
             },
-            "description": "ETF symbol(s). Single or comma-separated"
+            "description": "One ETF ticker or RIC per request.",
+            "examples": {
+              "0": {
+                "value": "SPY"
+              }
+            }
           }
         ],
         "responses": {
@@ -4132,6 +4837,15 @@
             "content": {
               "application/json": {
                 "schema": {}
+              }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
               }
             }
           },
@@ -4150,6 +4864,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4161,7 +4885,7 @@
           "ETF"
         ],
         "summary": "Etf Daily Price",
-        "description": "Get daily OHLCV for an ETF.",
+        "description": "Get daily OHLCV for an ETF.\n\n**Credits:** 0.05 credits per symbol. A comma-separated symbol list costs 0.05 multiplied by the number of submitted symbols. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "etf_daily_price_v1_etf_daily_price_get",
         "security": [
           {
@@ -4182,13 +4906,13 @@
                   "type": "null"
                 }
               ],
-              "description": "Start date (YYYY-MM-DD)",
+              "description": "Date in YYYY-MM-DD format. Supply both start_date and end_date for history, or omit both for the latest day. Supplying only one returns HTTP 400.",
               "examples": [
                 "2025-01-01"
               ],
               "title": "Start Date"
             },
-            "description": "Start date (YYYY-MM-DD)"
+            "description": "Date in YYYY-MM-DD format. Supply both start_date and end_date for history, or omit both for the latest day. Supplying only one returns HTTP 400."
           },
           {
             "name": "end_date",
@@ -4203,13 +4927,13 @@
                   "type": "null"
                 }
               ],
-              "description": "End date (YYYY-MM-DD)",
+              "description": "Date in YYYY-MM-DD format. Supply both start_date and end_date for history, or omit both for the latest day. Supplying only one returns HTTP 400.",
               "examples": [
                 "2025-03-01"
               ],
               "title": "End Date"
             },
-            "description": "End date (YYYY-MM-DD)"
+            "description": "Date in YYYY-MM-DD format. Supply both start_date and end_date for history, or omit both for the latest day. Supplying only one returns HTTP 400."
           },
           {
             "name": "symbol",
@@ -4217,14 +4941,19 @@
             "required": true,
             "schema": {
               "type": "string",
-              "description": "ETF symbol(s). Single or comma-separated",
+              "description": "One ETF ticker or RIC per request.",
               "examples": [
                 "SPY",
                 "SPY,QQQ,IWM"
               ],
               "title": "Symbol"
             },
-            "description": "ETF symbol(s). Single or comma-separated"
+            "description": "One ETF ticker or RIC per request.",
+            "examples": {
+              "0": {
+                "value": "SPY"
+              }
+            }
           }
         ],
         "responses": {
@@ -4233,6 +4962,15 @@
             "content": {
               "application/json": {
                 "schema": {}
+              }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
               }
             }
           },
@@ -4251,6 +4989,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4262,7 +5010,7 @@
           "ETF"
         ],
         "summary": "Etf Scores",
-        "description": "Get ETF scores (value, quality, momentum, defensive, tactical, total + recommendation).",
+        "description": "Get ETF scores (value, quality, momentum, defensive, tactical, total + recommendation).\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "etf_scores_v1_etf_scores_get",
         "security": [
           {
@@ -4276,14 +5024,19 @@
             "required": true,
             "schema": {
               "type": "string",
-              "description": "ETF symbol(s). Single or comma-separated",
+              "description": "One ETF ticker or RIC per request.",
               "examples": [
                 "SPY",
                 "SPY,QQQ,IWM"
               ],
               "title": "Symbol"
             },
-            "description": "ETF symbol(s). Single or comma-separated"
+            "description": "One ETF ticker or RIC per request.",
+            "examples": {
+              "0": {
+                "value": "SPY"
+              }
+            }
           }
         ],
         "responses": {
@@ -4292,6 +5045,15 @@
             "content": {
               "application/json": {
                 "schema": {}
+              }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
               }
             }
           },
@@ -4310,6 +5072,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4321,7 +5093,7 @@
           "ETF"
         ],
         "summary": "Etf Holdings",
-        "description": "Get ETF holdings with weights and per-holding scores.",
+        "description": "Get ETF holdings with weights and per-holding scores.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "etf_holdings_v1_etf_holdings_get",
         "security": [
           {
@@ -4349,14 +5121,19 @@
             "required": true,
             "schema": {
               "type": "string",
-              "description": "ETF symbol(s). Single or comma-separated",
+              "description": "One ETF ticker or RIC per request.",
               "examples": [
                 "SPY",
                 "SPY,QQQ,IWM"
               ],
               "title": "Symbol"
             },
-            "description": "ETF symbol(s). Single or comma-separated"
+            "description": "One ETF ticker or RIC per request.",
+            "examples": {
+              "0": {
+                "value": "SPY"
+              }
+            }
           }
         ],
         "responses": {
@@ -4365,6 +5142,15 @@
             "content": {
               "application/json": {
                 "schema": {}
+              }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
               }
             }
           },
@@ -4383,6 +5169,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4394,7 +5190,7 @@
           "ETF"
         ],
         "summary": "Etf Search",
-        "description": "Search ETFs by symbol or name with typo-tolerant fuzzy matching.",
+        "description": "Search ETFs by symbol or name with typo-tolerant fuzzy matching.\n\n**Credits:** Free (0 credits).",
         "operationId": "etf_search_v1_etf_search_get",
         "security": [
           {
@@ -4491,7 +5287,7 @@
           "Stock"
         ],
         "summary": "Stock Search",
-        "description": "Search stocks by symbol, name, sector, or industry with typo-tolerant fuzzy matching.",
+        "description": "Search stocks by symbol, name, sector, or industry with typo-tolerant fuzzy matching.\n\n**Credits:** Free (0 credits).",
         "operationId": "stock_search_v1_stock_search_get",
         "security": [
           {
@@ -4610,7 +5406,7 @@
           "DCF"
         ],
         "summary": "Get Dcf",
-        "description": "Bear, Base and Bull discounted cash flow valuations from the latest calibrated run.",
+        "description": "Get Bear, Base and Bull discounted cash flow valuations.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_dcf_v1_dcf_get",
         "security": [
           {
@@ -4641,6 +5437,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -4658,6 +5463,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4670,7 +5485,7 @@
           "Multiples"
         ],
         "summary": "Get Multiples",
-        "description": "Peer-multiples price target from the same daily-batch pricing\npipeline used by /v1/dcf and the stock report.",
+        "description": "Get peer-multiples price targets for a stock.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_multiples_v1_multiples__symbol__get",
         "security": [
           {
@@ -4723,6 +5538,15 @@
               "application/json": {
                 "schema": {}
               }
+            },
+            "headers": {
+              "X-Credits-Remaining": {
+                "description": "Your organization's remaining credits, when available. Can be fractional.",
+                "schema": {
+                  "type": "number"
+                },
+                "example": 99.95
+              }
             }
           },
           "404": {
@@ -4740,6 +5564,16 @@
           },
           "500": {
             "description": "Internal server error"
+          },
+          "402": {
+            "description": "Insufficient credits. The balance and required amount can be fractional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsufficientCreditsResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4750,14 +5584,38 @@
           "Health"
         ],
         "summary": "Health Check",
-        "description": "Production health check endpoint.\n\nUsed by load balancers to determine if this instance is healthy.\nReturns 200 only if all critical infrastructure is available.",
+        "description": "Check service health without authentication or credits. Returns 200 with status healthy or 503 with status unhealthy. Both responses contain only status, timestamp, service, and version. Data age does not determine health.",
         "operationId": "health_check_health_get",
         "responses": {
           "200": {
-            "description": "Successful Response",
+            "description": "Healthy",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                },
+                "example": {
+                  "status": "healthy",
+                  "timestamp": "2026-10-19T10:06:49.524126+08:00",
+                  "service": "Parallax API",
+                  "version": "1.1.0"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Unhealthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                },
+                "example": {
+                  "status": "unhealthy",
+                  "timestamp": "2026-10-19T10:06:49.524126+08:00",
+                  "service": "Parallax API",
+                  "version": "1.1.0"
+                }
               }
             }
           }
@@ -4956,45 +5814,76 @@
       "CIOReportRequest": {
         "properties": {
           "portfolio": {
-            "items": {
-              "$ref": "#/components/schemas/PortfolioHolding"
-            },
-            "type": "array",
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/CIOReportPortfolioHolding"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Portfolio",
-            "description": "List of portfolio holdings with dates and weights"
+            "description": "Portfolio target weights. Omit when report_snapshot is supplied."
           },
           "base_currency": {
             "type": "string",
             "title": "Base Currency",
             "description": "Base currency for portfolio",
             "default": "USD",
-            "example": "USD"
+            "examples": [
+              "USD"
+            ]
           },
           "start_date": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Start Date",
             "description": "Analysis start date in YYYY-MM-DD format",
-            "example": "2024-01-01"
+            "examples": [
+              "2024-01-01"
+            ]
           },
           "end_date": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "End Date",
             "description": "Analysis end date in YYYY-MM-DD format",
-            "example": "2024-12-31"
+            "examples": [
+              "2024-12-31"
+            ]
           },
           "initial_value": {
             "type": "number",
             "title": "Initial Value",
             "description": "Initial portfolio value in base currency",
             "default": 10000,
-            "example": 10000
+            "examples": [
+              10000
+            ]
           },
           "benchmark": {
             "type": "string",
             "title": "Benchmark",
             "description": "Benchmark for comparison",
             "default": "ACWI.OQ",
-            "example": "ACWI.OQ"
+            "examples": [
+              "ACWI.OQ"
+            ]
           },
           "format": {
             "type": "string",
@@ -5006,16 +5895,136 @@
             "title": "Format",
             "description": "Output format: html, pdf, or both",
             "default": "pdf"
+          },
+          "portfolio_name": {
+            "type": "string",
+            "title": "Portfolio Name",
+            "description": "Reader-facing portfolio name.",
+            "default": "Client Portfolio"
+          },
+          "mandate": {
+            "type": "string",
+            "title": "Mandate",
+            "description": "Reader-facing mandate description.",
+            "default": ""
+          },
+          "portfolio_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Portfolio Id",
+            "description": "Stable portfolio identifier included in the snapshot."
+          },
+          "report_snapshot": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Report Snapshot",
+            "description": "Report snapshot supplied instead of raw portfolio inputs. Requires enabled snapshot support and USD base currency."
+          },
+          "portfolio_report_metrics": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Portfolio Report Metrics",
+            "description": "Metrics from a Portfolio Report based on the same supplied report_snapshot."
+          },
+          "prior_report_snapshot": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prior Report Snapshot",
+            "description": "Previous report snapshot used to compare reporting periods."
+          },
+          "fee_basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fee Basis"
+          },
+          "transaction_cost_basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transaction Cost Basis"
+          },
+          "distribution_classification": {
+            "type": "string",
+            "enum": [
+              "current_client_service_report",
+              "marketing_advertisement"
+            ],
+            "title": "Distribution Classification",
+            "description": "Report distribution category. This route does not support marketing advertisements.",
+            "default": "current_client_service_report"
+          },
+          "lookthrough_mode": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "required",
+              "off"
+            ],
+            "title": "Lookthrough Mode",
+            "description": "Whether to include ETF constituent exposure. auto includes available qualified exposure, required rejects missing qualified exposure, and off excludes it.",
+            "default": "auto"
+          },
+          "constituent_redistribution_rights": {
+            "type": "string",
+            "enum": [
+              "unverified",
+              "aggregate_only",
+              "constituent_detail_permitted"
+            ],
+            "title": "Constituent Redistribution Rights",
+            "description": "Permission to include ETF constituent evidence. Unverified rights omit constituent evidence.",
+            "default": "unverified"
           }
         },
         "type": "object",
-        "required": [
-          "portfolio",
-          "start_date",
-          "end_date"
-        ],
         "title": "CIOReportRequest",
-        "description": "Request model for CIO report generation"
+        "description": "CIO report request. Raw requests require portfolio, start_date, and end_date. Snapshot requests require enabled snapshot support and USD base currency. Supply either a report_snapshot or raw portfolio inputs."
       },
       "DbQueryRequest": {
         "properties": {
@@ -5553,6 +6562,109 @@
           "message"
         ],
         "title": "ValidationIssueResponse"
+      },
+      "InsufficientCreditsResponse": {
+        "type": "object",
+        "required": [
+          "detail"
+        ],
+        "properties": {
+          "detail": {
+            "type": "object",
+            "required": [
+              "error",
+              "balance",
+              "required",
+              "endpoint"
+            ],
+            "properties": {
+              "error": {
+                "type": "string",
+                "example": "Insufficient credits"
+              },
+              "balance": {
+                "type": "number",
+                "description": "Remaining organization credits. Can be fractional.",
+                "example": 0.02
+              },
+              "required": {
+                "type": "number",
+                "description": "Credits required for this request. Can be fractional.",
+                "example": 0.05
+              },
+              "endpoint": {
+                "type": "string",
+                "example": "/v1/company-info"
+              }
+            }
+          }
+        }
+      },
+      "HealthResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "status",
+          "timestamp",
+          "service",
+          "version"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "healthy",
+              "unhealthy"
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "service": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        }
+      },
+      "CIOReportPortfolioHolding": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "title": "Date",
+            "description": "Rebalance date in YYYY-MM-DD format",
+            "examples": [
+              "2024-01-01"
+            ]
+          },
+          "symbol": {
+            "type": "string",
+            "title": "Symbol",
+            "description": "Stock symbol or RIC",
+            "examples": [
+              "AAPL.O"
+            ]
+          },
+          "weight": {
+            "type": "number",
+            "title": "Weight",
+            "description": "Portfolio weight as a decimal",
+            "examples": [
+              0.25
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "date",
+          "symbol",
+          "weight"
+        ],
+        "title": "CIOReportPortfolioHolding",
+        "description": "One target-weight row accepted by raw CIO report generation."
       }
     },
     "securitySchemes": {

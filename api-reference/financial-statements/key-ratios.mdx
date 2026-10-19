@@ -11,7 +11,7 @@ Retrieve key financial ratios for a given stock symbol. Returns profitability, l
 |-----------|------|----------|---------|-------------|
 | `symbol` | string | Yes | — | Stock symbol (e.g., `AAPL.O`, `0700.HK`). Ticker shorthand like `AAPL` is also accepted and will be resolved automatically. |
 | `limit` | integer | No | `4` | Number of periods to return |
-| `freq` | integer | No | `1` | `1` for Annual, `2` for Quarterly |
+| `freq` | integer | No | `1` | Accepts `1` or `2` for API consistency. This endpoint returns annual ratios regardless of this value. |
 
 ## Response
 
@@ -102,5 +102,5 @@ const response = await fetch(
 
 const periods = await response.json();
 console.log(`ROE: ${periods[0].return_on_equity}%`);
-console.log(`Net Margin: ${periods[0].net_profit_margin}%`);
+console.log(`Net Margin: ${periods[0].net_margin}%`);
 ```
