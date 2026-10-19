@@ -17,6 +17,5 @@ Both responses contain only these four fields:
 }
 ```
 
-Data age does not determine health. Market-data reads use a Postgres mirror and
-are not refused because the data is old. A `503` indicates a service or data
-availability failure.
+Data age does not determine health or cause HTTP `503`. A `503` indicates a service
+or data availability failure.

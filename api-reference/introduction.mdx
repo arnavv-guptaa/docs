@@ -139,16 +139,9 @@ Both `balance` and `required` are numbers that can be fractional. Parse them and
 
 ## Data availability
 
-Market-data reads use a Postgres mirror. Data age does not cause a request to be
-refused. HTTP `503` indicates a service or data availability failure.
+Data age does not cause HTTP `503`. A `503` indicates a service or data
+availability failure.
 The [health check](/api-reference/health) reports `healthy` or `unhealthy`.
-
-<Warning>
-As of October 19, 2026, `GET /v1/macro` and
-`GET /v1/macro/markets/{market}` return HTTP `500` in production and are
-unavailable. These are separate from the [Macro Report](/api-reference/macro/report)
-and [List Macro Markets](/api-reference/macro/markets) endpoints.
-</Warning>
 
 ## Response codes
 

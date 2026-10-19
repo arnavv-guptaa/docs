@@ -696,7 +696,7 @@
           "Company Data"
         ],
         "summary": "Peers",
-        "description": "Get peer comparison data for a given symbol including the company and its peers.\n\nResponse: list of peer rows ordered by MKTCAP_B DESC. The row matching\nthe resolved target symbol carries `is_target: true`; all other rows\ncarry `is_target: false`. Clients should identify the target by this\nflag rather than by position.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Get peer comparison data ordered by market capitalization, largest first. The requested stock has is_target: true; peers have is_target: false. Identify the requested stock by this flag rather than its position.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "peers_v1_peers_get",
         "security": [
           {
@@ -2901,7 +2901,7 @@
           "Portfolio"
         ],
         "summary": "Analyze Portfolio",
-        "description": "Analyze a portfolio with multi-currency support, rebalancing, and comprehensive metrics (ASYNC - returns job_id immediately).\n\nThis endpoint creates a background job for portfolio analysis. The actual analysis\nhappens asynchronously without blocking. Use GET /v1/jobs/{job_id} to check status.\n\n**Response Format:**\n```json\n{\n    \"job_id\": \"uuid-string\",\n    \"status\": \"pending\",\n    \"check_url\": \"/v1/jobs/{job_id}\",\n    \"estimated_duration_seconds\": 90\n}\n```\n\n**Workflow:**\n1. POST /portfolio/analyze -> Get job_id (returns in <1 second)\n2. Poll GET /v1/jobs/{job_id} every 3-5 seconds\n3. When status=\"completed\", result contains full analysis\n\n**Portfolio Analysis Includes:**\n- Performance metrics (returns, Sharpe, Sortino, etc.)\n- Risk metrics (volatility, drawdown, VaR, etc.)\n- Attribution analysis (by security, sector, market, currency)\n- Rolling metrics (30/60/90-day windows)\n- Benchmark comparison\n- Transaction history and rebalancing details\n\n**Portfolio Format:**\n- Each holding requires: date, symbol, and weight (as decimal)\n- Weights should sum to 1.0 for each date\n- Multiple dates can be provided for rebalancing\n\n**Field Selection (Optional):**\nUse the `fields` parameter to return only specific data sections. If omitted, all fields are returned.\n\nAvailable fields: `portfolio_parameters`, `portfolio_input`, `data_quality`, `portfolio_summary`,\n`performance_metrics`, `rolling_metrics`, `drawdown_analysis`, `portfolio_scores`, `concentration_metrics`,\n`transactions`, `company_info`, `latest_holdings`, `market_allocation`, `sector_allocation`,\n`currency_allocation`, `company_contribution`, `sector_contribution`, `market_contribution`,\n`time_period_returns`, `monthly_returns`, `annual_returns`, `daily_summary`.\n`portfolio_daily` is excluded from the default response because it is too large.\n\n**Example Request:**\n```json\n{\n  \"start_date\": \"2024-01-01\",\n  \"end_date\": \"2024-11-01\",\n  \"base_currency\": \"USD\",\n  \"benchmark\": \"SPY\",\n  \"initial_value\": 10000,\n  \"portfolio\": [\n    {\"date\": \"2024-01-01\", \"symbol\": \"AAPL\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"MSFT\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"GOOGL\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"AMZN\", \"weight\": 0.25}\n  ],\n  \"fields\": [\"portfolio_summary\", \"performance_metrics\", \"latest_holdings\"]\n}\n```\n\n**Example:**\n```bash\n# Start analysis\ncurl -X POST \"https://api.chicago.global/v1/portfolio/analyze\" \\\n     -H \"Authorization: Bearer key\" \\\n     -d '{\"start_date\":\"2024-01-01\",...}'\n\n# Check status\ncurl \"https://api.chicago.global/v1/jobs/{job_id}\" -H \"Authorization: Bearer key\"\n```\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
+        "description": "Analyze a portfolio with multi-currency support, rebalancing, and comprehensive metrics (ASYNC - returns job_id immediately).\n\nThis endpoint creates a background job for portfolio analysis. The actual analysis\nhappens asynchronously without blocking. Use GET /v1/jobs/{job_id} to check status.\n\n**Response Format:**\n```json\n{\n    \"job_id\": \"uuid-string\",\n    \"status\": \"pending\",\n    \"check_url\": \"/v1/jobs/{job_id}\",\n    \"estimated_duration_seconds\": 90\n}\n```\n\n**Workflow:**\n1. POST /portfolio/analyze -> Get job_id (returns in <1 second)\n2. Poll GET /v1/jobs/{job_id} every 3-5 seconds\n3. When status=\"completed\", result contains full analysis\n\n**Portfolio Analysis Includes:**\n- Performance metrics (returns, Sharpe, Sortino, etc.)\n- Risk metrics (volatility, drawdown, VaR, etc.)\n- Attribution analysis (by security, sector, market, currency)\n- Rolling metrics (30/60/90-day windows)\n- Benchmark comparison\n- Transaction history and rebalancing details\n\n**Portfolio Format:**\n- Each holding requires: date, symbol, and weight (as decimal)\n- Weights should sum to 1.0 for each date\n- Multiple dates can be provided for rebalancing\n\n**Field Selection (Optional):**\nUse the `fields` parameter to return only specific data sections. If omitted, all fields are returned.\n\nAvailable fields: `portfolio_parameters`, `portfolio_input`, `data_quality`, `portfolio_summary`,\n`performance_metrics`, `rolling_metrics`, `drawdown_analysis`, `portfolio_scores`, `concentration_metrics`,\n`transactions`, `company_info`, `latest_holdings`, `market_allocation`, `sector_allocation`,\n`currency_allocation`, `company_contribution`, `sector_contribution`, `market_contribution`,\n`time_period_returns`, `monthly_returns`, `annual_returns`, `daily_summary`.\n\n**Example Request:**\n```json\n{\n  \"start_date\": \"2024-01-01\",\n  \"end_date\": \"2024-11-01\",\n  \"base_currency\": \"USD\",\n  \"benchmark\": \"SPY\",\n  \"initial_value\": 10000,\n  \"portfolio\": [\n    {\"date\": \"2024-01-01\", \"symbol\": \"AAPL\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"MSFT\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"GOOGL\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"AMZN\", \"weight\": 0.25}\n  ],\n  \"fields\": [\"portfolio_summary\", \"performance_metrics\", \"latest_holdings\"]\n}\n```\n\n**Example:**\n```bash\n# Start analysis\ncurl -X POST \"https://api.chicago.global/v1/portfolio/analyze\" \\\n     -H \"Authorization: Bearer key\" \\\n     -d '{\"start_date\":\"2024-01-01\",...}'\n\n# Check status\ncurl \"https://api.chicago.global/v1/jobs/{job_id}\" -H \"Authorization: Bearer key\"\n```\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "analyze_portfolio_v1_portfolio_analyze_post",
         "requestBody": {
           "content": {
@@ -3069,7 +3069,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Validate Portfolio Update",
-        "description": "Dry-run validation for an update (same optional fields as /update).\n\nMerges the payload onto the stored registry + holdings, then validates the\nresulting definition — the same snapshot /update would persist if accepted.\n\n**Credits:** Free (0 credits).",
+        "description": "Validate an update without applying changes. Accepts the same optional fields as /update and validates the resulting portfolio definition.\n\n**Credits:** Free (0 credits).",
         "operationId": "validate_portfolio_update_v1_portfolio__portfolio_key__validate_post",
         "security": [
           {
@@ -3186,7 +3186,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Update Portfolio",
-        "description": "Update a tracked portfolio's holdings/params, then recompute its analytics\nin the background. Returns immediately (the holdings change + series clear are\ncheap and synchronous; the engine rebuild runs off the request path).\n\n**Credits:** Free (0 credits).",
+        "description": "Update a tracked portfolio's holdings or parameters and refresh its analytics in the background. Returns immediately with an analytics_job_id for polling.\n\n**Credits:** Free (0 credits).",
         "operationId": "update_portfolio_v1_portfolio__portfolio_key__update_post",
         "security": [
           {
@@ -3478,7 +3478,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Get Portfolio Holdings",
-        "description": "Get the portfolio DEFINITION: every holding in the registry across all\nrebalance dates, with the as-defined weights (date, symbol, weight). This is\nthe portfolio exactly as the user/builder set it — the source of truth for\nthe definition. For the latest COMPUTED state (drifted weights) use\n/holdings/latest.\n\n**Credits:** Free (0 credits).",
+        "description": "Get every holding in the portfolio definition across all rebalance dates, with the submitted date, symbol, and weight. For the most recent computed holdings and drifted weights, use /holdings/latest.\n\n**Credits:** Free (0 credits).",
         "operationId": "get_portfolio_holdings_v1_portfolio__portfolio_key__holdings_get",
         "security": [
           {
@@ -3797,7 +3797,7 @@
           "Assessment"
         ],
         "summary": "Create Assessment",
-        "description": "Generate an impact assessment report using Perplexity AI (ASYNC - returns job_id immediately).\n\nThis endpoint creates a background job for assessment generation. Use GET /v1/jobs/{job_id}\nto check status and retrieve results.\n\n**Research Modes:**\n- `fast`: Uses sonar-pro model (quick web search)\n- `default`: Uses sonar-reasoning-pro model (balanced analysis)\n- `deep`: Uses sonar-deep-research model (thorough research)\n\n**Request Body:**\n- `prompt`: Full prompt including scenario, portfolio/stock data, and analysis instructions\n- `system_prompt`: Optional custom system prompt (defaults to Parallax AI analyst)\n- `model`: Research mode - \"fast\", \"default\", or \"deep\"\n- `max_tokens`: Max response tokens (default 8000)\n- `temperature`: Model temperature (default 0.4)\n\n**Response Format:**\n```json\n{\n    \"job_id\": \"assess-uuid-string\",\n    \"status\": \"pending\",\n    \"model\": \"default\",\n    \"check_url\": \"/v1/jobs/{job_id}\",\n    \"estimated_duration_seconds\": 60\n}\n```\n\n**Result Format (when complete):**\n```json\n{\n    \"success\": true,\n    \"content\": \"# Impact Report\\n...\",\n    \"search_results\": [...],\n    \"model_used\": \"sonar-reasoning-pro\"\n}\n```\n\n**Example Prompt:**\n```\nANALYSIS TEMPLATE INSTRUCTIONS:\n1. Executive Summary (risk/opportunity classification)\n2. Direct Impact Analysis by sector\n3. Strategic Recommendations\n\nPORTFOLIO CONTEXT:\n- Name: Tech Portfolio\n- Holdings: AAPL (25%), MSFT (25%), GOOGL (20%)\n\nSCENARIO: What if the Fed raises interest rates by 50 basis points?\n```\n\n**Credits:** 5 credits for `fast` or `default`; 10 credits for `deep`. Charged when the job completes successfully. Polling is free.",
+        "description": "Generate an impact assessment report. Supply prompt with the scenario and portfolio or stock context. Choose fast, default, or deep research with model. Returns a job_id and check_url immediately; poll GET /v1/jobs/{job_id} for the result.\n\n**Credits:** 5 credits for `fast` or `default`; 10 credits for `deep`. Charged when the job completes successfully. Polling is free.",
         "operationId": "create_assessment_v1_assessment_post",
         "requestBody": {
           "content": {
@@ -4024,7 +4024,7 @@
           "Builder"
         ],
         "summary": "Builder",
-        "description": "Build a thematic stock universe (ASYNC - returns job_id immediately).\n\nAccepts a natural language query (e.g., \"top 50 EV companies in Asia\",\n\"fintech startups\", \"gene therapy pure plays\"). An LLM interprets the query\nto extract the theme, filters, and parameters, then searches ~65K company\ndescriptions to find relevant stocks ranked by relevance score.\n\nTypically takes 15-40 seconds. Use GET /v1/jobs/{job_id} to check status and retrieve results.\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
+        "description": "Build a thematic stock universe from a natural-language query, returning relevant stocks ranked for the request. Returns a job_id immediately. Poll GET /v1/jobs/{job_id} for the result.\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "builder_v1_builder_post",
         "requestBody": {
           "content": {
@@ -5406,7 +5406,7 @@
           "DCF"
         ],
         "summary": "Get Dcf",
-        "description": "Bear, Base and Bull discounted cash flow valuations from the latest calibrated run.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Get Bear, Base and Bull discounted cash flow valuations.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_dcf_v1_dcf_get",
         "security": [
           {
@@ -5485,7 +5485,7 @@
           "Multiples"
         ],
         "summary": "Get Multiples",
-        "description": "Peer-multiples price target from the same daily-batch pricing\npipeline used by /v1/dcf and the stock report.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Get peer-multiples price targets for a stock.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_multiples_v1_multiples__symbol__get",
         "security": [
           {
