@@ -10,12 +10,17 @@ Get historical daily OHLCV price data for a stock.
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `symbol` | string | Yes | Stock symbol (e.g., `AAPL`, `MSFT`). Comma-separated for multiple. |
-| `start_date` | string | No | Start date (YYYY-MM-DD). Defaults to 1 year ago. |
-| `end_date` | string | No | End date (YYYY-MM-DD). Defaults to latest available. |
+| `start_date` | string | No | Start date (YYYY-MM-DD). Supply with `end_date`. |
+| `end_date` | string | No | End date (YYYY-MM-DD). Supply with `start_date`. |
+
+Omit both dates to get the latest available day. Supplying only one date returns
+HTTP `400`.
 
 ## Response
 
-Returns an array of daily price records:
+With a date range, returns an array of daily price records. Without dates, a
+single symbol returns one object, and multiple symbols return an array. An empty
+result is `[]`.
 
 ```json
 [

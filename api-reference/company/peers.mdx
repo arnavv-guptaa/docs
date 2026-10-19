@@ -13,12 +13,14 @@ Get a list of peer companies for a given stock, including valuation metrics, per
 
 ## Response
 
-Returns an array of peer companies (including the target stock):
+Returns an array of peer companies ordered by market capitalization, largest
+first. Identify the requested stock by `is_target`, not its position in the array.
 
 ```json
 [
   {
     "ric": "AAPL.O",
+    "is_target": true,
     "company_name": "Apple Inc",
     "market": "United States",
     "mtd": 0.0,
@@ -38,6 +40,7 @@ Returns an array of peer companies (including the target stock):
   },
   {
     "ric": "QCOM.O",
+    "is_target": false,
     "company_name": "Qualcomm Inc",
     "market": "United States",
     "mtd": 0.0,
@@ -63,6 +66,7 @@ Returns an array of peer companies (including the target stock):
 | Field | Description |
 |-------|-------------|
 | `ric` | Reuters Instrument Code |
+| `is_target` | `true` for the requested stock and `false` for peers |
 | `company_name` | Company name |
 | `market` | Country/market |
 | `mtd` / `ytd` | Month-to-date and year-to-date returns (%) |

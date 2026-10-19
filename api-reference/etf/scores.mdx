@@ -9,9 +9,11 @@ Get Parallax factor scores for an ETF, calculated as weighted averages across it
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `symbol` | string | Yes | ETF symbol (e.g., `SPY`, `QQQ`). Comma-separated for multiple. |
+| `symbol` | string | Yes | One ETF symbol (e.g., `SPY` or `QQQ`) per request. |
 
 ## Response
+
+Returns `null` when no scores are available for the ETF.
 
 ```json
 {

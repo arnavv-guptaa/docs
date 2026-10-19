@@ -23,6 +23,7 @@ Analysis typically takes 30-90 seconds depending on the volume of recent news.
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `symbol` | string | Yes | Stock symbol (e.g., `AAPL`, `MSFT`) |
+| `limit` | integer | No | Number of articles to analyze, 1-50 (default: `10`) |
 
 ## Response (202 Accepted)
 
@@ -57,6 +58,8 @@ When the job completes, `GET /v1/jobs/{job_id}` returns:
 ```
 
 ## Result Fields
+
+When no news is available, `title`, `bullet1`, `bullet2`, and `bullet3` are `null`.
 
 | Field | Description |
 |-------|-------------|

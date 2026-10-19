@@ -2,3 +2,21 @@
 title: 'Health Check'
 openapi: 'GET /health'
 ---
+
+This endpoint is free and requires no API key. It returns HTTP `200` with
+`status: "healthy"`, or HTTP `503` with `status: "unhealthy"`.
+
+Both responses contain only these four fields:
+
+```json
+{
+  "status": "healthy",
+  "timestamp": "2026-10-19T10:06:49.524126+08:00",
+  "service": "Parallax API",
+  "version": "1.1.0"
+}
+```
+
+Data age does not determine health. Market-data reads use a Postgres mirror and
+are not refused because the data is old. A `503` indicates a service or data
+availability failure.

@@ -2,3 +2,8 @@
 title: 'Generate CIO Report'
 openapi: 'POST /v1/cio-report'
 ---
+
+Raw portfolio requests require `portfolio`, `start_date`, and `end_date`.
+Snapshot-based requests require enabled snapshot support and USD as the base
+currency. Supply either `report_snapshot` or raw portfolio inputs. Additional
+report options are listed in the request schema below.

@@ -13,7 +13,8 @@ This endpoint uses **async job processing** for AI-powered technical analysis:
 4. **Get Analysis**: The completed job contains comprehensive technical analysis
 
 <Note>
-Analysis typically takes 15-30 seconds. Results are cached daily - subsequent requests return cached analysis instantly.
+Analysis typically takes 15-30 seconds. Results are cached daily. Requests still
+return a job; poll it to retrieve the result.
 </Note>
 
 ## Query Parameters
@@ -24,7 +25,8 @@ Analysis typically takes 15-30 seconds. Results are cached daily - subsequent re
 | `force` | boolean | No | `false` | Force regeneration even if cached analysis exists |
 
 <Warning>
-If `force` is `false` and analysis was generated today, the cached result will be returned.
+If `force` is `false` and analysis was generated today, the job can reuse the cached
+result.
 </Warning>
 
 ## Response (202 Accepted)

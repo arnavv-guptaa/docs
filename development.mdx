@@ -13,11 +13,10 @@ Build Parallax's institutional-grade analytics directly into your applications u
   </Step>
 
   <Step title="Make Your First Request">
-    Test your connection with a simple authenticated request:
+    Test connectivity with the free health check. It requires no API key:
 
     ```bash
-    curl -X GET "https://api.chicago.global/v1/health" \
-      -H "Authorization: Bearer YOUR_API_KEY"
+    curl "https://api.chicago.global/health"
     ```
   </Step>
 
@@ -45,7 +44,7 @@ Build Parallax's institutional-grade analytics directly into your applications u
 
 ## Authentication
 
-All API requests require a Bearer token:
+Requests to `/v1/*` require a Bearer token:
 
 ```bash
 Authorization: Bearer YOUR_API_KEY
@@ -68,12 +67,13 @@ const response = await fetch('https://api.chicago.global/v1/portfolio/analyze', 
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    holdings: [
-      { ticker: 'AAPL', weight: 0.25 },
-      { ticker: 'MSFT', weight: 0.25 },
-      { ticker: 'GOOGL', weight: 0.25 },
-      { ticker: 'AMZN', weight: 0.25 }
-    ]
+    portfolio: [
+      { date: '2026-01-02', symbol: 'AAPL.O', weight: 0.25 },
+      { date: '2026-01-02', symbol: 'MSFT.O', weight: 0.25 },
+      { date: '2026-01-02', symbol: 'GOOGL.O', weight: 0.25 },
+      { date: '2026-01-02', symbol: 'AMZN.O', weight: 0.25 }
+    ],
+    fields: ['portfolio_scores', 'performance_metrics']
   })
 });
 
@@ -82,7 +82,7 @@ const { job_id, check_url } = await response.json();
 // 2. Poll for completion
 let result;
 while (!result) {
-  const status = await fetch(check_url, {
+  const status = await fetch(new URL(check_url, 'https://api.chicago.global'), {
     headers: { 'Authorization': `Bearer ${API_KEY}` }
   }).then(r => r.json());
 
@@ -96,8 +96,8 @@ while (!result) {
 }
 
 // 3. Use the results
-console.log(result.factor_scores);
-console.log(result.risk_metrics);
+console.log(result.result.portfolio_scores);
+console.log(result.result.performance_metrics);
 ```
 
 ## Response Codes
@@ -105,10 +105,17 @@ console.log(result.risk_metrics);
 | Code | Description |
 |------|-------------|
 | 200 | Success |
+| 202 | Background job accepted |
+| 400 | Invalid input |
 | 401 | Unauthorized - Invalid or missing API key |
+| 402 | Insufficient credits; required credits and balances can be fractional |
 | 404 | Not found |
 | 422 | Validation error - Check request body |
 | 500 | Server error |
+| 503 | Service or data unavailable; data age alone does not cause this response |
+
+See [Credits](/api-reference/introduction#credits) for endpoint prices and billing
+behavior. Portfolio analysis costs 5 credits per completed job. Polling is free.
 
 ## Example Use Cases
 
@@ -142,7 +149,8 @@ console.log(result.risk_metrics);
 
 ## Rate Limits
 
-Contact [parallax@chicago.global](mailto:parallax@chicago.global) for rate limit information based on your plan.
+Requests are limited per API key. Read `X-RateLimit-Limit` and
+`X-RateLimit-Remaining` on responses, and respect `Retry-After` after HTTP `429`.
 
 ## Next Steps
 

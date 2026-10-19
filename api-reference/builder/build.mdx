@@ -23,6 +23,12 @@ Typically takes 15-40 seconds. The agent may run multiple search iterations to r
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `query` | string | Yes | Natural language query describing the investment theme and any filters (2-500 characters) |
+| `markets` | string array | No | Exact market names. Unknown names match no companies. |
+| `region` | string or string array | No | Geographic region filter. Multiple regions combine; takes precedence over `markets`. |
+| `sectors` | string array | No | Sector names. GICS sector names are also accepted. |
+| `strict_theme` | boolean | No | Require a keyword match as well as thematic relevance (default: `true`). |
+| `rerank` | boolean | No | Rerank matches by similarity to the theme. Omit to use the server default. |
+| `min_relevance` | number | No | Optional threshold from 0 to 1, used only with reranking. Companies without similarity data are retained. |
 
 ```json
 {
@@ -45,7 +51,8 @@ Typically takes 15-40 seconds. The agent may run multiple search iterations to r
 
 ## Completed Response
 
-When the job completes, `GET /v1/jobs/{job_id}` returns the matched companies:
+When the job completes, `GET /v1/jobs/{job_id}` returns the matched companies.
+This illustrative response shows selected fields and companies:
 
 ```json
 {
@@ -55,8 +62,8 @@ When the job completes, `GET /v1/jobs/{job_id}` returns the matched companies:
     "total_matches": 546,
     "results_returned": 20,
     "category_breakdown": {
-      "core": 18,
-      "peripheral": 2
+      "Industrials": 8,
+      "Consumer Cyclicals": 12
     },
     "companies": [
       {
@@ -66,8 +73,7 @@ When the job completes, `GET /v1/jobs/{job_id}` returns the matched companies:
         "market": "China",
         "exchange": "Hong Kong",
         "activity": "Active",
-        "market_cap": 12624996781.5,
-        "category": "core",
+        "category": "Industrials",
         "composite_score": 249.43
       },
       {
@@ -77,8 +83,7 @@ When the job completes, `GET /v1/jobs/{job_id}` returns the matched companies:
         "market": "South Korea",
         "exchange": "Korea",
         "activity": "Active",
-        "market_cap": 91219584753000.0,
-        "category": "core",
+        "category": "Consumer Cyclicals",
         "composite_score": 141.13
       },
       {
@@ -88,8 +93,7 @@ When the job completes, `GET /v1/jobs/{job_id}` returns the matched companies:
         "market": "Hong Kong",
         "exchange": "Hong Kong",
         "activity": "Active",
-        "market_cap": 225892816535.3,
-        "category": "core",
+        "category": "Consumer Cyclicals",
         "composite_score": 108.08
       }
     ]
@@ -107,9 +111,14 @@ When the job completes, `GET /v1/jobs/{job_id}` returns the matched companies:
 | `market` | Country/market where the company is listed |
 | `exchange` | Stock exchange name |
 | `activity` | Company status (e.g., `Active`) |
-| `market_cap` | Market capitalization (in local currency) |
-| `category` | Match category: `core` (strongest match), `peripheral`, or `satellite` |
+| `market_cap_usd` | Market capitalization in USD, when available |
+| `category` | Category label. Standard searches use the company's sector. |
 | `composite_score` | Relevance score — higher means stronger thematic match |
+
+`category_breakdown` counts the returned companies by sector. When reranking is
+enabled, a company can also include `relevance`; inspect `rerank.applied` to see
+whether reranking ran. A query that requests a different sort order can change
+the order of the companies.
 
 ## Query Tips
 
