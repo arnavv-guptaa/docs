@@ -115,10 +115,10 @@ This illustrative response shows selected fields and companies:
 | `category` | Category label. Standard searches use the company's sector. |
 | `composite_score` | Relevance score — higher means stronger thematic match |
 
-`category_breakdown` counts the returned companies by sector. When reranking is
-enabled, a company can also include `relevance`; inspect `rerank.applied` to see
-whether reranking ran. A query that requests a different sort order can change
-the order of the companies.
+`category_breakdown` counts the returned companies by category. Standard searches
+group by sector. When reranking is enabled, a company can also include `relevance`;
+inspect `rerank.applied` to see whether reranking ran. A query that requests a
+different sort order can change the order of the companies.
 
 ## Query Tips
 
