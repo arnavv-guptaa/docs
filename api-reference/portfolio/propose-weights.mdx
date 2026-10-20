@@ -1,0 +1,91 @@
+---
+title: 'Propose Portfolio Weights'
+openapi: 'POST /v1/portfolio/propose-weights'
+---
+
+Send 2 to 100 holdings and get target weights from up to six allocation schemes, side by side. The weights describe the latest close in the data for those holdings, returned as `as_of`. The call is synchronous and costs **1 credit**, charged only when the response is a 200.
+
+Returns are price returns in the base currency, so dividends are not included. The output is a calculation, not investment advice.
+
+Prices and market caps use the exchange rate available on each valuation date. If a local market is closed, the last local close still changes in the base currency as FX changes. Price freshness remains tied to the actual local close.
+
+## Schemes
+
+| Scheme | How it weights | Modes |
+|--------|----------------|-------|
+| `equal_weight` | The same weight in every holding. | All |
+| `value_weight` | In proportion to market capitalisation. | `long_only` |
+| `conviction` | In proportion to score, or to score squared with `"power": 2`. | All |
+| `inverse_vol` | In proportion to 1 / volatility. | All |
+| `risk_parity` | Every holding contributes its share of predicted risk: equal shares by default, or the shares you set in `risk_budget`. | `long_only` |
+| `mean_variance` | The best trade-off between score-implied return and predicted risk, with at most `max_weight` in any holding. | All |
+
+With shorts, the score decides each holding's side:
+
+- `equal_weight` goes long the higher-scored half and short the rest, equally weighted within each side.
+- `inverse_vol` goes long the holdings scored at or above the median and short the rest, by 1 / volatility within each side.
+- `conviction` goes long the top fifth by score and short the bottom fifth, weighted by distance from the median score.
+- `mean_variance` solves both sides at once.
+
+Short positions pay no borrow fee and their proceeds earn nothing.
+
+`mean_variance` caps every holding at twice its equal share of gross exposure unless you set `max_weight`: 2 / N in `long_only`, so 40% each for five holdings. A holding without a score gets no expected return of its own, so `mean_variance` holds it only to reduce risk, and a warning names it.
+
+## Modes
+
+| Mode | Long | Short | Net |
+|------|------|-------|-----|
+| `long_only` | 100% | 0% | 100% |
+| `130_30` | 130% | 30% | 100% |
+| `150_50` | 150% | 50% | 100% |
+| `dollar_neutral` | 100% | 100% | 0% |
+
+For `mean_variance`, the long and short columns are limits. The solver can use less exposure while keeping the mode's net exposure. The other schemes fill both sides.
+
+## Request body
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `holdings` | array of strings | Yes | | 2 to 100 tickers or RICs, for example `AAPL`, `7203.T` or `SPY`. Each must resolve to a different listing. Weights come back keyed by these strings exactly as sent. |
+| `mode` | string | No | `long_only` | One of the modes above. |
+| `schemes` | array | No | Every scheme available in the mode | Each scheme at most once, as `{"name": "..."}` plus its options: `power` (1 or 2) for `conviction`, `risk_budget` (a positive share per holding) for `risk_parity`, `max_weight` for `mean_variance`. |
+| `base_currency` | string | No | `USD` | Currency of every price, return, volatility and market cap. Each close converts at its own day's exchange rate. |
+| `lookback_days` | integer | No | `756` | 60 to 2520 trading days of daily returns behind every risk estimate. `inverse_vol`, `risk_parity` and `mean_variance` need each holding to have traded for the whole window. |
+
+```json
+{
+  "holdings": ["AAPL", "MSFT", "7203.T", "PTT.BK", "SPY"],
+  "mode": "long_only",
+  "schemes": [{"name": "risk_parity"}, {"name": "mean_variance", "max_weight": 0.3}],
+  "base_currency": "USD"
+}
+```
+
+## Response
+
+| Field | Description |
+|-------|-------------|
+| `as_of` | The latest close used. |
+| `lookback` | First and last date of the prices behind the risk estimates. |
+| `holdings` | Per holding: its listing, kind (`stock` or `etf`), currency, last close date, score and score date, volatility and market cap. Fund scores are current and carry no date. |
+| `risk_model` | The shared risk estimate behind every `predicted_volatility` and `risk_contributions`, or null. |
+| `schemes` | One entry per scheme. `status: ok` carries `weights`, `exposure`, `effective_holdings`, `predicted_volatility` and `risk_contributions`; `mean_variance` adds `max_weight` and `capped`. `status: failed` carries `error` with a `code`, a `message` that says what to change, and the `holdings` involved. |
+| `warnings` | Conditions worth knowing, such as `no_risk_estimate`, which says why the risk figures are null. |
+
+A scheme that cannot run fails on its own and the others still answer. Its codes are `insufficient_history`, `needs_scores`, `scores_not_dispersed`, `needs_market_cap`, `zero_variance`, `solver_failed` and `invalid_max_weight`.
+
+## Errors
+
+A request that cannot be served is a 422 whose `detail` lists each problem as `{code, message}` plus the fields that apply, such as `holdings`. Nothing is charged. A body that does not match the request schema, such as a single holding or a negative `risk_budget` value, gets the standard validation 422 instead.
+
+| Code | When |
+|------|------|
+| `unknown_symbols` | A symbol matches no listing. Send a RIC, such as `COST.O`, when a bare ticker is not found. |
+| `duplicate_holdings` | Two symbols resolve to the same listing. |
+| `no_recent_price` | A holding has no close in the last 5 trading days before `as_of`. |
+| `unsupported_base_currency` | There are no exchange rates for the base currency. |
+| `no_fx_for_holding` | A required local-price or market-cap valuation has no exchange rate. This includes carried observations after a currency change. |
+| `scheme_not_available_in_mode` | The scheme does not run in the mode, for example `risk_parity` with shorts. |
+| `invalid_risk_budget` | `risk_budget` has no value for a holding, or names one that is not in `holdings`. |
+| `invalid_max_weight` | `max_weight` is above the mode's long exposure or too small to carry its net exposure. |
+| `all_schemes_failed` | No scheme could run; `schemes` carries each scheme's error. |

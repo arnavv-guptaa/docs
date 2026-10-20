@@ -46,6 +46,8 @@ Symbols use **RIC** format (e.g. `AAPL.O`, `JPM.N`, `2330.TW`). Use `search_stoc
 |------|--------------|------|--------|
 | `quick_portfolio_scores` | Instant VALUE/QUALITY/MOMENTUM/DEFENSIVE scores for a set of holdings. | 0.1 per holding analyzed | ~2s |
 | `analyze_portfolio` | Full multi-stock portfolio analysis (each holding needs a rebalance date, symbol, weight). | 5 | Async |
+| `propose_portfolio_weights` | Target weights for 2-100 holdings under up to six allocation schemes (equal weight, value weight, conviction, inverse volatility, risk parity, mean-variance), long-only or long/short. | 1 | Fast |
+| `backtest_portfolio_weights` | Backtest up to 8 portfolios over the same holdings: fixed weights, or a scheme re-run on every rebalance date with only the data available the day before. | 2 | Async |
 | `check_portfolio_redundancy` | Detect overlapping positions, sector concentration, industry duplicates, and factor clusters. Checks up to 100 holdings. | 0.1 per holding checked, up to 10 | Fast |
 
 ## ETFs
