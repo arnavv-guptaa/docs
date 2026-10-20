@@ -5642,6 +5642,114 @@
           }
         }
       }
+    },
+    "/v1/portfolio/propose-weights": {
+      "post": {
+        "tags": [
+          "v1",
+          "Portfolio"
+        ],
+        "summary": "Propose Weights",
+        "description": "Target weights for 2 to 100 holdings under up to six schemes, side by side.\n\nThe weights describe the latest close in the data for these holdings, reported as `as_of`. Every scheme\nreads the same risk window of `lookback_days` daily price returns in the base currency. Returns are price\nreturns, so dividends are not included. The output is a calculation, not investment advice.\n\n- `equal_weight`: the same weight in every holding.\n- `value_weight`: weights in proportion to market capitalisation. Long-only.\n- `conviction`: weights in proportion to score, or score squared.\n- `inverse_vol`: weights in proportion to 1 / volatility.\n- `risk_parity`: every holding contributes its budgeted share of predicted risk. Long-only.\n- `mean_variance`: the best trade-off between score-implied return and predicted risk, with at most\n  `max_weight` in any holding.\n\nWith shorts, `equal_weight`, `conviction` and `inverse_vol` go long the higher-scored holdings and short\nthe others, and `mean_variance` solves both sides. Short positions pay no borrow fee and their proceeds\nearn nothing.\n\nA scheme that cannot run returns `status: failed` with a code and a message that says what to change; the\nother schemes still return. A request that cannot be served is a 422 whose `detail` lists each problem as\n`{code, message, ...}` with only the fields that apply, such as `holdings`: `unknown_symbols`,\n`duplicate_holdings`, `no_recent_price`, `unsupported_base_currency`, `no_fx_for_holding`,\n`scheme_not_available_in_mode`, `invalid_risk_budget`, `invalid_max_weight` or `all_schemes_failed`, which\ncarries every scheme's error.\n\nCosts 1 credit, charged only when the response is a 200.",
+        "operationId": "propose_weights_v1_portfolio_propose_weights_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProposeWeightsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProposeResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/v1/portfolio/backtest-weights": {
+      "post": {
+        "tags": [
+          "v1",
+          "Portfolio"
+        ],
+        "summary": "Backtest Weights",
+        "description": "Simulate fixed and re-optimised portfolios over the same holdings, with rebalancing and trading costs.\n\nRuns as a job. Poll `check_url` until `status` is `completed`; `result` then holds `start_date`,\n`end_date`, `trading_days`, `base_currency`, `holdings` (each holding's first and last close in the\nwindow), `portfolios` (metrics, the value series, every rebalance and the final weights; or, for a\nre-optimised portfolio whose scheme could not run on a rebalance date, that date and the reason),\n`benchmark` and `warnings`.\n\nEach portfolio starts as 1.0 in cash, buys its targets at the first trade date's close and pays\n`cost_bps` per side on the value traded. A fixed portfolio trades back to its weights on every rebalance\ndate. A re-optimised portfolio re-runs its scheme on each rebalance date with only the data available the\nday before, as propose-weights would have answered that day. Values are price returns in the base\ncurrency, so dividends are not included; cash and short-sale proceeds earn nothing and shorts pay no\nborrow fee. The output is a simulation, not investment advice.\n\nEvery problem the caller can fix is a 422 before any job exists, with `detail` listing each problem as\n`{code, message, ...}` with only the fields that apply, such as `holdings`, `portfolio` and\n`earliest_start`: for example `unknown_symbols`,\n`duplicate_holdings`, `invalid_weights`, `rebalance_required`, `window_too_short`, `window_too_long`,\n`no_prices_in_window`, `stopped_trading`, `benchmark_no_prices`, `empty_leg_at_start` and\n`not_computable_at_start`, which names the earliest workable start date.\n\nCosts 2 credits, charged when the job completes. A 422 is not charged.",
+        "operationId": "backtest_weights_v1_portfolio_backtest_weights_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BacktestWeightsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BacktestJob"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -6665,6 +6773,976 @@
         ],
         "title": "CIOReportPortfolioHolding",
         "description": "One target-weight row accepted by raw CIO report generation."
+      },
+      "BacktestJob": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          },
+          "status": {
+            "type": "string",
+            "const": "pending",
+            "title": "Status"
+          },
+          "check_url": {
+            "type": "string",
+            "title": "Check Url",
+            "description": "Poll this URL (GET /v1/jobs/{job_id}). When status is completed, result holds the backtest."
+          },
+          "estimated_duration_seconds": {
+            "type": "integer",
+            "title": "Estimated Duration Seconds",
+            "description": "About how long the job takes, from how many times its portfolios are re-optimised and by which schemes."
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_id",
+          "status",
+          "check_url",
+          "estimated_duration_seconds"
+        ],
+        "title": "BacktestJob",
+        "description": "The backtest runs as a job."
+      },
+      "BacktestWeightsRequest": {
+        "properties": {
+          "holdings": {
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9.\\-^/:=_]{1,60}$"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "minItems": 2,
+            "title": "Holdings",
+            "description": "Tickers or RICs of listed stocks and funds, 2 to 100, for example AAPL, 7203.T or SPY. Each must resolve to a different listing. Weights come back keyed by these strings exactly as sent."
+          },
+          "base_currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "title": "Base Currency",
+            "description": "Currency of every price, return, volatility and market cap. Each close converts at its own day's exchange rate. Any currency with exchange rates works.",
+            "default": "USD"
+          },
+          "lookback_days": {
+            "type": "integer",
+            "maximum": 2520.0,
+            "minimum": 60.0,
+            "title": "Lookback Days",
+            "description": "Trading days of daily returns behind every risk estimate (756 is about three years). inverse_vol, risk_parity and mean_variance need each holding to have traded for the whole window.",
+            "default": 756
+          },
+          "portfolios": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/FixedPortfolio"
+                },
+                {
+                  "$ref": "#/components/schemas/ReoptimisedPortfolio"
+                }
+              ]
+            },
+            "type": "array",
+            "maxItems": 8,
+            "minItems": 1,
+            "title": "Portfolios",
+            "description": "1 to 8 portfolios with unique names: fixed weights, or a scheme and mode re-run on every rebalance date."
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Date",
+            "description": "The backtest starts on the first trading day on or after this date. Default: 5 years before end_date."
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Date",
+            "description": "The last day simulated. Default: the holdings' latest close before today."
+          },
+          "rebalance": {
+            "type": "string",
+            "enum": [
+              "none",
+              "monthly",
+              "quarterly",
+              "annual"
+            ],
+            "title": "Rebalance",
+            "description": "How often portfolios trade back to their targets, on the last trading day of each month, quarter or year. Re-optimised portfolios need one other than none.",
+            "default": "quarterly"
+          },
+          "cost_bps": {
+            "type": "number",
+            "maximum": 1000.0,
+            "minimum": 0.0,
+            "title": "Cost Bps",
+            "description": "Trading cost per side, in basis points of the value traded, including the first purchase.",
+            "default": 5.0
+          },
+          "benchmark": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9.\\-^/:=_]{1,60}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Benchmark",
+            "description": "A stock or fund bought and held over the same window, in the base currency, with the same metrics. No default."
+          },
+          "timeseries": {
+            "type": "string",
+            "enum": [
+              "none",
+              "monthly",
+              "daily"
+            ],
+            "title": "Timeseries",
+            "description": "Value series returned per portfolio: none, monthly (last day of each month) or daily.",
+            "default": "monthly"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "holdings",
+          "portfolios"
+        ],
+        "title": "BacktestWeightsRequest",
+        "description": "Portfolios to simulate over the same holdings and window."
+      },
+      "Conviction": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "const": "conviction",
+            "title": "Name",
+            "default": "conviction"
+          },
+          "power": {
+            "type": "integer",
+            "enum": [
+              1,
+              2
+            ],
+            "title": "Power",
+            "description": "Exponent on the score: 1 weights by score, 2 by score squared.",
+            "default": 1
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Conviction",
+        "description": "Weights in proportion to score (or score squared). In a long/short mode the top fifth\nof holdings by score is long and the bottom fifth short, weighted by distance from the\nmedian score."
+      },
+      "DateRange": {
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date",
+            "title": "Start"
+          },
+          "end": {
+            "type": "string",
+            "format": "date",
+            "title": "End"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "start",
+          "end"
+        ],
+        "title": "DateRange"
+      },
+      "EqualWeight": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "const": "equal_weight",
+            "title": "Name",
+            "default": "equal_weight"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "EqualWeight",
+        "description": "Equal weights. In a long/short mode the higher-scored half of the holdings is long\nand the rest short, equally weighted within each side."
+      },
+      "Exposure": {
+        "properties": {
+          "long": {
+            "type": "number",
+            "title": "Long"
+          },
+          "short": {
+            "type": "number",
+            "title": "Short"
+          },
+          "gross": {
+            "type": "number",
+            "title": "Gross"
+          },
+          "net": {
+            "type": "number",
+            "title": "Net"
+          },
+          "long_count": {
+            "type": "integer",
+            "title": "Long Count",
+            "description": "Long positions, ignoring weights below 1e-6."
+          },
+          "short_count": {
+            "type": "integer",
+            "title": "Short Count",
+            "description": "Short positions, ignoring weights below 1e-6."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "long",
+          "short",
+          "gross",
+          "net",
+          "long_count",
+          "short_count"
+        ],
+        "title": "Exposure"
+      },
+      "FailureDetail": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "insufficient_history",
+              "needs_scores",
+              "scores_not_dispersed",
+              "needs_market_cap",
+              "zero_variance",
+              "solver_failed",
+              "invalid_max_weight"
+            ],
+            "title": "Code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "What failed and what to change."
+          },
+          "holdings": {
+            "additionalProperties": {
+              "type": "string",
+              "enum": [
+                "not_listed",
+                "not_trading",
+                "insufficient_history",
+                "no_score",
+                "no_market_cap",
+                "zero_variance"
+              ]
+            },
+            "type": "object",
+            "title": "Holdings",
+            "description": "Holdings involved, keyed by symbol, and why."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "FailureDetail"
+      },
+      "FixedPortfolio": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "weights": {
+            "patternProperties": {
+              "^[A-Za-z0-9.\\-^/:=_]{1,60}$": {
+                "type": "number"
+              }
+            },
+            "type": "object",
+            "maxProperties": 100,
+            "title": "Weights",
+            "description": "Target weight per holding, keyed by symbols in holdings; holdings left out are 0. Long-only weights sum to 1; with shorts, the sum is 1 or 0 and the sum of absolute weights is at most 2."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "weights"
+        ],
+        "title": "FixedPortfolio",
+        "description": "Fixed target weights, traded back to on every rebalance date."
+      },
+      "HoldingSnapshot": {
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "title": "Symbol"
+          },
+          "ric": {
+            "type": "string",
+            "title": "Ric"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "stock",
+              "etf"
+            ],
+            "title": "Kind"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "last_price_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Last Price Date"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score",
+            "description": "Composite score from 0 to 10; null means no view."
+          },
+          "score_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score Date",
+            "description": "Date of the score; null when there is no score, and for a fund, whose score is current and undated."
+          },
+          "volatility": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Volatility",
+            "description": "Annualised volatility of daily returns in the base currency over the lookback; null when the holding has not traded for the whole lookback."
+          },
+          "market_cap": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Market Cap",
+            "description": "In the base currency."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "symbol",
+          "ric",
+          "kind",
+          "currency",
+          "last_price_date",
+          "score",
+          "score_date",
+          "volatility",
+          "market_cap"
+        ],
+        "title": "HoldingSnapshot"
+      },
+      "InverseVol": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "const": "inverse_vol",
+            "title": "Name",
+            "default": "inverse_vol"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "InverseVol",
+        "description": "Weights in proportion to 1 / volatility. In a long/short mode holdings scored at or\nabove the median are long and the rest short, by 1 / volatility within each side."
+      },
+      "MeanVariance": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "const": "mean_variance",
+            "title": "Name",
+            "default": "mean_variance"
+          },
+          "max_weight": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Weight",
+            "description": "Largest absolute weight any holding may take, at most the mode's long exposure (1 in long_only, 1.3 in 130_30, 1.5 in 150_50, 1 in dollar_neutral). Default: twice the holding's equal share of gross exposure, up to the long exposure (2 / N long-only, at most 1)."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "MeanVariance",
+        "description": "Long-only: the weights with the highest score-implied excess return per unit of predicted\nvolatility. Long/short: the best trade-off between that return and predicted variance.\nHoldings without a score have no view (zero expected excess return)."
+      },
+      "ProposeResult": {
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of",
+            "description": "The latest close used; the weights describe this date."
+          },
+          "base_currency": {
+            "type": "string",
+            "title": "Base Currency"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "long_only",
+              "130_30",
+              "150_50",
+              "dollar_neutral"
+            ],
+            "title": "Mode"
+          },
+          "lookback": {
+            "$ref": "#/components/schemas/DateRange",
+            "description": "First and last date of the prices behind risk estimates."
+          },
+          "holdings": {
+            "items": {
+              "$ref": "#/components/schemas/HoldingSnapshot"
+            },
+            "type": "array",
+            "title": "Holdings"
+          },
+          "risk_model": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskModelSummary"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The shared risk estimate behind every predicted_volatility and risk_contributions. Null when a holding lacks the whole lookback or the estimate fails; a no_risk_estimate warning says why."
+          },
+          "schemes": {
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/SchemeWeights"
+                },
+                {
+                  "$ref": "#/components/schemas/SchemeFailed"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "status",
+                "mapping": {
+                  "failed": "#/components/schemas/SchemeFailed",
+                  "ok": "#/components/schemas/SchemeWeights"
+                }
+              }
+            },
+            "type": "array",
+            "title": "Schemes"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/ResultWarning"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "as_of",
+          "base_currency",
+          "mode",
+          "lookback",
+          "holdings",
+          "risk_model",
+          "schemes",
+          "warnings"
+        ],
+        "title": "ProposeResult"
+      },
+      "ProposeWeightsRequest": {
+        "properties": {
+          "holdings": {
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9.\\-^/:=_]{1,60}$"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "minItems": 2,
+            "title": "Holdings",
+            "description": "Tickers or RICs of listed stocks and funds, 2 to 100, for example AAPL, 7203.T or SPY. Each must resolve to a different listing. Weights come back keyed by these strings exactly as sent."
+          },
+          "base_currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "title": "Base Currency",
+            "description": "Currency of every price, return, volatility and market cap. Each close converts at its own day's exchange rate. Any currency with exchange rates works.",
+            "default": "USD"
+          },
+          "lookback_days": {
+            "type": "integer",
+            "maximum": 2520.0,
+            "minimum": 60.0,
+            "title": "Lookback Days",
+            "description": "Trading days of daily returns behind every risk estimate (756 is about three years). inverse_vol, risk_parity and mean_variance need each holding to have traded for the whole window.",
+            "default": 756
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "long_only",
+              "130_30",
+              "150_50",
+              "dollar_neutral"
+            ],
+            "title": "Mode",
+            "description": "Exposure, as a fraction of capital: long_only (100% long, 0% short), 130_30 (130% long, 30% short), 150_50 (150% long, 50% short), dollar_neutral (100% long, 100% short).",
+            "default": "long_only"
+          },
+          "schemes": {
+            "anyOf": [
+              {
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/EqualWeight"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ValueWeight"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Conviction"
+                    },
+                    {
+                      "$ref": "#/components/schemas/InverseVol"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RiskParity"
+                    },
+                    {
+                      "$ref": "#/components/schemas/MeanVariance"
+                    }
+                  ],
+                  "discriminator": {
+                    "propertyName": "name",
+                    "mapping": {
+                      "conviction": "#/components/schemas/Conviction",
+                      "equal_weight": "#/components/schemas/EqualWeight",
+                      "inverse_vol": "#/components/schemas/InverseVol",
+                      "mean_variance": "#/components/schemas/MeanVariance",
+                      "risk_parity": "#/components/schemas/RiskParity",
+                      "value_weight": "#/components/schemas/ValueWeight"
+                    }
+                  }
+                },
+                "type": "array",
+                "maxItems": 6,
+                "minItems": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Schemes",
+            "description": "Schemes to run, each at most once. Default: every scheme available in the mode, which is all six in long_only and equal_weight, conviction, inverse_vol and mean_variance with shorts."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "holdings"
+        ],
+        "title": "ProposeWeightsRequest",
+        "description": "Holdings to weight, the exposure, and the schemes to compare."
+      },
+      "ReoptimisedPortfolio": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "scheme": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/EqualWeight"
+              },
+              {
+                "$ref": "#/components/schemas/ValueWeight"
+              },
+              {
+                "$ref": "#/components/schemas/Conviction"
+              },
+              {
+                "$ref": "#/components/schemas/InverseVol"
+              },
+              {
+                "$ref": "#/components/schemas/RiskParity"
+              },
+              {
+                "$ref": "#/components/schemas/MeanVariance"
+              }
+            ],
+            "title": "Scheme",
+            "discriminator": {
+              "propertyName": "name",
+              "mapping": {
+                "conviction": "#/components/schemas/Conviction",
+                "equal_weight": "#/components/schemas/EqualWeight",
+                "inverse_vol": "#/components/schemas/InverseVol",
+                "mean_variance": "#/components/schemas/MeanVariance",
+                "risk_parity": "#/components/schemas/RiskParity",
+                "value_weight": "#/components/schemas/ValueWeight"
+              }
+            }
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "long_only",
+              "130_30",
+              "150_50",
+              "dollar_neutral"
+            ],
+            "title": "Mode",
+            "default": "long_only"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "scheme"
+        ],
+        "title": "ReoptimisedPortfolio",
+        "description": "A scheme re-run on every rebalance date with only the data available the day before."
+      },
+      "ResultWarning": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "no_risk_estimate",
+              "risk_model_ill_conditioned",
+              "risk_window_gaps",
+              "unscored_no_view",
+              "fixed_weights_rescaled",
+              "funds_unscored",
+              "value_reached_zero"
+            ],
+            "title": "Code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "holdings": {
+            "additionalProperties": {
+              "type": "string",
+              "enum": [
+                "not_listed",
+                "not_trading",
+                "insufficient_history",
+                "no_score",
+                "no_market_cap",
+                "zero_variance"
+              ]
+            },
+            "type": "object",
+            "title": "Holdings",
+            "description": "no_risk_estimate: the holdings behind it, keyed by symbol, and why."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ResultWarning"
+      },
+      "RiskModelSummary": {
+        "properties": {
+          "observations": {
+            "type": "integer",
+            "title": "Observations",
+            "description": "Daily returns used."
+          },
+          "dropped_days": {
+            "type": "integer",
+            "title": "Dropped Days",
+            "description": "Days left out because a holding had no price."
+          },
+          "shrinkage": {
+            "type": "number",
+            "title": "Shrinkage",
+            "description": "Weight on the shrinkage target, from 0 to 1."
+          },
+          "condition_number": {
+            "type": "number",
+            "title": "Condition Number"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "observations",
+          "dropped_days",
+          "shrinkage",
+          "condition_number"
+        ],
+        "title": "RiskModelSummary"
+      },
+      "RiskParity": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "const": "risk_parity",
+            "title": "Name",
+            "default": "risk_parity"
+          },
+          "risk_budget": {
+            "anyOf": [
+              {
+                "patternProperties": {
+                  "^[A-Za-z0-9.\\-^/:=_]{1,60}$": {
+                    "type": "number",
+                    "exclusiveMinimum": 0.0
+                  }
+                },
+                "type": "object",
+                "maxProperties": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Budget",
+            "description": "Share of predicted risk per holding, keyed by the symbols in holdings. Every holding needs a positive value; values are rescaled to sum to 1. Omit for equal risk."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "RiskParity",
+        "description": "Weights at which every holding contributes its budgeted share of predicted risk\n(equal shares by default). Long-only and uncapped."
+      },
+      "SchemeFailed": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "equal_weight",
+              "value_weight",
+              "conviction",
+              "inverse_vol",
+              "risk_parity",
+              "mean_variance"
+            ],
+            "title": "Name"
+          },
+          "status": {
+            "type": "string",
+            "const": "failed",
+            "title": "Status",
+            "default": "failed"
+          },
+          "error": {
+            "$ref": "#/components/schemas/FailureDetail"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "error"
+        ],
+        "title": "SchemeFailed",
+        "description": "A scheme that could not produce weights; the other schemes are unaffected."
+      },
+      "SchemeWeights": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "equal_weight",
+              "value_weight",
+              "conviction",
+              "inverse_vol",
+              "risk_parity",
+              "mean_variance"
+            ],
+            "title": "Name"
+          },
+          "status": {
+            "type": "string",
+            "const": "ok",
+            "title": "Status",
+            "default": "ok"
+          },
+          "weights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Weights",
+            "description": "Target weight per holding; negative is short."
+          },
+          "exposure": {
+            "$ref": "#/components/schemas/Exposure"
+          },
+          "effective_holdings": {
+            "type": "number",
+            "title": "Effective Holdings",
+            "description": "(sum of |w|)^2 / sum of w^2: how many equal positions would be as concentrated."
+          },
+          "predicted_volatility": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Predicted Volatility",
+            "description": "Annualised volatility predicted for these weights; null when risk_model is null."
+          },
+          "risk_contributions": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Contributions",
+            "description": "Share of predicted variance per holding; sums to 1. Null when risk_model is null."
+          },
+          "max_weight": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Weight",
+            "description": "mean_variance only: the largest absolute weight it allowed."
+          },
+          "capped": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capped",
+            "description": "mean_variance only: holdings at max_weight."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "weights",
+          "exposure",
+          "effective_holdings",
+          "predicted_volatility",
+          "risk_contributions"
+        ],
+        "title": "SchemeWeights",
+        "description": "A scheme that produced weights."
+      },
+      "ValueWeight": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "const": "value_weight",
+            "title": "Name",
+            "default": "value_weight"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ValueWeight",
+        "description": "Weights in proportion to market capitalisation in the base currency. Long-only."
       }
     },
     "securitySchemes": {

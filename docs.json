@@ -156,6 +156,8 @@
             "pages": [
               "api-reference/portfolio/analyze",
               "api-reference/portfolio/report",
+              "api-reference/portfolio/propose-weights",
+              "api-reference/portfolio/backtest-weights",
               "api-reference/reports/cio-report"
             ]
           },

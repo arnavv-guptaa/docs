@@ -1,0 +1,100 @@
+---
+title: 'Backtest Portfolio Weights'
+openapi: 'POST /v1/portfolio/backtest-weights'
+---
+
+Simulate up to 8 portfolios over the same holdings and window. A portfolio holds either fixed weights or a scheme from [Propose Portfolio Weights](/api-reference/portfolio/propose-weights) that is re-run on every rebalance date. The backtest runs as a job and costs **2 credits**, charged when the job completes. A request the data cannot serve is a 422 before any job exists, and is not charged.
+
+Returns are price returns in the base currency, so dividends are not included. Cash and short-sale proceeds earn nothing, shorts pay no borrow fee, and there is no margin. The output is a simulation, not investment advice.
+
+## How it works
+
+1. POST the request to `/v1/portfolio/backtest-weights`. The API checks it against the data and answers `202` with a `job_id` and a `check_url`.
+2. Poll `GET /v1/jobs/{job_id}` until `status` is `completed`. Polling is free.
+3. Read the backtest from the completed job's `result`.
+
+Sending the same request again within five minutes returns the same job.
+
+## How portfolios trade
+
+- Each portfolio starts as 1.0 in cash and buys its targets at the close of the first trading day on or after `start_date`.
+- It trades back to its targets at the close of the last trading day of each month, quarter or year inside the window, set by `rebalance`. The last day of the window never trades.
+- Every trade pays `cost_bps` per side on the value traded, including the first purchase.
+- A re-optimised portfolio re-runs its scheme on each rebalance date with only the data available the day before, as propose-weights would have answered then. Fund scores are current only, so they are not used on past dates.
+- A holding that lists after the start enters at the first rebalance after its first close. Until then, fixed weights are rescaled over the holdings that can trade, and a warning names them.
+- A holding that cannot trade on a rebalance date keeps its position, and each side of the portfolio keeps its target gross exposure across the holdings that can trade.
+
+## Request body
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `holdings` | array of strings | Yes | | 2 to 100 tickers or RICs. Each must resolve to a different listing. |
+| `portfolios` | array | Yes | | 1 to 8 portfolios with unique names, in either form below. |
+| `start_date` | string | No | 5 years before `end_date` | The backtest starts on the first trading day on or after this date. |
+| `end_date` | string | No | The holdings' latest close before today | The last day simulated. The window runs from 126 trading days to 10 years. |
+| `rebalance` | string | No | `quarterly` | `none`, `monthly`, `quarterly` or `annual`. Re-optimised portfolios need one other than `none`. |
+| `cost_bps` | number | No | `5` | 0 to 1000 basis points per side. |
+| `benchmark` | string | No | None | A stock or fund bought and held over the same window, in the base currency. |
+| `base_currency` | string | No | `USD` | Currency of every value. Each close converts at its own day's exchange rate. |
+| `lookback_days` | integer | No | `756` | 60 to 2520 trading days of returns behind each re-optimisation. |
+| `timeseries` | string | No | `monthly` | Value series per portfolio: `none`, `monthly` (last day of each month) or `daily`. |
+
+A portfolio is one of:
+
+| Form | Fields | Rules |
+|------|--------|-------|
+| Fixed weights | `name`, `weights` | `weights` is keyed by symbols in `holdings`; holdings left out are 0. Long-only weights sum to 1. With shorts, the weights sum to 1 or 0 and their absolute values sum to at most 2. |
+| Re-optimised | `name`, `scheme`, `mode` | `scheme` is a scheme object as in propose-weights, such as `{"name": "risk_parity"}`. `mode` defaults to `long_only`. |
+
+```json
+{
+  "holdings": ["AAPL", "MSFT", "JPM", "7203.T", "SPY"],
+  "start_date": "2021-01-04",
+  "rebalance": "monthly",
+  "benchmark": "SPY",
+  "portfolios": [
+    {"name": "equal", "weights": {"AAPL": 0.25, "MSFT": 0.25, "JPM": 0.25, "7203.T": 0.25}},
+    {"name": "risk parity", "scheme": {"name": "risk_parity"}},
+    {"name": "130/30 mean-variance", "scheme": {"name": "mean_variance"}, "mode": "130_30"}
+  ]
+}
+```
+
+## Result
+
+| Field | Description |
+|-------|-------------|
+| `start_date`, `end_date`, `trading_days` | The simulated window: the first trade date to the last day. |
+| `holdings` | Each holding's listing, kind, currency, and first and last close inside the window. |
+| `portfolios` | One entry per portfolio, with `status: ok` or `status: failed`. |
+| `benchmark` | The benchmark's `metrics` and value series, when you sent one. |
+| `warnings` | Conditions worth knowing, such as `fixed_weights_rescaled`, `funds_unscored` or `value_reached_zero`. |
+
+A portfolio with `status: ok` carries:
+
+| Field | Description |
+|-------|-------------|
+| `metrics` | `total_return`; `cagr` over 365.25-day years; `cagr_before_costs`, from the same trades without costs; `volatility` of daily returns, annualised by the trading days per year in the window; `max_drawdown` as a negative fraction; `return_over_volatility` (not a Sharpe ratio, because cash earns nothing); `return_over_max_drawdown`; and `annual_turnover`, excluding the first purchase. |
+| `nav` | The value series chosen by `timeseries`, from a start of 1.0 in cash. |
+| `rebalances` | Every trade date with its turnover and cost as fractions of the portfolio, the holdings left out and why, and for re-optimised portfolios the weights the scheme chose. |
+| `final_weights`, `final_cash` | The portfolio on the last day. |
+
+A re-optimised portfolio whose scheme cannot run on a later rebalance date has `status: failed` and an `error` with the `code`, `message`, `date` and `holdings` involved. The other portfolios still complete, and the job is charged.
+
+## Errors
+
+Each problem the caller can fix is a 422 before any job exists. `detail` lists each problem as `{code, message}` plus the fields that apply, such as `holdings`, `portfolio` and `earliest_start`.
+
+| Code | When |
+|------|------|
+| `unknown_symbols`, `duplicate_holdings` | As in propose-weights. |
+| `invalid_weights` | Fixed weights name a symbol not in `holdings` or break the sums above. |
+| `scheme_not_available_in_mode`, `invalid_risk_budget`, `invalid_max_weight` | As in propose-weights, for a re-optimised portfolio. |
+| `rebalance_required` | A re-optimised portfolio with `rebalance: none`. |
+| `window_too_short`, `window_too_long` | The window has fewer than 126 trading days or spans more than 10 years. |
+| `no_prices_in_window` | No holding has a price in the window. |
+| `stopped_trading` | A holding's last close is more than 5 trading days before the end of the window. |
+| `benchmark_no_prices` | The benchmark has no price in the window. |
+| `unsupported_base_currency`, `no_fx_for_holding` | As in propose-weights. |
+| `empty_leg_at_start` | No holding on one side of a fixed portfolio can trade on the first trade date. `earliest_start` gives a start that works. |
+| `not_computable_at_start` | A re-optimised portfolio's scheme cannot run on the first trade date. When a later start would work, `earliest_start` is the first start on which the holdings have the history and scores the scheme needs and its limits can be met. |
