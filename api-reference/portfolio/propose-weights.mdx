@@ -7,6 +7,8 @@ Send 2 to 100 holdings and get target weights from up to six allocation schemes,
 
 Returns are price returns in the base currency, so dividends are not included. The output is a calculation, not investment advice.
 
+Prices and market caps use the exchange rate available on each valuation date. If a local market is closed, the last local close still changes in the base currency as FX changes. Price freshness remains tied to the actual local close.
+
 ## Schemes
 
 | Scheme | How it weights | Modes |
@@ -82,7 +84,7 @@ A request that cannot be served is a 422 whose `detail` lists each problem as `{
 | `duplicate_holdings` | Two symbols resolve to the same listing. |
 | `no_recent_price` | A holding has no close in the last 5 trading days before `as_of`. |
 | `unsupported_base_currency` | There are no exchange rates for the base currency. |
-| `no_fx_for_holding` | A holding trades in a currency with no exchange rates. |
+| `no_fx_for_holding` | A required local-price or market-cap valuation has no exchange rate. This includes carried observations after a currency change. |
 | `scheme_not_available_in_mode` | The scheme does not run in the mode, for example `risk_parity` with shorts. |
 | `invalid_risk_budget` | `risk_budget` has no value for a holding, or names one that is not in `holdings`. |
 | `invalid_max_weight` | `max_weight` is above the mode's long exposure or too small to carry its net exposure. |

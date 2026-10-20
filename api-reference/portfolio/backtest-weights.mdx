@@ -22,9 +22,11 @@ Sending the same request again within 15 minutes of its creation returns the sam
 - Every trade pays `cost_bps` per side on the value actually bought or sold, including the first purchase. Fees come from the portfolio, so the executed positions account for the cost.
 - A re-optimised portfolio re-runs its scheme on each rebalance date with only the data available the day before, as propose-weights would have answered then. Fund scores are current only, so they are not used on past dates.
 - A holding that lists after the start enters at the first rebalance after its first close. Until then, fixed weights are rescaled over the holdings that can trade, and a warning names them.
-- A holding without a close on a rebalance date keeps its position, valued at its last close. The executable targets are rescaled within each side around those frozen positions.
+- A holding without a local close on a rebalance date keeps its position. It is valued at its last local close using the exchange rate available on the valuation date. The executable targets are rescaled within each side around those frozen positions.
 
-When a holding has no local close, its last converted price is carried forward. FX changes enter its valuation at the next local close.
+FX changes still affect portfolio values, risk estimates, market caps and benchmarks when a local market is closed. A valuation mark does not make the holding available to trade.
+
+Every required price and market-cap conversion needs an exchange rate. If a carried observation cannot convert after a currency change, the request is refused with `no_fx_for_holding`.
 
 ## Request body
 
