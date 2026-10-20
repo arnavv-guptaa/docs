@@ -24,6 +24,8 @@ Sending the same request again within 15 minutes of its creation returns the sam
 - A holding that lists after the start enters at the first rebalance after its first close. Until then, fixed weights are rescaled over the holdings that can trade, and a warning names them.
 - A holding without a close on a rebalance date keeps its position, valued at its last close. The executable targets are rescaled within each side around those frozen positions.
 
+When a holding has no local close, its last converted price is carried forward. FX changes enter its valuation at the next local close.
+
 ## Request body
 
 | Field | Type | Required | Default | Description |
