@@ -38,6 +38,8 @@ Short positions pay no borrow fee and their proceeds earn nothing.
 | `150_50` | 150% | 50% | 100% |
 | `dollar_neutral` | 100% | 100% | 0% |
 
+For `mean_variance`, the long and short columns are limits. The solver can use less exposure while keeping the mode's net exposure. The other schemes fill both sides.
+
 ## Request body
 
 | Field | Type | Required | Default | Description |

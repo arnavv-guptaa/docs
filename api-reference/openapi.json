@@ -7103,7 +7103,7 @@
           "weights"
         ],
         "title": "FixedPortfolio",
-        "description": "Fixed target weights, traded back to on every rebalance date."
+        "description": "Fixed target weights, traded back to on every rebalance date. A holding without a close cannot\ntrade: its existing position remains at the last close and executable targets are rescaled."
       },
       "HoldingSnapshot": {
         "properties": {

@@ -5,24 +5,24 @@ openapi: 'POST /v1/portfolio/backtest-weights'
 
 Simulate up to 8 portfolios over the same holdings and window. A portfolio holds either fixed weights or a scheme from [Propose Portfolio Weights](/api-reference/portfolio/propose-weights) that is re-run on every rebalance date. The backtest runs as a job and costs **2 credits**, charged when the job completes. A request the data cannot serve is a 422 before any job exists, and is not charged.
 
-Returns are price returns in the base currency, so dividends are not included. Cash and short-sale proceeds earn nothing, shorts pay no borrow fee, and there is no margin. The output is a simulation, not investment advice.
+Returns are price returns in the base currency, so dividends are not included. Cash and short-sale proceeds earn nothing, and shorts pay no borrow fee. Margin requirements and margin calls are not modelled. The output is a simulation, not investment advice.
 
 ## How it works
 
 1. POST the request to `/v1/portfolio/backtest-weights`. The API checks it against the data and answers `202` with a `job_id` and a `check_url`.
-2. Poll `GET /v1/jobs/{job_id}` until `status` is `completed`. Polling is free.
-3. Read the backtest from the completed job's `result`.
+2. Poll `GET /v1/jobs/{job_id}` until `status` is `completed` or `failed`. Polling is free.
+3. Read the backtest from the job's `result`. A failed backtest carries its reasons and costs nothing.
 
-Sending the same request again within five minutes returns the same job.
+Sending the same request again within 15 minutes of its creation returns the same job, unless that job failed. A failed job releases the request so you can retry it.
 
 ## How portfolios trade
 
 - Each portfolio starts as 1.0 in cash and buys its targets at the close of the first trading day on or after `start_date`.
 - It trades back to its targets at the close of the last trading day of each month, quarter or year inside the window, set by `rebalance`. The last day of the window never trades.
-- Every trade pays `cost_bps` per side on the value traded, including the first purchase.
+- Every trade pays `cost_bps` per side on the value actually bought or sold, including the first purchase. Fees come from the portfolio, so the executed positions account for the cost.
 - A re-optimised portfolio re-runs its scheme on each rebalance date with only the data available the day before, as propose-weights would have answered then. Fund scores are current only, so they are not used on past dates.
 - A holding that lists after the start enters at the first rebalance after its first close. Until then, fixed weights are rescaled over the holdings that can trade, and a warning names them.
-- A holding that cannot trade on a rebalance date keeps its position, and each side of the portfolio keeps its target gross exposure across the holdings that can trade.
+- A holding without a close on a rebalance date keeps its position, valued at its last close. The executable targets are rescaled within each side around those frozen positions.
 
 ## Request body
 
@@ -49,7 +49,7 @@ A portfolio is one of:
 ```json
 {
   "holdings": ["AAPL", "MSFT", "JPM", "7203.T", "SPY"],
-  "start_date": "2021-01-04",
+  "start_date": "2024-01-16",
   "rebalance": "monthly",
   "benchmark": "SPY",
   "portfolios": [
@@ -74,12 +74,12 @@ A portfolio with `status: ok` carries:
 
 | Field | Description |
 |-------|-------------|
-| `metrics` | `total_return`; `cagr` over 365.25-day years; `cagr_before_costs`, from the same trades without costs; `volatility` of daily returns, annualised by the trading days per year in the window; `max_drawdown` as a negative fraction; `return_over_volatility` (not a Sharpe ratio, because cash earns nothing); `return_over_max_drawdown`; and `annual_turnover`, excluding the first purchase. |
+| `metrics` | `total_return`; `cagr` over 365.25-day years; `cagr_before_costs`, from the same trades without costs; `volatility` of daily returns, annualised by the trading days per year in the window; `max_drawdown` from initial capital or a later peak, including initial fees, as a negative fraction; `return_over_volatility` (not a Sharpe ratio, because cash earns nothing); `return_over_max_drawdown`; and `annual_turnover`, excluding the first purchase. |
 | `nav` | The value series chosen by `timeseries`, from a start of 1.0 in cash. |
 | `rebalances` | Every trade date with its turnover and cost as fractions of the portfolio, the holdings left out and why, and for re-optimised portfolios the weights the scheme chose. |
 | `final_weights`, `final_cash` | The portfolio on the last day. |
 
-A re-optimised portfolio whose scheme cannot run on a later rebalance date has `status: failed` and an `error` with the `code`, `message`, `date` and `holdings` involved. The other portfolios still complete, and the job is charged.
+A re-optimised portfolio whose scheme cannot run on a later rebalance date has `status: failed` and an `error` with the `code`, `message`, `date` and `holdings` involved. If at least one portfolio completes, the job completes and costs 2 credits. If every portfolio fails, the job fails, keeps those reasons in `result`, and costs nothing.
 
 ## Errors
 
