@@ -107,7 +107,8 @@ When the job completes, `GET /v1/jobs/{job_id}` returns:
 ```
 
 <Note>
-Results are cached for 14 days. Subsequent requests for the same symbol will return cached analysis instantly.
+Analysis can reuse a result generated on the same calendar day in Asia/Singapore.
+The endpoint still returns a job; poll it to retrieve the result.
 </Note>
 
 ## Analysis Framework

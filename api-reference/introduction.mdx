@@ -92,31 +92,86 @@ Use [List Jobs](/api-reference/jobs/list) to enumerate recent jobs, and
 | Header | Description |
 |--------|-------------|
 | `X-Request-ID` | Unique ID for the request. Include it when reporting an issue so we can trace it. |
-| `X-Credits-Remaining` | Credits left on your key after a billable request (when applicable). |
+| `X-Credits-Remaining` | Your organization's remaining credits, when available. The value can be fractional, such as `99.95`. |
 | `Cache-Control` / `Vary` | Responses that depend on your organization's [KYC verification](/problems/kyc-required) are `private, no-store` and vary by `Authorization`. |
+
+## Credits
+
+Requests use your organization's credit balance. Prices can be fractional.
+For endpoints priced per symbol, a comma-separated list costs the price multiplied
+by the number of submitted symbols. For example, `company-info?symbol=AAPL,MSFT`
+costs `0.1` credits.
+
+| Endpoints | Credits |
+|-----------|---------|
+| Company info, income statement, balance sheet, cash flow, key ratios, daily price, financial summary, dividend history, dividend-yield history, current ratios | 0.05 per symbol |
+| Analyst targets, recommendations, upgrades and downgrades, earnings and revenue estimates, earnings history, EPS trends and revisions | 0.05 per call |
+| News, peers, rolling volatility and drawdown, historical scores, score metrics, returns calendar, sector scores, Altman Z-Score, Piotroski F-Score, risk-return profile, DCF, multiples | 0.1 per call |
+| ETF profile, scores, holdings, and other ETF analytics | 0.1 per call |
+| ETF daily price | 0.05 per symbol |
+| Telemetry endpoints | 0.05 per call |
+| Stock and ETF search, symbol validation, job listing and polling, macro-report markets | Free |
+| Portfolio analysis, portfolio report, Builder, financial, technical, score, news, and peers analysis, company background, macro context | 5 per job |
+| Stock report, ETF report, CIO report | 10 per job |
+| Assessment | 5 for `fast` or `default`; 10 for `deep` |
+| Macro report | 5 per call |
+| Portfolio tracker summary and analytics | 1 per call |
+| Other portfolio tracker endpoints | Free |
+
+Billable reads check your balance before processing and deduct credits after a
+successful response. Failed HTTP requests do not deduct credits. Background jobs
+deduct credits when they complete successfully. Job polling is free.
+
+An insufficient balance returns HTTP `402`:
+
+```json
+{
+  "detail": {
+    "error": "Insufficient credits",
+    "balance": 0.02,
+    "required": 0.05,
+    "endpoint": "/v1/company-info"
+  }
+}
+```
+
+Both `balance` and `required` are numbers that can be fractional. Parse them and
+`X-Credits-Remaining` as decimal values, not integers.
 
 ## Recommendation labels
 
 Recommendation labels (`STRONG BUY` to `STRONG SELL`) are returned only to
 [KYC-verified organizations](/problems/kyc-required). For other organizations the
 `recommendation` field is left out and every numeric score remains, so treat it as optional.
+Analyst recommendations and upgrades and downgrades return HTTP `403` with
+`code: "kyc_required"` to other organizations, before any credits are deducted.
 Stock, ETF, portfolio and CIO reports never include recommendation labels, for any organization.
+
+## Data availability
+
+Data age does not cause HTTP `503`. A `503` indicates a service or data
+availability failure.
+The [health check](/api-reference/health) reports `healthy` or `unhealthy`.
 
 ## Response codes
 
 | Code | Description |
 |------|-------------|
 | 200 | Success |
+| 202 | Background job accepted; poll its `check_url` |
+| 400 | Invalid input, including an unrecognized symbol |
 | 401 | Unauthorized — invalid or missing API key |
-| 402 | Insufficient credits for this request |
+| 402 | Insufficient credits; `detail.balance` and `detail.required` can be fractional |
 | 403 | Forbidden — for recommendation data, `code: "kyc_required"` means your organization is not [KYC-verified](/problems/kyc-required) |
 | 404 | Not found |
 | 422 | Validation error — check the request body |
 | 429 | Rate limit exceeded — slow down and retry |
 | 500 | Server error — includes an `X-Request-ID` you can report |
+| 503 | Service or data unavailable; data age alone does not cause this response |
 
 ## Rate limits
 
 Requests are rate limited per API key. If you exceed your limit you'll receive a
-`429` response; back off and retry. Limits depend on your plan — contact
-[support](https://parallax.chicago.global/contact) for details.
+`429` response. Respect `Retry-After` before retrying. The
+`X-RateLimit-Limit` and `X-RateLimit-Remaining` headers show the applicable
+request limit and remaining requests.

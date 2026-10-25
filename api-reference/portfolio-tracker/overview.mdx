@@ -33,8 +33,9 @@ carrying forward portfolio and benchmark values across updates.
   <Step title="Read analytics">
     Poll [Get Analytics](/api-reference/portfolio-tracker/analytics). It returns a
     discriminated status: `not_computed` (200) while the background compute hasn't landed
-    yet, then `ready` with the full analytics series. Reads are fast and never trigger a
-    recompute.
+    yet, then `ready` with the full analytics series. Reads use stored series. If the
+    cached analytics are missing or use an older calculation version, the read
+    derives updated analytics from those series.
   </Step>
   <Step title="Keep it current">
     [Increment](/api-reference/portfolio-tracker/increment) brings a portfolio forward to
@@ -81,7 +82,7 @@ curl -s https://api.chicago.global/v1/portfolio/track \
     "benchmark": "ACWI.OQ",
     "initial_value": 10000
   }'
-# => { "portfolio_key": "pf_...", "status": "initializing" }
+# => { "success": true, "portfolio_key": "pf_...", "analytics_job_id": "...", "portfolio": { ... } }
 
 # 2. Poll analytics until status == "ready"
 curl -s https://api.chicago.global/v1/portfolio/pf_.../analytics \

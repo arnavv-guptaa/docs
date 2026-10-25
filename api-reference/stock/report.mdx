@@ -13,7 +13,8 @@ This endpoint uses **async job processing** for generating comprehensive stock r
 4. **Get Report URLs**: The completed job contains URLs to PDF, HTML, and JSON reports
 
 <Note>
-Reports include financial analysis, factor scores and AI-generated insights.
+Report generation typically takes 5-10 minutes. Reports include company
+information, financial analysis, peer comparisons, and AI-generated insights.
 They contain no recommendation labels, for any organization.
 </Note>
 
@@ -23,10 +24,12 @@ They contain no recommendation labels, for any organization.
 |-------|------|----------|---------|-------------|
 | `symbol` | string | Yes | - | Stock symbol (e.g., AAPL.O for Apple Inc) |
 | `force` | boolean | No | `false` | Force regeneration even if recent report exists |
+| `lang` | string | No | `en` | Report language: `en` or `th` |
 
 <Warning>
-If `force` is `false` and a report using the current template was generated today
-in Singapore time, its cached URLs are returned.
+If `force` is `false`, English reports can reuse a report generated with the
+current report template on the same calendar day in Asia/Singapore. The endpoint
+still returns a job; poll it to retrieve the report URLs.
 </Warning>
 
 ## Response (202 Accepted)
@@ -38,9 +41,11 @@ When the job is created:
   "job_id": "stock-a3522a92-87ed-4be0-a912-ad56ed6a8806",
   "status": "pending",
   "symbol": "AAPL.O",
+  "original_symbol": "AAPL.O",
   "force": false,
+  "lang": "en",
   "check_url": "/v1/jobs/stock-a3522a92-87ed-4be0-a912-ad56ed6a8806",
-  "estimated_duration_seconds": 600,
+  "estimated_duration_seconds": 300,
   "message": "Stock report generation started for AAPL.O. Poll the check_url to get results."
 }
 ```
@@ -57,6 +62,7 @@ When the job completes, `GET /v1/jobs/{job_id}` returns:
   "result": {
     "success": true,
     "symbol": "AAPL.O",
+    "lang": "en",
     "pdf_url": "https://storage.example.com/reports/AAPL.O/report.pdf",
     "html_url": "https://storage.example.com/reports/AAPL.O/report.html",
     "json_url": "https://storage.example.com/reports/AAPL.O/report.json"
