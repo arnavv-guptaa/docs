@@ -618,7 +618,7 @@
           "Company Data"
         ],
         "summary": "Company Info",
-        "description": "Get company information for one or multiple symbols.\n\n**Credits:** 0.05 credits per symbol. A comma-separated symbol list costs 0.05 multiplied by the number of submitted symbols. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Get company information for one or multiple symbols. The `recommendation` key is returned only to KYC-verified organizations; see https://docs.chicago.global/problems/kyc-required. Every score field remains available.\n\n**Credits:** 0.05 credits per symbol. A comma-separated symbol list costs 0.05 multiplied by the number of submitted symbols. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "company_info_v1_company_info_get",
         "security": [
           {
@@ -696,7 +696,7 @@
           "Company Data"
         ],
         "summary": "Peers",
-        "description": "Get peer comparison data ordered by market capitalization, largest first. The requested stock has is_target: true; peers have is_target: false. Identify the requested stock by this flag rather than its position.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Get peer comparison data ordered by market capitalization, largest first. The requested stock has is_target: true; peers have is_target: false. Identify the requested stock by this flag rather than its position. The `recommendation` key is returned only to KYC-verified organizations; see https://docs.chicago.global/problems/kyc-required.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "peers_v1_peers_get",
         "security": [
           {
@@ -3406,7 +3406,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Get Portfolio Analytics",
-        "description": "Read analytics from a tracked portfolio's stored series. If cached analytics are missing or use an older calculation version, derive updated analytics from those series. Returns status ready with analytics, or status not_computed with HTTP 200 while the initial series is unavailable. Missing or inaccessible portfolios return HTTP 404.\n\n**Credits:** 1 credit per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Read analytics from a tracked portfolio's stored series. If cached analytics are missing or use an older calculation version, derive updated analytics from those series. Returns status ready with analytics, or status not_computed with HTTP 200 while the initial series is unavailable. Missing or inaccessible portfolios return HTTP 404. Per-holding `recommendation` labels in the analytics are returned only to KYC-verified organizations; see https://docs.chicago.global/problems/kyc-required.\n\n**Credits:** 1 credit per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_portfolio_analytics_v1_portfolio__portfolio_key__analytics_get",
         "security": [
           {
@@ -4802,7 +4802,7 @@
           "ETF"
         ],
         "summary": "Etf Profile",
-        "description": "Get ETF profile with metadata and optional scores.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Get ETF profile with metadata and optional scores. The `recommendation` key is returned only to KYC-verified organizations; see https://docs.chicago.global/problems/kyc-required. Metadata and scores remain available.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "etf_profile_v1_etf_profile_get",
         "security": [
           {
@@ -5010,7 +5010,7 @@
           "ETF"
         ],
         "summary": "Etf Scores",
-        "description": "Get ETF scores (value, quality, momentum, defensive, tactical, total + recommendation).\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Get ETF scores (value, quality, momentum, defensive, tactical, total). The recommendation label is returned only to KYC-verified organizations; see https://docs.chicago.global/problems/kyc-required.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "etf_scores_v1_etf_scores_get",
         "security": [
           {
@@ -5093,7 +5093,7 @@
           "ETF"
         ],
         "summary": "Etf Holdings",
-        "description": "Get ETF holdings with weights and per-holding scores.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Get ETF holdings with weights and per-holding scores. Each holding's `recommendation` key is returned only to KYC-verified organizations; see https://docs.chicago.global/problems/kyc-required. Numeric scores remain available.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "etf_holdings_v1_etf_holdings_get",
         "security": [
           {
@@ -5190,7 +5190,7 @@
           "ETF"
         ],
         "summary": "Etf Search",
-        "description": "Search ETFs by symbol or name with typo-tolerant fuzzy matching.\n\n**Credits:** Free (0 credits).",
+        "description": "Search ETFs by symbol or name with typo-tolerant fuzzy matching. Each result's `recommendation` key is returned only to KYC-verified organizations; see https://docs.chicago.global/problems/kyc-required.\n\n**Credits:** Free (0 credits).",
         "operationId": "etf_search_v1_etf_search_get",
         "security": [
           {
@@ -5406,7 +5406,7 @@
           "DCF"
         ],
         "summary": "Get Dcf",
-        "description": "Get Bear, Base and Bull discounted cash flow valuations.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Get Bear, Base and Bull discounted cash flow valuations. The model recommendation fields (`compositeRecommendation`, `factorRating`) are returned only to KYC-verified organizations; see https://docs.chicago.global/problems/kyc-required. All valuation fields remain available.\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_dcf_v1_dcf_get",
         "security": [
           {
@@ -5641,6 +5641,75 @@
             }
           }
         }
+      }
+    },
+    "/v1/etf-report": {
+      "post": {
+        "tags": [
+          "v1",
+          "ETF Reports"
+        ],
+        "summary": "Etf Report",
+        "description": "Generate an ETF research report (ASYNC - returns job_id immediately). Poll GET /v1/jobs/{job_id}; when status=\"completed\" the result carries pdf_url, html_url and json_url. Reports contain no recommendation labels, for any organization.\n\n**Workflow:**\n1. POST /etf-report → job_id (returns in <1s)\n2. Poll GET /v1/jobs/{job_id}\n3. status=\"completed\" → result has pdf_url / html_url / json_url\n\n**Credits:** 10 credits per job. Charged when the job completes successfully. Polling is free.",
+        "operationId": "etf_report_v1_etf_report_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ETFReportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Job created successfully",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Fund not supported for reports; no job created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     }
   },
@@ -6562,6 +6631,27 @@
           "message"
         ],
         "title": "ValidationIssueResponse"
+      },
+      "ETFReportRequest": {
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "title": "Symbol",
+            "description": "ETF symbol/RIC identifier",
+            "example": "SPY"
+          },
+          "force": {
+            "type": "boolean",
+            "title": "Force",
+            "description": "Force regeneration even if recent report exists",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "symbol"
+        ],
+        "title": "ETFReportRequest"
       },
       "InsufficientCreditsResponse": {
         "type": "object",

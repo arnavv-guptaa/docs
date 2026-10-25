@@ -146,6 +146,7 @@
             "group": "Overview",
             "pages": [
               "api-reference/introduction",
+              "problems/kyc-required",
               "api-reference/jobs/status",
               "api-reference/jobs/list",
               "api-reference/health"
@@ -274,7 +275,8 @@
               "api-reference/etf/scores",
               "api-reference/etf/holdings",
               "api-reference/etf/daily-price",
-              "api-reference/etf/validate"
+              "api-reference/etf/validate",
+              "api-reference/etf/report"
             ]
           },
           {

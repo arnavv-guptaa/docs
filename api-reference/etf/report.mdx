@@ -1,0 +1,15 @@
+---
+title: 'Generate ETF Report'
+openapi: 'POST /v1/etf-report'
+---
+
+Generate an ETF research report as HTML, PDF and JSON. Submit the fund's symbol,
+then poll the returned `check_url` until the job completes.
+
+The report describes holdings, factor scores, performance and risk. It contains
+no recommendation labels, house verdict or buy/hold/sell mix, for any organization.
+
+Reports are shared across organizations. A report generated today in Singapore
+time can be reused when `force` is `false`. Set `force` to `true` to regenerate.
+
+When the job completes, its result contains `html_url`, `pdf_url` and `json_url`.

@@ -73,17 +73,12 @@ The Size factor has a unique role in the framework:
 | **Capacity Constraints** | Helps manage strategy scalability and position sizing |
 | **Factor Amplification** | Small-cap exposure can amplify other factor signals |
 
-## Recommendation Generation
+## Recommendation Labels
 
-Overall scores translate directly into investment recommendations:
-
-| Score Range | Recommendation |
-|-------------|----------------|
-| **8.5-10.0** | STRONG BUY |
-| **6.5-8.4** | BUY |
-| **3.5-6.4** | HOLD |
-| **1.5-3.4** | SELL |
-| **0.0-1.4** | STRONG SELL |
+Parallax also publishes a recommendation label (`STRONG BUY`, `BUY`, `HOLD`, `SELL`,
+`STRONG SELL`) for each scored security. Labels are available only to
+[KYC-verified organizations](/problems/kyc-required). Every organization receives the
+numeric factor and overall scores.
 
 ## Score Validation and Quality Control
 

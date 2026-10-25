@@ -1,0 +1,63 @@
+---
+title: 'KYC verification required'
+description: 'Recommendation labels are available only to KYC-verified organizations'
+---
+
+Parallax recommendation labels (`STRONG BUY`, `BUY`, `HOLD`, `SELL`, `STRONG SELL`) and
+sell-side analyst recommendations are available only when your organization has completed
+KYC verification. Access is decided per organization, from the organization that owns the
+API key making the request.
+
+## Endpoints that answer 403
+
+Endpoints whose whole purpose is recommendation data refuse unverified organizations with
+`403` and an `application/problem+json` body. The check runs before credit validation, so a
+refused request is **not charged**.
+
+```json
+{
+  "type": "https://docs.chicago.global/problems/kyc-required",
+  "title": "KYC verification required",
+  "status": 403,
+  "detail": "This endpoint requires a KYC-verified organization.",
+  "code": "kyc_required",
+  "request_id": "7f3c9b2a-..."
+}
+```
+
+Match on `code`, not on the human-readable `detail`. Retrying will not change the outcome
+until your organization is verified.
+
+## Endpoints that omit the label
+
+Every other endpoint keeps working for unverified organizations. The response stays `200`
+and simply leaves out the label, while every numeric score (including `total`) remains:
+
+| Endpoint | Field left out |
+|----------|----------------|
+| [Company Info](/api-reference/company/info), [Peers](/api-reference/company/peers) | `recommendation` |
+| [ETF Profile](/api-reference/etf/profile), [ETF Scores](/api-reference/etf/scores), [ETF Holdings](/api-reference/etf/holdings), [ETF Search](/api-reference/etf/search) | `recommendation` |
+| [DCF](/api-reference/valuation/dcf) | `compositeRecommendation`, `factorRating` |
+| [Portfolio Analytics](/api-reference/portfolio-tracker/analytics), completed portfolio-analysis [jobs](/api-reference/jobs/status) | per-holding `recommendation` |
+
+Treat the field as optional: a missing `recommendation` means your organization does not
+have access to it, not that the security is unrated.
+
+Responses that depend on your organization's verification carry
+`Cache-Control: private, no-store` and `Vary: Authorization`. Do not cache or share them
+across organizations.
+
+## Written analysis and reports
+
+AI-written analysis (peers, analyst consensus, financial analysis, investment thesis, and
+portfolio insights) never includes a recommendation label, for any organization.
+[Stock](/api-reference/stock/report), [ETF](/api-reference/etf/report),
+[portfolio](/api-reference/portfolio/report) and
+[CIO](/api-reference/reports/cio-report) reports never include recommendation labels either,
+for any organization.
+
+## Getting verified
+
+Contact [parallax@chicago.global](mailto:parallax@chicago.global) to start KYC verification
+for your organization. Verification applies to every API key and MCP connection the
+organization owns.

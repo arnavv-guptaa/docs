@@ -93,6 +93,7 @@ Use [List Jobs](/api-reference/jobs/list) to enumerate recent jobs, and
 |--------|-------------|
 | `X-Request-ID` | Unique ID for the request. Include it when reporting an issue so we can trace it. |
 | `X-Credits-Remaining` | Your organization's remaining credits, when available. The value can be fractional, such as `99.95`. |
+| `Cache-Control` / `Vary` | Responses that depend on your organization's [KYC verification](/problems/kyc-required) are `private, no-store` and vary by `Authorization`. |
 
 ## Credits
 
@@ -111,7 +112,7 @@ costs `0.1` credits.
 | Telemetry endpoints | 0.05 per call |
 | Stock and ETF search, symbol validation, job listing and polling, macro-report markets | Free |
 | Portfolio analysis, portfolio report, Builder, financial, technical, score, news, and peers analysis, company background, macro context | 5 per job |
-| Stock report, CIO report | 10 per job |
+| Stock report, ETF report, CIO report | 10 per job |
 | Assessment | 5 for `fast` or `default`; 10 for `deep` |
 | Macro report | 5 per call |
 | Portfolio tracker summary and analytics | 1 per call |
@@ -137,6 +138,15 @@ An insufficient balance returns HTTP `402`:
 Both `balance` and `required` are numbers that can be fractional. Parse them and
 `X-Credits-Remaining` as decimal values, not integers.
 
+## Recommendation labels
+
+Recommendation labels (`STRONG BUY` to `STRONG SELL`) are returned only to
+[KYC-verified organizations](/problems/kyc-required). For other organizations the
+`recommendation` field is left out and every numeric score remains, so treat it as optional.
+Analyst recommendations and upgrades and downgrades return HTTP `403` with
+`code: "kyc_required"` to other organizations, before any credits are deducted.
+Stock, ETF, portfolio and CIO reports never include recommendation labels, for any organization.
+
 ## Data availability
 
 Data age does not cause HTTP `503`. A `503` indicates a service or data
@@ -152,6 +162,7 @@ The [health check](/api-reference/health) reports `healthy` or `unhealthy`.
 | 400 | Invalid input, including an unrecognized symbol |
 | 401 | Unauthorized — invalid or missing API key |
 | 402 | Insufficient credits; `detail.balance` and `detail.required` can be fractional |
+| 403 | Forbidden — for recommendation data, `code: "kyc_required"` means your organization is not [KYC-verified](/problems/kyc-required) |
 | 404 | Not found |
 | 422 | Validation error — check the request body |
 | 429 | Rate limit exceeded — slow down and retry |
