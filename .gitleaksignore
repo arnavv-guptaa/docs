@@ -1,0 +1,8 @@
+api-reference/analyst/upgrades-downgrades.mdx:curl-auth-header:44
+api-reference/analyst/eps-trend.mdx:curl-auth-header:33
+api-reference/analyst/revenue-estimate.mdx:curl-auth-header:34
+api-reference/analyst/target-summary.mdx:curl-auth-header:44
+api-reference/analyst/earnings-history.mdx:curl-auth-header:52
+api-reference/analyst/eps-revisions.mdx:curl-auth-header:32
+api-reference/analyst/recommendations.mdx:curl-auth-header:39
+api-reference/analyst/earnings-estimate.mdx:curl-auth-header:34

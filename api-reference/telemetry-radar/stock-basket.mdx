@@ -1,0 +1,81 @@
+---
+title: 'Stock → Basket Lookup'
+openapi: 'GET /v1/telemetry/stock-basket'
+---
+
+Part of the **telemetry-radar** layer, a newer set of endpoints distinct from
+the baskets under [Telemetry](/api-reference/telemetry/summary). It reads the
+full, live basket membership synced daily into the basket composition tables,
+not the 10-member sample in the daily telemetry row.
+
+Finds the telemetry basket(s) a stock belongs to, for any stock in a basket —
+not just the 10 listed per basket in the daily telemetry. Each match returns
+the stock's cohesion with its basket, its factor scores, its rank by total
+score inside the basket, and the basket's telemetry context (returns,
+momentum, quadrant, scores, `confirmed_in`) for the report date.
+
+<Note>
+A plain ticker can match several RICs across markets. Each match is returned,
+up to 3 per symbol.
+</Note>
+
+## Query Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `symbols` | array of string | Yes | — | Ticker, RIC, or company name, e.g. `AAPL`, `NVDA.O`, `Toyota`. Repeat the parameter for several, up to 10. |
+| `include_members` | boolean | No | `false` | Also return every member of each matched basket. |
+| `date` | string | No | Latest | Telemetry report date (`YYYY-MM-DD`) used for basket returns and context. |
+
+Sending no symbols, or more than 10, returns `400`.
+
+## Response
+
+One result per symbol queried, each with its matches (possibly empty).
+
+```json
+{
+  "report_date": "2026-11-04",
+  "results": [
+    {
+      "query": "NVDA",
+      "matches": [
+        {
+          "ric": "NVDA.O",
+          "name": "NVIDIA Corp",
+          "member_cohesion": 0.812,
+          "cohesion_z": 1.46,
+          "scores": { "value": 3.1, "quality": 8.7, "momentum": 9.2, "defensive": 4.0, "tactical": 6.5, "total": 7.4 },
+          "basket_id": "us-ai-infra-02",
+          "rank_in_basket": { "by_total_score": 2, "of_scored": 24, "basket_size": 26 },
+          "basket": {
+            "basket_id": "us-ai-infra-02",
+            "name": "US AI Infrastructure",
+            "market": "US",
+            "quadrant": "Fading",
+            "momentum_1m": -0.018,
+            "momentum_6m": 0.064,
+            "n_confirmed_markets": 3,
+            "is_priced_in": false
+          }
+        }
+      ]
+    },
+    {
+      "query": "ZZZZZ",
+      "matches": [],
+      "note": "Not in any active telemetry basket. Telemetry covers about N stocks across its baskets; this one isn't among them."
+    }
+  ]
+}
+```
+
+For a symbol in no active basket, `note` states live current coverage (`N`
+above stands in for that day's actual count, which changes daily as
+baskets re-form). `basket` is `null`, with a different `note` explaining the
+basket was re-formed since this match was built, when the matched basket is
+no longer in the telemetry row for the report date. `members` is included
+only when `include_members`
+is `true`, sorted most representative (`cohesion_z` descending) first. See
+the response example for exact field presence — nullable fields are omitted
+from this illustration where not applicable.

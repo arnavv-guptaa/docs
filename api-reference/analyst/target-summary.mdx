@@ -1,0 +1,46 @@
+---
+title: 'Target Price Summary'
+openapi: 'GET /v1/target-summary'
+---
+
+Get the analyst target price range (low, high, mean, median, current) for a symbol. Returns a typed "unavailable" record rather than an error when a range cannot be resolved.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | Stock symbol (e.g., `AAPL`, `MSFT`) |
+
+## Response
+
+When a target range is available:
+
+```json
+{
+  "current": 227.5,
+  "high": 250.0,
+  "low": 170.0,
+  "mean": 228.9,
+  "median": 230.0,
+  "source": "<provider>",
+  "ric": "AAPL.O",
+  "status": "available",
+  "unavailable_reason": null,
+  "retrieved_at": "2026-11-04T08:15:00Z"
+}
+```
+
+When a range cannot be resolved, `status` is `"unavailable"`, `low`/`high`/`mean`/`median`/`current` are `null`, and `unavailable_reason` carries a short machine-readable cause such as `provider_request_failed`, `provider_range_timeout`, `provider_range_unavailable`, or `contributor_extrema_missing`. A symbol-matching failure returns its own distinct reason code, separate from the four above.
+
+<Note>
+The response also carries internal resolution metadata (how the symbol was matched to the
+upstream provider) that isn't part of the documented contract above and may change without
+notice. Don't build against undocumented fields.
+</Note>
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/target-summary?symbol=AAPL" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

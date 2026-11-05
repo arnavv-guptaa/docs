@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Parallax API",
-    "description": "Parallax by Chicago Global — AI-powered investment research and portfolio analytics. Multi-factor scoring, portfolio analysis and tracking, financial statements, analyst estimates, ETF analytics, valuation (DCF & multiples), macro and market telemetry, and AI-generated research reports. Credits can be fractional. Per-symbol reads cost 0.05 credits per submitted symbol; see each operation for its price. A 503 indicates an availability failure, not data age.",
-    "version": "1.1.0"
+    "description": "Parallax by Chicago Global \u2014 AI-powered investment research and portfolio analytics. Multi-factor scoring, portfolio analysis and tracking, financial statements, analyst estimates, ETF analytics, valuation (DCF & multiples), macro and market telemetry, and AI-generated research reports. Credits can be fractional. Per-symbol reads cost 0.05 credits per submitted symbol; see each operation for its price. A 503 indicates an availability failure, not data age.",
+    "version": "2.0.0"
   },
   "servers": [
     {
@@ -23,7 +23,7 @@
           "Stock Reports"
         ],
         "summary": "Stock Report",
-        "description": "Generate comprehensive stock report (ASYNC - returns job_id immediately).\n\nThis endpoint creates a background job for report generation. The actual generation\nhappens asynchronously without blocking. Use GET /v1/jobs/{job_id} to check status.\n\n**Response Format:**\n```json\n{\n    \"job_id\": \"uuid-string\",\n    \"status\": \"pending\",\n    \"symbol\": \"AAPL.O\",\n    \"check_url\": \"/v1/jobs/{job_id}\",\n    \"estimated_duration_seconds\": 300\n}\n```\n\n**Workflow:**\n1. POST /stock-report → Get job_id (returns in <1 second)\n2. Poll GET /v1/jobs/{job_id} every 5-10 seconds\n3. When status=\"completed\", result contains pdf_url, html_url, json_url\n\n**Example:**\n```bash\n# Start generation\ncurl -X POST \"https://api.chicago.global/v1/stock-report\" \\\n     -H \"Authorization: Bearer key\" \\\n     -d '{\"symbol\":\"AAPL.O\",\"force\":false}'\n\n# Check status\ncurl \"https://api.chicago.global/v1/jobs/{job_id}\" -H \"Authorization: Bearer key\"\n```\n\n**Credits:** 10 credits per job. Charged when the job completes successfully. Polling is free.",
+        "description": "Generate comprehensive stock report (ASYNC - returns job_id immediately).\n\nThis endpoint creates a background job for report generation. Use GET /v1/jobs/{job_id} to check status.\n\n**Response Format:**\n```json\n{\n    \"job_id\": \"uuid-string\",\n    \"status\": \"pending\",\n    \"symbol\": \"AAPL.O\",\n    \"check_url\": \"/v1/jobs/{job_id}\",\n    \"estimated_duration_seconds\": 300\n}\n```\n\n**Workflow:**\n1. POST /stock-report \u2192 Get job_id (returns in <1 second)\n2. Poll GET /v1/jobs/{job_id} every 5-10 seconds\n3. When status=\"completed\", result contains pdf_url, html_url, json_url\n\n**Example:**\n```bash\n# Start generation\ncurl -X POST \"https://api.chicago.global/v1/stock-report\" \\\n     -H \"Authorization: Bearer key\" \\\n     -d '{\"symbol\":\"AAPL.O\",\"force\":false}'\n\n# Check status\ncurl \"https://api.chicago.global/v1/jobs/{job_id}\" -H \"Authorization: Bearer key\"\n```\n\n**Credits:** 10 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "stock_report_v1_stock_report_post",
         "requestBody": {
           "content": {
@@ -2170,7 +2170,7 @@
           "Score Data"
         ],
         "summary": "Sector Avg Scores",
-        "description": "Get average scores for sectors.\n- No sector, no market → global averages for all sectors\n- No sector, market provided → all sectors in that market\n- Sector provided, no market → global avg for that sector\n- Both provided → avg of sector in that market\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Get average scores for sectors.\n- No sector, no market \u2192 global averages for all sectors\n- No sector, market provided \u2192 all sectors in that market\n- Sector provided, no market \u2192 global avg for that sector\n- Both provided \u2192 avg of sector in that market\n\n**Credits:** 0.1 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "sector_avg_scores_v1_sector_avg_scores_get",
         "security": [
           {
@@ -2901,7 +2901,7 @@
           "Portfolio"
         ],
         "summary": "Analyze Portfolio",
-        "description": "Analyze a portfolio with multi-currency support, rebalancing, and comprehensive metrics (ASYNC - returns job_id immediately).\n\nThis endpoint creates a background job for portfolio analysis. The actual analysis\nhappens asynchronously without blocking. Use GET /v1/jobs/{job_id} to check status.\n\n**Response Format:**\n```json\n{\n    \"job_id\": \"uuid-string\",\n    \"status\": \"pending\",\n    \"check_url\": \"/v1/jobs/{job_id}\",\n    \"estimated_duration_seconds\": 90\n}\n```\n\n**Workflow:**\n1. POST /portfolio/analyze -> Get job_id (returns in <1 second)\n2. Poll GET /v1/jobs/{job_id} every 3-5 seconds\n3. When status=\"completed\", result contains full analysis\n\n**Portfolio Analysis Includes:**\n- Performance metrics (returns, Sharpe, Sortino, etc.)\n- Risk metrics (volatility, drawdown, VaR, etc.)\n- Attribution analysis (by security, sector, market, currency)\n- Rolling metrics (30/60/90-day windows)\n- Benchmark comparison\n- Transaction history and rebalancing details\n\n**Portfolio Format:**\n- Each holding requires: date, symbol, and weight (as decimal)\n- Weights should sum to 1.0 for each date\n- Multiple dates can be provided for rebalancing\n\n**Field Selection (Optional):**\nUse the `fields` parameter to return only specific data sections. If omitted, all fields are returned.\n\nAvailable fields: `portfolio_parameters`, `portfolio_input`, `data_quality`, `portfolio_summary`,\n`performance_metrics`, `rolling_metrics`, `drawdown_analysis`, `portfolio_scores`, `concentration_metrics`,\n`transactions`, `company_info`, `latest_holdings`, `market_allocation`, `sector_allocation`,\n`currency_allocation`, `company_contribution`, `sector_contribution`, `market_contribution`,\n`time_period_returns`, `monthly_returns`, `annual_returns`, `daily_summary`.\n\n**Example Request:**\n```json\n{\n  \"start_date\": \"2024-01-01\",\n  \"end_date\": \"2024-11-01\",\n  \"base_currency\": \"USD\",\n  \"benchmark\": \"SPY\",\n  \"initial_value\": 10000,\n  \"portfolio\": [\n    {\"date\": \"2024-01-01\", \"symbol\": \"AAPL\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"MSFT\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"GOOGL\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"AMZN\", \"weight\": 0.25}\n  ],\n  \"fields\": [\"portfolio_summary\", \"performance_metrics\", \"latest_holdings\"]\n}\n```\n\n**Example:**\n```bash\n# Start analysis\ncurl -X POST \"https://api.chicago.global/v1/portfolio/analyze\" \\\n     -H \"Authorization: Bearer key\" \\\n     -d '{\"start_date\":\"2024-01-01\",...}'\n\n# Check status\ncurl \"https://api.chicago.global/v1/jobs/{job_id}\" -H \"Authorization: Bearer key\"\n```\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
+        "description": "Analyze a portfolio with multi-currency support, rebalancing, and comprehensive metrics (ASYNC - returns job_id immediately).\n\nThis endpoint creates a background job for portfolio analysis. Use GET /v1/jobs/{job_id} to check status.\n\n**Response Format:**\n```json\n{\n    \"job_id\": \"uuid-string\",\n    \"status\": \"pending\",\n    \"check_url\": \"/v1/jobs/{job_id}\",\n    \"estimated_duration_seconds\": 90\n}\n```\n\n**Workflow:**\n1. POST /portfolio/analyze -> Get job_id (returns in <1 second)\n2. Poll GET /v1/jobs/{job_id} every 3-5 seconds\n3. When status=\"completed\", result contains full analysis\n\n**Portfolio Analysis Includes:**\n- Performance metrics (returns, Sharpe, Sortino, etc.)\n- Risk metrics (volatility, drawdown, VaR, etc.)\n- Attribution analysis (by security, sector, market, currency)\n- Rolling metrics (30/60/90-day windows)\n- Benchmark comparison\n- Transaction history and rebalancing details\n\n**Portfolio Format:**\n- Each holding requires: date, symbol, and weight (as decimal)\n- Weights should sum to 1.0 for each date\n- Multiple dates can be provided for rebalancing\n\n**Field Selection (Optional):**\nUse the `fields` parameter to return only specific data sections. If omitted, all fields are returned.\n\nAvailable fields: `portfolio_parameters`, `portfolio_input`, `data_quality`, `portfolio_summary`,\n`performance_metrics`, `rolling_metrics`, `drawdown_analysis`, `portfolio_scores`, `concentration_metrics`,\n`transactions`, `company_info`, `latest_holdings`, `market_allocation`, `sector_allocation`,\n`currency_allocation`, `company_contribution`, `sector_contribution`, `market_contribution`,\n`time_period_returns`, `monthly_returns`, `annual_returns`, `daily_summary`.\n\n**Example Request:**\n```json\n{\n  \"start_date\": \"2024-01-01\",\n  \"end_date\": \"2024-11-01\",\n  \"base_currency\": \"USD\",\n  \"benchmark\": \"SPY\",\n  \"initial_value\": 10000,\n  \"portfolio\": [\n    {\"date\": \"2024-01-01\", \"symbol\": \"AAPL\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"MSFT\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"GOOGL\", \"weight\": 0.25},\n    {\"date\": \"2024-01-01\", \"symbol\": \"AMZN\", \"weight\": 0.25}\n  ],\n  \"fields\": [\"portfolio_summary\", \"performance_metrics\", \"latest_holdings\"]\n}\n```\n\n**Example:**\n```bash\n# Start analysis\ncurl -X POST \"https://api.chicago.global/v1/portfolio/analyze\" \\\n     -H \"Authorization: Bearer key\" \\\n     -d '{\"start_date\":\"2024-01-01\",...}'\n\n# Check status\ncurl \"https://api.chicago.global/v1/jobs/{job_id}\" -H \"Authorization: Bearer key\"\n```\n\n**Credits:** 5 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "analyze_portfolio_v1_portfolio_analyze_post",
         "requestBody": {
           "content": {
@@ -3249,7 +3249,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Increment Portfolio",
-        "description": "Extend a tracked portfolio's analytics to yesterday. No request body —\nholdings and params are unchanged. Compute runs as a background job.\n\n**Credits:** Free (0 credits).",
+        "description": "Extend a tracked portfolio's analytics to yesterday. No request body \u2014\nholdings and params are unchanged. Compute runs as a background job.\n\n**Credits:** Free (0 credits).",
         "operationId": "increment_portfolio_v1_portfolio__portfolio_key__increment_post",
         "security": [
           {
@@ -3531,7 +3531,7 @@
           "Portfolio Tracker"
         ],
         "summary": "Get Portfolio Holdings Latest",
-        "description": "Get the latest computed holdings — the portfolio's current\nstate on its most recent computed day, with drifted weights / ending values.\nFor the as-defined definition (all rebalance dates) use /holdings.\n\nDiscriminated status, matching /analytics:\n  - {status: \"ready\", holdings}   when the series is computed\n  - {status: \"not_computed\", holdings: []} (200) when the portfolio exists but\n    its series is empty (a background compute hasn't landed)\n  - 404 only when the portfolio genuinely doesn't exist.\n\n**Credits:** Free (0 credits).",
+        "description": "Get the latest computed holdings \u2014 the portfolio's current\nstate on its most recent computed day, with drifted weights / ending values.\nFor the as-defined definition (all rebalance dates) use /holdings.\n\nDiscriminated status, matching /analytics:\n  - {status: \"ready\", holdings}   when the series is computed\n  - {status: \"not_computed\", holdings: []} (200) when the portfolio exists but\n    its series is empty (a background compute hasn't landed)\n  - 404 only when the portfolio genuinely doesn't exist.\n\n**Credits:** Free (0 credits).",
         "operationId": "get_portfolio_holdings_latest_v1_portfolio__portfolio_key__holdings_latest_get",
         "security": [
           {
@@ -4086,7 +4086,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry Summary",
-        "description": "Quick daily market snapshot — always ~2KB, no large payloads.\n\nReturns: `regime_tag`, `signals`, `metadata`, `raw_tape`, `divergences`\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Quick daily market snapshot \u2014 always ~2KB, no large payloads.\n\nReturns: `regime_tag`, `signals`, `metadata`, `raw_tape`, `divergences`\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_telemetry_summary_v1_telemetry_summary_get",
         "security": [
           {
@@ -4167,7 +4167,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry Baskets",
-        "description": "Thematic basket performance — filtered and sorted slice of all 400 baskets.\n\nDefault response (top 20 by daily, no members): ~8KB.\nFull 400 baskets with members: ~800KB — use `limit=400&include_members=true` explicitly.\n\n**Basket fields:** name, basket_id, market, quadrant, daily, wtd, mtd, ytd,\nscores, n_stocks, momentum_1m, momentum_6m, daily_zscore, is_priced_in,\nconfirmed_in, n_confirmed_markets. Members added when `include_members=true`.\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Thematic basket performance \u2014 filtered and sorted slice of all 400 baskets.\n\nDefault response (top 20 by daily, no members): ~8KB.\nFull 400 baskets with members: ~800KB \u2014 use `limit=400&include_members=true` explicitly.\n\n**Basket fields:** name, basket_id, market, quadrant, daily, wtd, mtd, ytd,\nscores, n_stocks, momentum_1m, momentum_6m, daily_zscore, is_priced_in,\nconfirmed_in, n_confirmed_markets. Members added when `include_members=true`.\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_telemetry_baskets_v1_telemetry_baskets_get",
         "security": [
           {
@@ -4322,7 +4322,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry Basket Detail",
-        "description": "Single basket detail including member stock list (~1.1KB).\n\nResolve `basket_id` from `GET /telemetry/baskets` first.\n\n**Chain pattern:** summary → baskets list → basket detail (members)\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Single basket detail including member stock list (~1.1KB).\n\nResolve `basket_id` from `GET /telemetry/baskets` first.\n\n**Chain pattern:** summary \u2192 baskets list \u2192 basket detail (members)\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_telemetry_basket_detail_v1_telemetry_baskets__basket_id__get",
         "security": [
           {
@@ -4412,7 +4412,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry Macro",
-        "description": "Macro lens — per-market breakdown with aggregate stats, top/bottom baskets, distributions.\n\n- **No `market` param** → all 38 markets (~43.5KB). Each market has: aggregate_daily/wtd/mtd/ytd,\n  n_baskets, size_tier, total_market_cap_usd, top/bottom performers per period, return distribution.\n- **`market=GB`** → full detail for one country (~1.1KB).\n\nAlso returns `regime_tag` and `signals` for context.\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Macro lens \u2014 per-market breakdown with aggregate stats, top/bottom baskets, distributions.\n\n- **No `market` param** \u2192 all 38 markets (~43.5KB). Each market has: aggregate_daily/wtd/mtd/ytd,\n  n_baskets, size_tier, total_market_cap_usd, top/bottom performers per period, return distribution.\n- **`market=GB`** \u2192 full detail for one country (~1.1KB).\n\nAlso returns `regime_tag` and `signals` for context.\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_telemetry_macro_v1_telemetry_macro_get",
         "security": [
           {
@@ -4511,7 +4511,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry Factor",
-        "description": "Factor lens — momentum, value, quality, size, defensive, tactical factor performance.\n\n**Default (~2.2KB):** `factors`, `commentary`, `split_methods`\n\n**Opt-in large fields:**\n- `portfolios` (~107KB total, ~2–3KB with `market=US`)\n- `timeseries` (~592KB) — explicit opt-in only\n- `correlations` (~767KB) — explicit opt-in only\n\n`commentary` sub-keys: `regime`, `dominant_factor`, `headline`, `paragraphs`, `model`, `generated_at`\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Factor lens \u2014 momentum, value, quality, size, defensive, tactical factor performance.\n\n**Default (~2.2KB):** `factors`, `commentary`, `split_methods`\n\n**Opt-in large fields:**\n- `portfolios` (~107KB total, ~2\u20133KB with `market=US`)\n- `timeseries` (~592KB) \u2014 explicit opt-in only\n- `correlations` (~767KB) \u2014 explicit opt-in only\n\n`commentary` sub-keys: `regime`, `dominant_factor`, `headline`, `paragraphs`, `model`, `generated_at`\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_telemetry_factor_v1_telemetry_factor_get",
         "security": [
           {
@@ -4631,7 +4631,7 @@
           "Telemetry"
         ],
         "summary": "Get Telemetry",
-        "description": "Get daily market telemetry for a given report date (legacy field-selection endpoint).\n\n**Prefer the focused sub-endpoints:**\n- `GET /telemetry/summary` — regime, signals, divergences (~2KB)\n- `GET /telemetry/baskets` — thematic baskets with filters\n- `GET /telemetry/macro` — per-market macro breakdown\n- `GET /telemetry/factor` — factor lens\n\n**Default fields** (~60KB): `regime_tag`, `raw_tape`, `metadata`, `signals`, `markets`, `commentary`, `divergences`\n\n**Large fields** (opt-in): `baskets` (~800KB), `factor_view` (~1.47MB)\n\n**Dot notation for commentary sub-fields:**\n`commentary.headline`, `commentary.mechanism`, `commentary.paragraphs`,\n`commentary.narrative_text`, `commentary.market_notes`, `commentary.model`,\n`commentary.generated_at`, `commentary.compliance_violations`\n\n**Dot notation for factor_view sub-fields:**\n`factor_view.factors`, `factor_view.commentary`, `factor_view.split_methods`,\n`factor_view.portfolios` (~107KB), `factor_view.timeseries` (~592KB), `factor_view.correlations` (~767KB)\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
+        "description": "Get daily market telemetry for a given report date (legacy field-selection endpoint).\n\n**Prefer the focused sub-endpoints:**\n- `GET /telemetry/summary` \u2014 regime, signals, divergences (~2KB)\n- `GET /telemetry/baskets` \u2014 thematic baskets with filters\n- `GET /telemetry/macro` \u2014 per-market macro breakdown\n- `GET /telemetry/factor` \u2014 factor lens\n\n**Default fields** (~60KB): `regime_tag`, `raw_tape`, `metadata`, `signals`, `markets`, `commentary`, `divergences`\n\n**Large fields** (opt-in): `baskets` (~800KB), `factor_view` (~1.47MB)\n\n**Dot notation for commentary sub-fields:**\n`commentary.headline`, `commentary.mechanism`, `commentary.paragraphs`,\n`commentary.narrative_text`, `commentary.market_notes`, `commentary.model`,\n`commentary.generated_at`, `commentary.compliance_violations`\n\n**Dot notation for factor_view sub-fields:**\n`factor_view.factors`, `factor_view.commentary`, `factor_view.split_methods`,\n`factor_view.portfolios` (~107KB), `factor_view.timeseries` (~592KB), `factor_view.correlations` (~767KB)\n\n**Credits:** 0.05 credits per call. Deducted after a successful HTTP response. HTTP errors do not deduct credits.",
         "operationId": "get_telemetry_v1_telemetry_get",
         "security": [
           {
@@ -5512,11 +5512,11 @@
               "type": "integer",
               "maximum": 5,
               "minimum": 1,
-              "description": "Forecast horizon — accepted for backward compat, ignored (source refreshes daily).",
+              "description": "Forecast horizon \u2014 accepted for backward compat, ignored (source refreshes daily).",
               "default": 1,
               "title": "Horizon"
             },
-            "description": "Forecast horizon — accepted for backward compat, ignored (source refreshes daily)."
+            "description": "Forecast horizon \u2014 accepted for backward compat, ignored (source refreshes daily)."
           },
           {
             "name": "refresh",
@@ -5524,11 +5524,11 @@
             "required": false,
             "schema": {
               "type": "boolean",
-              "description": "Accepted for backward compat, ignored — the source refreshes daily upstream.",
+              "description": "Accepted for backward compat, ignored \u2014 the source refreshes daily upstream.",
               "default": false,
               "title": "Refresh"
             },
-            "description": "Accepted for backward compat, ignored — the source refreshes daily upstream."
+            "description": "Accepted for backward compat, ignored \u2014 the source refreshes daily upstream."
           }
         ],
         "responses": {
@@ -5650,7 +5650,7 @@
           "ETF Reports"
         ],
         "summary": "Etf Report",
-        "description": "Generate an ETF research report (ASYNC - returns job_id immediately). Poll GET /v1/jobs/{job_id}; when status=\"completed\" the result carries pdf_url, html_url and json_url. Reports contain no recommendation labels, for any organization.\n\n**Workflow:**\n1. POST /etf-report → job_id (returns in <1s)\n2. Poll GET /v1/jobs/{job_id}\n3. status=\"completed\" → result has pdf_url / html_url / json_url\n\n**Credits:** 10 credits per job. Charged when the job completes successfully. Polling is free.",
+        "description": "Generate an ETF research report (ASYNC - returns job_id immediately). Poll GET /v1/jobs/{job_id}; when status=\"completed\" the result carries pdf_url, html_url and json_url. Reports contain no recommendation labels, for any organization.\n\n**Workflow:**\n1. POST /etf-report \u2192 job_id (returns in <1s)\n2. Poll GET /v1/jobs/{job_id}\n3. status=\"completed\" \u2192 result has pdf_url / html_url / json_url\n\n**Credits:** 10 credits per job. Charged when the job completes successfully. Polling is free.",
         "operationId": "etf_report_v1_etf_report_post",
         "requestBody": {
           "content": {
@@ -5710,6 +5710,1127 @@
             "HTTPBearer": []
           }
         ]
+      }
+    },
+    "/v1/analyst-recommendations": {
+      "get": {
+        "tags": [
+          "v1",
+          "Analyst Data"
+        ],
+        "summary": "Analyst Recommendations",
+        "description": "Get analyst recommendations; requires recommendation access.",
+        "operationId": "analyst_recommendations_v1_analyst_recommendations_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Stock symbol(s). Single or comma-separated",
+              "examples": [
+                "AAPL",
+                "AAPL,MSFT,GOOG"
+              ],
+              "title": "Symbol"
+            },
+            "description": "Stock symbol(s). Single or comma-separated"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "The organization is not KYC-verified",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/v1/earnings-estimate": {
+      "get": {
+        "tags": [
+          "v1",
+          "Analyst Data"
+        ],
+        "summary": "Earnings Estimate",
+        "description": "Get earnings estimates for a symbol.",
+        "operationId": "earnings_estimate_v1_earnings_estimate_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Stock symbol(s). Single or comma-separated",
+              "examples": [
+                "AAPL",
+                "AAPL,MSFT,GOOG"
+              ],
+              "title": "Symbol"
+            },
+            "description": "Stock symbol(s). Single or comma-separated"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/v1/earnings-history": {
+      "get": {
+        "tags": [
+          "v1",
+          "Analyst Data"
+        ],
+        "summary": "Earnings History",
+        "description": "Get earnings history for a symbol.",
+        "operationId": "earnings_history_v1_earnings_history_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Stock symbol(s). Single or comma-separated",
+              "examples": [
+                "AAPL",
+                "AAPL,MSFT,GOOG"
+              ],
+              "title": "Symbol"
+            },
+            "description": "Stock symbol(s). Single or comma-separated"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/v1/eps-revisions": {
+      "get": {
+        "tags": [
+          "v1",
+          "Analyst Data"
+        ],
+        "summary": "Eps Revisions",
+        "description": "Get EPS revisions for a symbol.",
+        "operationId": "eps_revisions_v1_eps_revisions_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Stock symbol(s). Single or comma-separated",
+              "examples": [
+                "AAPL",
+                "AAPL,MSFT,GOOG"
+              ],
+              "title": "Symbol"
+            },
+            "description": "Stock symbol(s). Single or comma-separated"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/v1/eps-trend": {
+      "get": {
+        "tags": [
+          "v1",
+          "Analyst Data"
+        ],
+        "summary": "Eps Trend",
+        "description": "Get EPS trend for a symbol.",
+        "operationId": "eps_trend_v1_eps_trend_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Stock symbol(s). Single or comma-separated",
+              "examples": [
+                "AAPL",
+                "AAPL,MSFT,GOOG"
+              ],
+              "title": "Symbol"
+            },
+            "description": "Stock symbol(s). Single or comma-separated"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/v1/portfolio/risk": {
+      "post": {
+        "tags": [
+          "v1",
+          "Portfolio"
+        ],
+        "summary": "Portfolio Risk",
+        "description": "Full instantaneous single-currency repricing from supplied vanilla inputs (synchronous). Always includes a zero-shock baseline. Supplied scenarios report full model P&L and measured spot-only delta-gamma residuals, never guaranteed bounds. No live data, historical performance, FX, cash dividends or expiry settlement.",
+        "operationId": "portfolio_risk_v1_portfolio_risk_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "valuation_date",
+                  "currency",
+                  "nav",
+                  "positions"
+                ],
+                "properties": {
+                  "valuation_date": {
+                    "type": "string",
+                    "format": "date",
+                    "title": "Valuation Date"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{3}$",
+                    "title": "Currency"
+                  },
+                  "nav": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "title": "Nav"
+                  },
+                  "positions": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "title": "Positions",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "asset_type",
+                        "underlying",
+                        "quantity",
+                        "spot",
+                        "currency"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128
+                        },
+                        "asset_type": {
+                          "type": "string",
+                          "enum": [
+                            "stock",
+                            "etf",
+                            "option"
+                          ]
+                        },
+                        "underlying": {
+                          "type": "string"
+                        },
+                        "quantity": {
+                          "type": "number"
+                        },
+                        "spot": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "currency": {
+                          "type": "string",
+                          "pattern": "^[A-Z]{3}$"
+                        },
+                        "option": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "option_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "call",
+                                    "put"
+                                  ]
+                                },
+                                "option_style": {
+                                  "type": "string",
+                                  "enum": [
+                                    "european",
+                                    "american"
+                                  ]
+                                },
+                                "strike": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0
+                                },
+                                "expiration": {
+                                  "type": "string",
+                                  "format": "date"
+                                },
+                                "implied_vol": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0
+                                },
+                                "risk_free_rate": {
+                                  "type": "number"
+                                },
+                                "dividend_yield": {
+                                  "type": "number"
+                                },
+                                "contract_size": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 100000
+                                },
+                                "settlement_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "am",
+                                    "pm"
+                                  ]
+                                },
+                                "underlying_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "equity",
+                                    "index",
+                                    "etf"
+                                  ]
+                                },
+                                "payoff_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "vanilla"
+                                  ]
+                                },
+                                "deliverable_type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "standard"
+                                  ]
+                                },
+                                "dividend_model": {
+                                  "type": "string",
+                                  "enum": [
+                                    "continuous_yield"
+                                  ]
+                                },
+                                "price_unit": {
+                                  "type": "string",
+                                  "enum": [
+                                    "per_underlying_unit"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "option_type",
+                                "option_style",
+                                "strike",
+                                "expiration",
+                                "implied_vol",
+                                "risk_free_rate",
+                                "dividend_yield",
+                                "contract_size",
+                                "settlement_type",
+                                "underlying_type",
+                                "payoff_type",
+                                "deliverable_type",
+                                "dividend_model",
+                                "price_unit"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "default": null
+                        }
+                      }
+                    }
+                  },
+                  "scenarios": {
+                    "type": "array",
+                    "maxItems": 20,
+                    "default": [],
+                    "title": "Scenarios",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128
+                        },
+                        "spot_shocks": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "number"
+                          },
+                          "maxProperties": 100,
+                          "default": {}
+                        },
+                        "vol_shocks": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "number"
+                          },
+                          "maxProperties": 100,
+                          "default": {}
+                        }
+                      }
+                    }
+                  }
+                },
+                "title": "PortfolioRiskRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "invalid_pricing_inputs or pricing_unresolved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "pricing_unavailable \u2014 option pricing unavailable"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/v1/portfolio/theme-exposure": {
+      "post": {
+        "tags": [
+          "v1",
+          "Portfolio"
+        ],
+        "summary": "Portfolio Theme Exposure",
+        "description": "Decompose a portfolio across the telemetry theme baskets (ASYNC \u2014 returns job_id). Poll GET /v1/jobs/{job_id} for the result.",
+        "operationId": "portfolio_theme_exposure_v1_portfolio_theme_exposure_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "holdings"
+                ],
+                "properties": {
+                  "holdings": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "description": "Up to 100 positions.",
+                    "title": "Holdings",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "symbol",
+                        "weight"
+                      ],
+                      "properties": {
+                        "symbol": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 24,
+                          "description": "RIC of the position, e.g. AAPL.O, JPM.N, SPY.P, 0700.HK, PTT.BK. Symbols are taken as sent, with no ticker resolution: a symbol that is not a known RIC is reported in the result as unresolved weight, never guessed. Resolve tickers to RICs first: for stocks, GET /v1/stock/search or GET /v1/validate-symbol; for ETFs, GET /v1/etf/search or GET /v1/etf/validate."
+                        },
+                        "weight": {
+                          "type": "number",
+                          "description": "Portfolio fraction in the base currency. Weights need not sum to 1 and may be negative for short positions; non-finite values are rejected."
+                        }
+                      }
+                    }
+                  },
+                  "themes": {
+                    "type": "array",
+                    "maxItems": 10,
+                    "default": [],
+                    "description": "Optional theme questions ('how exposed am I to X?'). Each entry is a basket_id or a theme-name substring; the result gains a theme_queries[] block with the member-inclusive exposure (every held member of the theme, overlap disclosed) next to the assigned view. An ambiguous name returns candidates, never a guess.",
+                    "title": "Themes",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "title": "ThemeExposureRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job created",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "None of the supplied symbols resolve to a known RIC"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Theme-exposure worker at capacity (Retry-After: 2)"
+          },
+          "500": {
+            "description": "Failed to create job"
+          }
+        }
+      }
+    },
+    "/v1/revenue-estimate": {
+      "get": {
+        "tags": [
+          "v1",
+          "Analyst Data"
+        ],
+        "summary": "Revenue Estimate",
+        "description": "Get revenue estimates for a symbol.",
+        "operationId": "revenue_estimate_v1_revenue_estimate_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Stock symbol(s). Single or comma-separated",
+              "examples": [
+                "AAPL",
+                "AAPL,MSFT,GOOG"
+              ],
+              "title": "Symbol"
+            },
+            "description": "Stock symbol(s). Single or comma-separated"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/v1/target-summary": {
+      "get": {
+        "tags": [
+          "v1",
+          "Analyst Data"
+        ],
+        "summary": "Target Summary",
+        "description": "Get an analyst target price range for a symbol.",
+        "operationId": "target_summary_v1_target_summary_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Stock symbol(s). Single or comma-separated",
+              "examples": [
+                "AAPL",
+                "AAPL,MSFT,GOOG"
+              ],
+              "title": "Symbol"
+            },
+            "description": "Stock symbol(s). Single or comma-separated"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/v1/telemetry/baskets/{basket_id}/members": {
+      "get": {
+        "tags": [
+          "v1",
+          "Telemetry Radar"
+        ],
+        "summary": "Get Basket Members",
+        "description": "Every member of a telemetry basket (the daily telemetry lists only 10), most representative first, with each stock's cohesion and factor scores, plus the basket's telemetry context for the report date.",
+        "operationId": "get_basket_members_v1_telemetry_baskets__basket_id__members_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "basket_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Basket Id"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Telemetry report date (YYYY-MM-DD) for basket context. Defaults to latest.",
+              "title": "Date"
+            },
+            "description": "Telemetry report date (YYYY-MM-DD) for basket context. Defaults to latest."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Basket is not an active telemetry basket"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/v1/telemetry/changes": {
+      "get": {
+        "tags": [
+          "v1",
+          "Telemetry Radar"
+        ],
+        "summary": "Get Telemetry Changes",
+        "description": "What changed in the telemetry baskets over the last `days`: quadrant changes, new divergences (fatigue / rebound), themes confirmed in more markets, and moves of 3+ standard deviations. Built from the daily signal log: from 2026-09-25 it holds each day's signals as recorded that day (no hindsight); earlier dates come from a later backfill. Each event carries the basket's current state for context.",
+        "operationId": "get_telemetry_changes_v1_telemetry_changes_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 90,
+              "minimum": 1,
+              "description": "Look back this many calendar days from the latest report (1-90).",
+              "default": 7,
+              "title": "Days"
+            },
+            "description": "Look back this many calendar days from the latest report (1-90)."
+          },
+          {
+            "name": "market",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Market code or country name to narrow to, e.g. JP or Japan.",
+              "title": "Market"
+            },
+            "description": "Market code or country name to narrow to, e.g. JP or Japan."
+          },
+          {
+            "name": "types",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Event types to include (repeatable): quadrant_change, divergence, theme_spreading, big_move. Default all.",
+              "title": "Types"
+            },
+            "description": "Event types to include (repeatable): quadrant_change, divergence, theme_spreading, big_move. Default all."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 500,
+              "minimum": 1,
+              "description": "Maximum events returned, newest first (max 500).",
+              "default": 50,
+              "title": "Limit"
+            },
+            "description": "Maximum events returned, newest first (max 500)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Unknown event type in `types`"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/v1/telemetry/stock-basket": {
+      "get": {
+        "tags": [
+          "v1",
+          "Telemetry Radar"
+        ],
+        "summary": "Get Stock Basket",
+        "description": "Find the telemetry basket a stock belongs to \u2014 for any stock in a basket, not just the 10 listed in the daily telemetry. Each match returns the stock's cohesion with its basket, its factor scores, its rank by total score inside the basket, and the basket's telemetry context (returns, momentum, quadrant, scores, confirmed_in) for the report date. A plain ticker can match several listings; each is returned (up to 3).",
+        "operationId": "get_stock_basket_v1_telemetry_stock_basket_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbols",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Ticker, RIC or company name, e.g. AAPL, NVDA.O, Toyota. Repeat for several (max 10).",
+              "title": "Symbols"
+            },
+            "description": "Ticker, RIC or company name, e.g. AAPL, NVDA.O, Toyota. Repeat for several (max 10)."
+          },
+          {
+            "name": "include_members",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "Also return every member of each matched basket.",
+              "default": false,
+              "title": "Include Members"
+            },
+            "description": "Also return every member of each matched basket."
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Telemetry report date (YYYY-MM-DD) for basket returns. Defaults to latest.",
+              "title": "Date"
+            },
+            "description": "Telemetry report date (YYYY-MM-DD) for basket returns. Defaults to latest."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "No symbols provided, or more than 10 symbols"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/v1/upgrades-downgrades": {
+      "get": {
+        "tags": [
+          "v1",
+          "Analyst Data"
+        ],
+        "summary": "Upgrades Downgrades",
+        "description": "Get analyst rating changes; requires recommendation access.",
+        "operationId": "upgrades_downgrades_v1_upgrades_downgrades_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Stock symbol(s). Single or comma-separated",
+              "examples": [
+                "AAPL",
+                "AAPL,MSFT,GOOG"
+              ],
+              "title": "Symbol"
+            },
+            "description": "Stock symbol(s). Single or comma-separated"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "The organization is not KYC-verified",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
       }
     }
   },
@@ -5821,7 +6942,7 @@
               }
             ],
             "title": "Region",
-            "description": "Geographic region filter — a single region or a list of them, which UNION together. Takes precedence over `markets` if both are set. Valid: Europe, Asia, Southeast Asia, South Asia, East Asia, Americas, Middle East, Oceania."
+            "description": "Geographic region filter \u2014 a single region or a list of them, which UNION together. Takes precedence over `markets` if both are set. Valid: Europe, Asia, Southeast Asia, South Asia, East Asia, Americas, Middle East, Oceania."
           },
           "sectors": {
             "anyOf": [
@@ -6094,23 +7215,6 @@
         "type": "object",
         "title": "CIOReportRequest",
         "description": "CIO report request. Raw requests require portfolio, start_date, and end_date. Snapshot requests require enabled snapshot support and USD base currency. Supply either a report_snapshot or raw portfolio inputs."
-      },
-      "DbQueryRequest": {
-        "properties": {
-          "sql_query": {
-            "type": "string",
-            "maxLength": 20000,
-            "minLength": 1,
-            "title": "Sql Query",
-            "description": "Read-only SQL query to execute against Snowflake."
-          }
-        },
-        "type": "object",
-        "required": [
-          "sql_query"
-        ],
-        "title": "DbQueryRequest",
-        "description": "Request payload for database SQL execution."
       },
       "ErrorResponse": {
         "properties": {
@@ -6558,7 +7662,7 @@
         },
         "type": "object",
         "title": "UpdatePortfolioRequest",
-        "description": "Request model for updating a tracked portfolio.\n\nAll fields are optional — send only what you want to change. If `portfolio`\nis provided, holdings are fully replaced. Analytics are recomputed in the\nbackground up to the latest trading day; extending the series through a\nspecific date without changing definition is /increment's job."
+        "description": "Request model for updating a tracked portfolio.\n\nAll fields are optional \u2014 send only what you want to change. If `portfolio`\nis provided, holdings are fully replaced. Analytics are recomputed in the\nbackground up to the latest trading day; extending the series through a\nspecific date without changing definition is /increment's job."
       },
       "ValidationError": {
         "properties": {
@@ -6755,6 +7859,56 @@
         ],
         "title": "CIOReportPortfolioHolding",
         "description": "One target-weight row accepted by raw CIO report generation."
+      },
+      "ProblemDetail": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "status": {
+            "type": "integer",
+            "title": "Status"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "required_entitlement": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Required Entitlement"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "title",
+          "status",
+          "detail",
+          "code",
+          "request_id"
+        ],
+        "title": "ProblemDetail",
+        "description": "RFC 9457 error contract used by authorization policy failures."
       }
     },
     "securitySchemes": {

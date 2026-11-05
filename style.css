@@ -1,0 +1,2 @@
+/* Parallax lockup is stacked (600x450); default nav-logo height is 16px. Enlarge to fit the 48px navbar. */
+.nav-logo { height: 2.5rem; }
