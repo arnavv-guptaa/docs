@@ -1,0 +1,36 @@
+---
+title: 'Earnings Estimate'
+openapi: 'GET /v1/earnings-estimate'
+---
+
+Get consensus EPS estimates for a symbol across the current and next fiscal quarter and year.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | Stock symbol (e.g., `AAPL`, `MSFT`) |
+
+## Response
+
+Returns a dictionary keyed by field name, with each field itself a dictionary keyed by forecast period (`0q` current quarter, `+1q` next quarter, `0y` current fiscal year, `+1y` next fiscal year):
+
+```json
+{
+  "avg": { "0q": 1.65, "+1q": 1.82, "0y": 7.1, "+1y": 7.9 },
+  "low": { "0q": 1.55, "+1q": 1.7, "0y": 6.85, "+1y": 7.5 },
+  "high": { "0q": 1.75, "+1q": 1.95, "0y": 7.3, "+1y": 8.3 },
+  "yearAgoEps": { "0q": 1.5, "+1q": 1.6, "0y": 6.6, "+1y": 7.1 },
+  "numberOfAnalysts": { "0q": 22, "+1q": 20, "0y": 28, "+1y": 25 },
+  "growth": { "0q": 0.1, "+1q": 0.1375, "0y": 0.0758, "+1y": 0.1127 }
+}
+```
+
+Missing or non-finite provider values come back as `null` rather than `NaN`. Returns `null` when no estimate data is found for the symbol.
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/earnings-estimate?symbol=AAPL" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

@@ -1,0 +1,144 @@
+---
+title: 'Portfolio Risk'
+openapi: 'POST /v1/portfolio/risk'
+---
+
+Full instantaneous, single-currency repricing of a portfolio of supplied
+vanilla positions (stocks, ETFs, and European or American options), from
+caller-supplied spot and implied-vol inputs. **Synchronous** — no job ID.
+
+<Warning>
+This never substitutes option deltas into historical returns, and uses no
+live market data. Every price and Greek comes from what you send in the
+request. A `baseline` scenario (no shocks) is always included alongside any
+scenarios you supply.
+</Warning>
+
+## Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `valuation_date` | string (date) | Yes | As-of date for the repricing. |
+| `currency` | string | Yes | 3-letter currency code. Must match every position's `currency`. |
+| `nav` | number | Yes | Portfolio NAV, must be positive. |
+| `positions` | array of `Holding` | Yes | 1–100 positions. Position `id` values must be unique. |
+| `scenarios` | array of `Scenario` | No | 0–20 scenarios. IDs must be unique and not `baseline` (reserved). |
+
+**`Holding` object:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Caller-assigned position identifier, unique within the request. |
+| `asset_type` | string | Yes | `stock`, `etf`, or `option`. |
+| `underlying` | string | Yes | RIC of the underlying. |
+| `quantity` | number | Yes | Signed position size. Integer-valued for options. |
+| `spot` | number | Yes | Spot price, must be positive. Positions sharing an `underlying` must share the same `spot`. |
+| `currency` | string | Yes | 3-letter code, must match the request's `currency`. |
+| `option` | `Contract` object | Required only when `asset_type` is `option` | Option terms (see below). |
+
+**`Contract` object** (option terms). Every field below is required whenever
+`option` is present; there are no optional or defaulted fields in this object:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `option_type` | string | `call` or `put`. |
+| `option_style` | string | `european` or `american`. |
+| `strike` | number | Positive. |
+| `expiration` | string (date) | Must be after `valuation_date`. |
+| `implied_vol` | number | Positive. |
+| `risk_free_rate` | number | |
+| `dividend_yield` | number | |
+| `contract_size` | integer | 1–100,000. |
+| `settlement_type` | string | `am` or `pm`. |
+| `underlying_type` | string | `equity`, `index`, or `etf`. |
+| `payoff_type` | string | `vanilla` (only value accepted). |
+| `deliverable_type` | string | `standard` (only value accepted). |
+| `dividend_model` | string | `continuous_yield` (only value accepted). |
+| `price_unit` | string | `per_underlying_unit` (only value accepted). |
+
+**`Scenario` object:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Unique, not `baseline`. |
+| `spot_shocks` | object | No | Map of underlying RIC to fractional spot shock (must exceed `-1`). Up to 100 entries. |
+| `vol_shocks` | object | No | Map of underlying RIC to additive implied-vol shock. Up to 100 entries. |
+
+<Note>
+Request-size caps: positions × (scenarios + 1) ≤ 500 position-scenarios, and
+American-style option valuations ≤ 40 across the request (scaled by
+scenario count). A scenario naming an underlying not in `positions` is
+rejected.
+</Note>
+
+## Response
+
+Every position, in every scenario, carries `base_greeks` and `position_risk`,
+whether it's a stock, ETF, or option. If no position has `asset_type: "option"`,
+these are computed directly (exact stock arithmetic) and come out trivial
+for stocks and ETFs (delta 1, all other Greeks 0, as in the example below).
+With any option position, every position in the request is priced through
+the same options-pricing path instead, so Greeks stay additive across the
+book.
+
+```json
+{
+  "schema_version": 1,
+  "valuation_date": "2026-11-04",
+  "currency": "USD",
+  "nav": 1000000,
+  "assumptions": [
+    "instantaneous",
+    "single_currency_no_fx_conversion",
+    "whole_day_actual_365",
+    "continuous_dividend_yield",
+    "flat_rates",
+    "fixed_strike_additive_volatility",
+    "model_to_model_pnl",
+    "no_constituent_lookthrough"
+  ],
+  "market_status": "not_checked",
+  "underlying_exposures": [
+    { "underlying": "AAPL.O", "delta_equivalent_units": 500, "dollar_delta": 95000, "delta_weight": 0.095 }
+  ],
+  "scenarios": [
+    {
+      "id": "baseline",
+      "total_pnl": 0,
+      "pnl_fraction_nav": 0,
+      "delta_gamma_pnl": 0,
+      "approximation_residual": 0,
+      "approximation_status": "measured_spot_only_residual_not_bound",
+      "positions": [
+        {
+          "position_id": "pos-1",
+          "underlying": "AAPL.O",
+          "asset_type": "stock",
+          "quantity": 500,
+          "multiplier": 1,
+          "base_price": 190,
+          "base_greeks": { "delta": 1, "gamma": 0, "vega": 0, "theta": 0, "rho": 0 },
+          "position_risk": { "delta_equivalent_units": 500, "dollar_delta": 95000, "gamma_per_price_unit_squared": 0, "vega_per_vol_point": 0, "theta_per_calendar_day": 0, "rho_per_rate_point": 0 },
+          "scenario_price": 190,
+          "pnl": 0,
+          "delta_gamma_pnl": 0
+        }
+      ]
+    }
+  ],
+  "input_source": "caller_supplied_unverified",
+  "positions": [ { "id": "pos-1", "asset_type": "stock", "underlying": "AAPL.O", "quantity": 500, "spot": 190, "currency": "USD", "option": null } ]
+}
+```
+
+With an option position, each scenario's `positions[]` row also carries
+`contract_eligibility` and `pricing_diagnostics`; see the response example
+for exact field presence, which varies by position.
+
+## Errors
+
+| Status | Code | When |
+|--------|------|------|
+| `422` | `invalid_pricing_inputs` | Request fails pricing validation. |
+| `422` | `pricing_unresolved` | A price could not be resolved; `pricing_diagnostics` explains why. |
+| `503` | `pricing_unavailable` | Option pricing is unavailable (option positions only; stock-only requests are unaffected). |

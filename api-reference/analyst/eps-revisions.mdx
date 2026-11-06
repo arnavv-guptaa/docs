@@ -1,0 +1,34 @@
+---
+title: 'EPS Revisions'
+openapi: 'GET /v1/eps-revisions'
+---
+
+Get the count of analyst EPS estimate revisions (up and down) over the last 7 and 30 days, by forecast period.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | Stock symbol (e.g., `AAPL`, `MSFT`) |
+
+## Response
+
+Returns a dictionary keyed by field name, with each field itself a dictionary keyed by forecast period (`0q` current quarter, `+1q` next quarter, `0y` current fiscal year, `+1y` next fiscal year):
+
+```json
+{
+  "upLast7days": { "0q": 2, "+1q": 1, "0y": 3, "+1y": 1 },
+  "upLast30days": { "0q": 5, "+1q": 4, "0y": 6, "+1y": 3 },
+  "downLast7days": { "0q": 0, "+1q": 1, "0y": 0, "+1y": 0 },
+  "downLast30days": { "0q": 1, "+1q": 2, "0y": 1, "+1y": 2 }
+}
+```
+
+Returns `null` when no revision data is found for the symbol.
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/eps-revisions?symbol=AAPL" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

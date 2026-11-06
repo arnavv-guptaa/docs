@@ -17,7 +17,7 @@ All API requests should be made to:
 https://api.chicago.global
 ```
 
-The current API version is **v1.1.0**. The URL path version (`/v1/`) is a separate,
+The current API version is **v2.0.0**. The URL path version (`/v1/`) is a separate,
 slower-moving axis — see the [changelog](https://github.com/arnavv-guptaa/parallax-api/blob/main/CHANGELOG.md)
 for the release history and our SemVer policy.
 
@@ -51,9 +51,10 @@ e.g. `AAPL.O` (Apple, Nasdaq), `JPM.N` (JPMorgan, NYSE), `RELI.NS` (Reliance, NS
 
 ## Async job processing
 
-Long-running endpoints (portfolio analysis, stock reports, technical/financial/news
-analysis, CIO reports, assessments, company background, macro context) use an async
-job pattern:
+Long-running endpoints (portfolio analysis, portfolio reports, stock reports, ETF reports,
+technical/financial/news analysis, CIO reports, assessments, company background, macro
+context, portfolio builder, peer analysis, score analysis, and portfolio theme exposure)
+use an async job pattern:
 
 1. **Submit** — `POST` your request to the endpoint.
 2. **Receive a job** — you get a `job_id` (and a polling URL) immediately.
@@ -109,9 +110,11 @@ costs `0.1` credits.
 | News, peers, rolling volatility and drawdown, historical scores, score metrics, returns calendar, sector scores, Altman Z-Score, Piotroski F-Score, risk-return profile, DCF, multiples | 0.1 per call |
 | ETF profile, scores, holdings, and other ETF analytics | 0.1 per call |
 | ETF daily price | 0.05 per symbol |
-| Telemetry endpoints | 0.05 per call |
+| Telemetry endpoints, including the newer telemetry-radar endpoints (changes, stock-basket, basket members) | 0.05 per call |
 | Stock and ETF search, symbol validation, job listing and polling, macro-report markets | Free |
 | Portfolio analysis, portfolio report, Builder, financial, technical, score, news, and peers analysis, company background, macro context | 5 per job |
+| Portfolio theme exposure | 1 per job |
+| Portfolio risk (synchronous, not a job) | 5 per call |
 | Stock report, ETF report, CIO report | 10 per job |
 | Assessment | 5 for `fast` or `default`; 10 for `deep` |
 | Macro report | 5 per call |
@@ -167,7 +170,7 @@ The [health check](/api-reference/health) reports `healthy` or `unhealthy`.
 | 422 | Validation error — check the request body |
 | 429 | Rate limit exceeded — slow down and retry |
 | 500 | Server error — includes an `X-Request-ID` you can report |
-| 503 | Service or data unavailable; data age alone does not cause this response |
+| 503 | Service, data, or auth-provider unavailable; data age alone does not cause this response |
 
 ## Rate limits
 

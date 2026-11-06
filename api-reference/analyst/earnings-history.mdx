@@ -1,0 +1,54 @@
+---
+title: 'Earnings History'
+openapi: 'GET /v1/earnings-history'
+---
+
+Get a symbol's history of reported EPS versus consensus estimate, by earnings date.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | Stock symbol (e.g., `AAPL`, `MSFT`) |
+
+## Response
+
+Returns a dictionary keyed by field name, with each field itself a dictionary keyed by earnings report date (`YYYY-MM-DD`):
+
+```json
+{
+  "epsActual": {
+    "2025-08-01": 1.64,
+    "2025-10-31": 1.85,
+    "2026-02-05": 2.4,
+    "2026-05-01": 1.65
+  },
+  "epsEstimate": {
+    "2025-08-01": 1.6,
+    "2025-10-31": 1.76,
+    "2026-02-05": 2.35,
+    "2026-05-01": 1.62
+  },
+  "epsDifference": {
+    "2025-08-01": 0.04,
+    "2025-10-31": 0.09,
+    "2026-02-05": 0.05,
+    "2026-05-01": 0.03
+  },
+  "surprisePercent": {
+    "2025-08-01": 2.5,
+    "2025-10-31": 5.11,
+    "2026-02-05": 2.13,
+    "2026-05-01": 1.85
+  }
+}
+```
+
+Returns `null` when no earnings history is found for the symbol.
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/earnings-history?symbol=AAPL" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

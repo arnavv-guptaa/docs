@@ -1,0 +1,41 @@
+---
+title: 'Analyst Recommendations'
+openapi: 'GET /v1/analyst-recommendations'
+---
+
+Get the current analyst recommendation summary (strong buy / buy / hold / sell / strong sell counts by period) for a symbol. Requires an organization with recommendation access.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | Stock symbol (e.g., `AAPL`, `MSFT`) |
+
+## Response
+
+Returns a dictionary keyed by field name, with each field itself a dictionary of period index to value (a positional index, not a fixed label):
+
+```json
+{
+  "period": {
+    "0": "0m",
+    "1": "-1m",
+    "2": "-2m",
+    "3": "-3m"
+  },
+  "strongBuy": { "0": 12, "1": 11, "2": 10, "3": 9 },
+  "buy": { "0": 8, "1": 9, "2": 9, "3": 8 },
+  "hold": { "0": 4, "1": 4, "2": 5, "3": 5 },
+  "sell": { "0": 1, "1": 1, "2": 1, "3": 1 },
+  "strongSell": { "0": 0, "1": 0, "2": 0, "3": 0 }
+}
+```
+
+`period` values of `"0m"`, `"-1m"`, `"-2m"`, `"-3m"` mean the current month and the three prior months. Returns `null` when no recommendation data is found for the symbol. The endpoint responds `403` with a `kyc_required` problem when the caller's organization is not KYC-verified.
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/analyst-recommendations?symbol=AAPL" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

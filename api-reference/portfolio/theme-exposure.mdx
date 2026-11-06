@@ -1,0 +1,111 @@
+---
+title: 'Portfolio Theme Exposure'
+openapi: 'POST /v1/portfolio/theme-exposure'
+---
+
+Decomposes a portfolio across the telemetry-radar theme baskets. **Async —
+returns a `job_id` immediately.**
+
+1. **Submit**: POST your holdings to `/v1/portfolio/theme-exposure`.
+2. **Receive**: a `job_id` and polling URL.
+3. **Poll**: `GET /v1/jobs/{job_id}` until `status` is `completed`.
+
+<Note>
+Symbols are taken as RICs, as sent, with no ticker resolution: a bare ticker
+like `AGG` can mean a different stock on a different exchange than the one
+you intend. Resolve tickers to RICs first: for stocks, use
+[Stock Search](/api-reference/stock/search) or
+[Validate Symbol](/api-reference/validation/validate-symbol); for ETFs, use
+[ETF Search](/api-reference/etf/search) or
+[Validate ETF Symbol](/api-reference/etf/validate). Do not use
+`POST /v1/portfolio/resolve` for this. It is a Portfolio Tracker function
+that requires a date per holding and renormalizes weights to 1.0, a
+different contract from this endpoint's. A request where **none** of the
+symbols is a known RIC is rejected with `400` before a job is created, and
+nothing is charged.
+</Note>
+
+## Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `holdings` | array of `Holding` | Yes | 1–100 positions. |
+| `themes` | array of string | No | Up to 10 theme questions ("how exposed am I to X?"). Each entry is a basket ID or a theme-name substring. |
+
+**`Holding` object:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `symbol` | string | Yes | RIC of the position, e.g. `AAPL.O`, `JPM.N`, `0700.HK`. 1–24 characters. |
+| `weight` | number | Yes | Portfolio fraction in the base currency. Need not sum to 1; may be negative for shorts. Must be finite. |
+
+## Response (job created)
+
+```json
+{
+  "job_id": "theme-9c1e4f2a-...",
+  "status": "pending",
+  "check_url": "/v1/jobs/theme-9c1e4f2a-...",
+  "estimated_duration_seconds": 10,
+  "message": "Theme-exposure decomposition started. Poll the check_url for results."
+}
+```
+
+## Completed Job Result
+
+Documented directly from the endpoint's own contract. `result` carries:
+
+| Field | Description |
+|-------|-------------|
+| `themes[]` | One entry per theme basket the book reaches: basket id, name, market, quadrant; `gross_weight` (sum of absolute per-name net exposure); `net_weight` (signed); `member_rics` (your held names counting toward the theme, not the basket's full roster); `active_weight` with `active_weight_status` (`null` or `"no_benchmark"` — no market-neutral reference is served yet, never fabricated). |
+| `coverage` | `themed` / `unthemed` / `fi_pending` / `unresolved` / `cash` / `lookthrough_residual`, reconciling to `total_book`. |
+| `equity_sleeve` | `themed + unthemed`, the denominator for theme percentages. Check `diagnostics.equity_sleeve_nonpositive` before dividing. |
+| `fi_by_type` | Fixed-income weight by sub-asset (bond, credit, macro funds receive no theme exposure). |
+| `diagnostics`, `disclosures`, `methodology_note` | Conservation totals, resolution counters, data-gap magnitudes, and caveats applicable to this book. |
+| `basket_universe` | The report date of the theme baskets used (a staleness signal) and their data-quality counters. |
+| `theme_queries[]` | Present only when `themes` was sent. Per query: `status` (`matched` / `ambiguous` / `not_found`), the member-inclusive exposure headline and assigned view when matched, or capped `candidates` with `n_candidates_total` when ambiguous. Numeric fields are `null` unless matched. |
+
+ETFs are unpacked to their constituents at reported weights, nested funds
+included. Weight the holdings data does not cover is reported as
+`lookthrough_residual` and never spread over known constituents. A symbol
+that is not a known RIC is reported as unresolved weight, not guessed.
+
+Exact field types and nullability depend on the book's composition — see a
+live job result for the authoritative shape.
+
+```json
+{
+  "job_id": "theme-9c1e4f2a-...",
+  "status": "completed",
+  "result": {
+    "themes": [
+      {
+        "basket_id": "us-ai-infra-02",
+        "name": "US AI Infrastructure",
+        "market": "US",
+        "quadrant": "Fading",
+        "gross_weight": 0.08,
+        "net_weight": 0.08,
+        "member_rics": ["NVDA.O", "AVGO.O"],
+        "active_weight": null,
+        "active_weight_status": "no_benchmark"
+      }
+    ],
+    "coverage": { "themed": 0.62, "unthemed": 0.21, "fi_pending": 0.0, "unresolved": 0.02, "cash": 0.05, "lookthrough_residual": 0.10, "total_book": 1.0 },
+    "equity_sleeve": 0.83,
+    "fi_by_type": {},
+    "diagnostics": {},
+    "disclosures": [],
+    "methodology_note": "...",
+    "basket_universe": { "report_date": "2026-11-04" }
+  }
+}
+```
+
+## Errors
+
+| Status | When |
+|--------|------|
+| `400` | None of the supplied symbols resolve to a known RIC. No job is created and nothing is charged. |
+| `429` | The theme-exposure worker is at capacity; `Retry-After: 2` is set. |
+| `500` | Job creation failed unexpectedly. |

@@ -34,20 +34,20 @@ Symbols use **RIC** format (e.g. `AAPL.O`, `JPM.N`, `2330.TW`). Use `search_stoc
 | `get_peer_snapshot` | Score a stock against its peers. Returns Quality/Value/Momentum/Defensive/Tactical plus a peer comparison. | 0.1 | Fast |
 | `get_score_analysis` | Historical factor-score trends (how Quality/Value/Momentum/Defensive/Tactical evolved). | 0.1 | Instant |
 | `get_score_summary` | Plain-language summary of where a stock's factor scores stand over the past 52 weeks: current score and 13-week trend. | 0.1 | Instant |
-| `get_performance_history` | Past price performance, a returns calendar, and risk/return versus peers. Makes two analytics calls. | 0.2 | Instant |
-| `get_financials` | Financial statements and ratios. `statement`: `income`, `balance_sheet`, `cash_flow`, `ratios`, `summary`. | 0.05 per symbol; 0.1 with `latest=true` for income, balance sheet, or cash flow | Instant |
-| `get_stock_outlook` | Analyst outlook. `aspect`: `analyst_targets`, `recommendations`, `risk_return`, `dividends`. The `recommendations` aspect requires a [KYC-verified organization](/problems/kyc-required). | 0.05; 0.1 for `risk_return` | Instant |
+| `get_performance_history` | Past price performance, a returns calendar, and risk/return versus peers. Makes up to two analytics calls. | Up to 0.2 | Instant |
+| `get_financials` | Financial statements and ratios. `statement`: `income`, `balance_sheet`, `cash_flow`, `ratios`, `summary`. | 0.05 per symbol; 0.1 per symbol with `latest=true` for income, balance sheet, or cash flow | Instant |
+| `get_stock_outlook` | Analyst outlook. `aspect`: `analyst_targets`, `recommendations`, `risk_return`, `dividends`. The `recommendations` aspect requires a [KYC-verified organization](/problems/kyc-required). | 0.05 per call (`analyst_targets`, `recommendations`); 0.1 per call (`risk_return`); 0.05 per symbol (`dividends`) | Instant |
 | `get_technical_analysis` | Trend, momentum (RSI, MACD), support/resistance, volume, volatility. | 5 | Async (~15–30s) |
 | `get_financial_analysis` | Deep financial analysis using Palepu's framework (profitability, liquidity, solvency, valuation). | 5 | Async (~2–5m) |
 | `get_stock_report` | Full Chicago Global research report with PDF/HTML links. | 10 | Async (~1–2m) |
-| `export_price_series` | Price data for charting tools (dates/prices, CSV, or JSON). | 0.05 | Instant |
+| `export_price_series` | Price data for charting tools (dates/prices, CSV, or JSON). | 0.05 per symbol | Instant |
 | `export_peer_comparison` | Peer-comparison data for charting tools. | 0.1 | Instant |
 
 ## Portfolio
 
 | Tool | What it does | Credits | Timing |
 |------|--------------|------|--------|
-| `quick_portfolio_scores` | Instant VALUE/QUALITY/MOMENTUM/DEFENSIVE scores for a set of holdings. | 0.1 per holding analyzed | ~2s |
+| `quick_portfolio_scores` | Instant VALUE/QUALITY/MOMENTUM/DEFENSIVE scores for a set of holdings. | 0.1 per holding analyzed (max 100 holdings) | ~2s |
 | `analyze_portfolio` | Full multi-stock portfolio analysis (each holding needs a rebalance date, symbol, weight). | 5 | Async |
 | `check_portfolio_redundancy` | Detect overlapping positions, sector concentration, industry duplicates, and factor clusters. Checks up to 100 holdings. | 0.1 per holding checked, up to 10 | Fast |
 
@@ -56,21 +56,21 @@ Symbols use **RIC** format (e.g. `AAPL.O`, `JPM.N`, `2330.TW`). Use `search_stoc
 | Tool | What it does | Credits | Timing |
 |------|--------------|------|--------|
 | `search_etfs` | Find an ETF by symbol or name (typo-tolerant). | 0 | Instant |
-| `etf_search` | Deprecated alias for ETF search by query and market. | 0 | Instant |
+| `etf_search` | **Deprecated.** Alias for `search_etfs` with the same inputs, but returns a bare array instead of `{success, query, count, results}`. Will be removed in a future release — use `search_etfs`. | 0 | Instant |
 | `etf_profile` | ETF profile and factor scores (accepts a plain ticker like `SPY`). | 0.1 | Instant |
 | `etf_holdings` | Top holdings with portfolio weights and per-holding factor scores. | 0.1 | Instant |
-| `etf_daily_price` | Daily OHLCV price data for one ETF per request. | 0.05 per symbol | Instant |
-| `get_etf_report` | Full ETF research report. Symbol search is free. | 10 | Async |
+| `etf_daily_price` | Daily OHLCV price data for one or more ETFs. | 0.05 per symbol | Instant |
+| `get_etf_report` | Full ETF research report. Symbol resolution is free. | 10 | Async (~1–2m) |
 
 ## Macro & market telemetry
 
 | Tool | What it does | Credits | Timing |
 |------|--------------|------|--------|
-| `macro_analyst` | Macro outlook for a market or country, with overview and component views. | 5 normally; up to 50 during overview recovery | ~2–3s |
+| `macro_analyst` | Macro outlook for a market/country (progressive disclosure — overview, then a component for detail). | 5 normally. An overview call without a success payload can trigger up to 9 more component requests, for up to 50 credits total if all 10 requests succeed. Passing an explicit `component` never fans out. | ~2–3s |
 | `list_macro_countries` | List all markets/countries with available macro reports. | 0 | Instant |
-| `check_macro_health` | Deprecated macro-market-list check. Use `check_api_health` for API health. | 0 | Instant |
-| `get_telemetry` | Daily market telemetry snapshot, regime, leading/lagging baskets, and narrative. Returns directly without job polling. | 0.05 | Synchronous |
-| `explore_telemetry` | Search and slice the daily telemetry baskets: a stock's baskets and peers, a market's moves, a basket's members, and what changed recently. | 0.05; 0.1 when looking up a stock; 0.05 more per basket opened | Synchronous |
+| `check_macro_health` | **Deprecated.** Confirms the macro markets list responds; does not probe report generation. For server liveness use `check_api_health`; for macro coverage use `list_macro_countries`, which returns the same data. | 0 | Instant |
+| `get_telemetry` | Daily market telemetry snapshot — regime, leading/lagging baskets, the daily narrative. | 0.05 | Instant (synchronous, no polling) |
+| `explore_telemetry` | Search and slice the daily telemetry baskets (about 380 thematic stock baskets across 41 markets, holding about 15,000 stocks) by stock, market, basket, or recent changes. | 0.05 normally; 0.1 for a stock lookup; plus 0.05 per basket opened for a basket lookup, up to 0.2 total | Instant (synchronous, no polling) |
 
 If a macro overview fails, `macro_analyst` can make nine additional report requests.
 Each successful HTTP response costs 5 credits, including HTTP `200` responses whose
@@ -88,7 +88,7 @@ are free. An explicit component request does not trigger the nine-request recove
 
 | Tool | What it does | Credits | Timing |
 |------|--------------|------|--------|
-| `build_stock_universe` | Build a thematic stock universe from a plain-English query (searches ~65K company descriptions, ranks by relevance). | 5 | ~1m |
+| `build_stock_universe` | Build a thematic stock universe from a plain-English query (searches company descriptions, ranks by relevance). | 5 | ~1m |
 
 ## Documentation
 

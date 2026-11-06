@@ -1,0 +1,46 @@
+---
+title: 'Upgrades & Downgrades'
+openapi: 'GET /v1/upgrades-downgrades'
+---
+
+Get the history of analyst rating changes (upgrades and downgrades) for a symbol. Requires an organization with recommendation access.
+
+## Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `symbol` | string | Yes | Stock symbol (e.g., `AAPL`, `MSFT`) |
+
+## Response
+
+Returns a dictionary keyed by field name, with each field itself a dictionary keyed by the grade date:
+
+```json
+{
+  "firm": {
+    "2026-10-28 00:00:00": "Morgan Stanley",
+    "2026-09-15 00:00:00": "Jefferies"
+  },
+  "toGrade": {
+    "2026-10-28 00:00:00": "Overweight",
+    "2026-09-15 00:00:00": "Hold"
+  },
+  "fromGrade": {
+    "2026-10-28 00:00:00": "Equal-Weight",
+    "2026-09-15 00:00:00": "Hold"
+  },
+  "action": {
+    "2026-10-28 00:00:00": "up",
+    "2026-09-15 00:00:00": "main"
+  }
+}
+```
+
+Field names use this exact casing (`firm`, `toGrade`, `fromGrade`, `action`), keyed by grade-change date in this string format (no timezone offset in the string itself). Returns `null` when no rating-change data is found for the symbol. The endpoint responds `403` with a `kyc_required` problem when the caller's organization is not KYC-verified.
+
+## Example
+
+```bash
+curl "https://api.chicago.global/v1/upgrades-downgrades?symbol=AAPL" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```

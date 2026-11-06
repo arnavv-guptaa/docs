@@ -1,0 +1,80 @@
+---
+title: 'Telemetry Changes'
+openapi: 'GET /v1/telemetry/changes'
+---
+
+Part of the **telemetry-radar** layer, a newer set of endpoints built on the
+daily basket signal log. It is separate from the baskets under
+[Telemetry](/api-reference/telemetry/summary), which read the daily telemetry
+row directly.
+
+What changed in the telemetry baskets over a lookback window: quadrant
+changes, new divergences (fatigue or rebound), themes confirmed in more
+markets, and moves of 3 or more standard deviations. Each event carries the
+basket's current quadrant and momentum for context.
+
+<Note>
+Built from the daily signal log. From 2026-09-25 each day's signals are
+recorded as seen that day, with no hindsight. Earlier dates come from a later
+backfill run. Only active baskets are reported.
+</Note>
+
+## Query Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `days` | integer | No | `7` | Look back this many calendar days from the latest report. Range 1–90. |
+| `market` | string | No | — | Market code or country name to narrow to, e.g. `JP` or `Japan`. |
+| `types` | array of string | No | All types | Event types to include. Repeat the parameter for several. Valid values: `quadrant_change`, `divergence`, `theme_spreading`, `big_move`. |
+| `limit` | integer | No | `50` | Maximum events returned, newest first. Range 1–500. |
+
+An unknown value in `types` returns `400`.
+
+## Response
+
+The window, counts per event type, and the events themselves (newest first,
+capped at `limit`). A `note` field appears only when more events matched than
+`limit` allows. `legend` explains each event type and is static.
+
+```json
+{
+  "window": { "from": "2026-10-28", "to": "2026-11-04", "days": 7 },
+  "counts": { "quadrant_change": 2, "divergence": 1, "theme_spreading": 1, "big_move": 3 },
+  "total_events": 7,
+  "events": [
+    {
+      "basket_id": "jp-semiconductors-01",
+      "basket_name": "Japan Semiconductors",
+      "theme_id": "semiconductors",
+      "market": "JP",
+      "country": "Japan",
+      "now": { "quadrant": "Leaders", "momentum_1m_pct": 4.21, "momentum_6m_pct": 11.03 },
+      "date": "2026-11-03",
+      "type": "quadrant_change",
+      "from": "Recovering",
+      "to": "Leaders",
+      "flips": 1,
+      "momentum_1m_pct": 4.21,
+      "momentum_6m_pct": 11.03
+    },
+    {
+      "basket_id": "us-ai-infra-02",
+      "basket_name": "US AI Infrastructure",
+      "theme_id": "ai-infra",
+      "market": "US",
+      "country": "United States",
+      "now": { "quadrant": "Fading", "momentum_1m_pct": -1.8, "momentum_6m_pct": 6.4 },
+      "date": "2026-11-02",
+      "type": "big_move",
+      "daily_zscore": -3.4
+    }
+  ],
+  "legend": {
+    "quadrant_change": "The basket ended the window in a different quadrant than it started.",
+    "divergence": "A divergence started: fatigue = down on the day while up month-to-date; rebound = up on the day while down month-to-date.",
+    "theme_spreading": "The basket's theme is confirmed in more other markets than at the start of the window.",
+    "big_move": "The day's move was at least 3 standard deviations from the basket's own history.",
+    "now": "The basket's latest state, for context: quadrant and momentum (percent)."
+  }
+}
+```

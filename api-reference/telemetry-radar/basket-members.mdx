@@ -1,0 +1,75 @@
+---
+title: 'Basket Members'
+openapi: 'GET /v1/telemetry/baskets/{basket_id}/members'
+---
+
+Part of the **telemetry-radar** layer, a newer set of endpoints distinct from
+the baskets under [Telemetry](/api-reference/telemetry/summary), including
+[Basket Detail](/api-reference/telemetry/basket-detail). The daily telemetry
+row lists at most 10 members per basket; this endpoint returns the full, live
+membership, paired with that day's telemetry row so returns, momentum, and
+quadrant match [Telemetry Baskets](/api-reference/telemetry/baskets) exactly.
+
+Resolve `basket_id` from [Telemetry Baskets](/api-reference/telemetry/baskets)
+first.
+
+## Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `basket_id` | string | Yes | The basket to list members for. |
+
+## Query Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `date` | string | No | Latest | Telemetry report date (`YYYY-MM-DD`) for basket context. |
+
+An unknown or inactive `basket_id` returns `404`.
+
+## Response
+
+Members sorted most representative first (`cohesion_z` descending, missing
+last), each with its factor scores where available.
+
+```json
+{
+  "report_date": "2026-11-04",
+  "basket_id": "us-ai-infra-02",
+  "basket": {
+    "basket_id": "us-ai-infra-02",
+    "name": "US AI Infrastructure",
+    "market": "US",
+    "quadrant": "Fading",
+    "momentum_1m": -0.018,
+    "momentum_6m": 0.064,
+    "n_confirmed_markets": 3,
+    "is_priced_in": false
+  },
+  "n_members": 26,
+  "members": [
+    {
+      "ric": "NVDA.O",
+      "name": "NVIDIA Corp",
+      "member_cohesion": 0.812,
+      "cohesion_z": 1.46,
+      "scores": { "value": 3.1, "quality": 8.7, "momentum": 9.2, "defensive": 4.0, "tactical": 6.5, "total": 7.4 }
+    },
+    {
+      "ric": "AVGO.O",
+      "name": "Broadcom Inc",
+      "member_cohesion": 0.744,
+      "cohesion_z": 0.91,
+      "scores": null
+    }
+  ]
+}
+```
+
+`basket` is the same object returned by
+[Basket Detail](/api-reference/telemetry/basket-detail), minus its own
+10-member sample. If the basket has been re-formed since this date's
+telemetry row, `basket` is `null` and a `note` field explains that membership
+is current but returns and quadrant are unavailable. `scores` is `null` for a
+member with no scored factor row. See the response example for exact field
+types.
