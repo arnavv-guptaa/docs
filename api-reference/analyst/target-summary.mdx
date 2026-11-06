@@ -22,7 +22,6 @@ When a target range is available:
   "low": 170.0,
   "mean": 228.9,
   "median": 230.0,
-  "source": "<provider>",
   "ric": "AAPL.O",
   "status": "available",
   "unavailable_reason": null,
@@ -31,12 +30,6 @@ When a target range is available:
 ```
 
 When a range cannot be resolved, `status` is `"unavailable"`, `low`/`high`/`mean`/`median`/`current` are `null`, and `unavailable_reason` carries a short machine-readable cause such as `provider_request_failed`, `provider_range_timeout`, `provider_range_unavailable`, or `contributor_extrema_missing`. A symbol-matching failure returns its own distinct reason code, separate from the four above.
-
-<Note>
-The response also carries internal resolution metadata (how the symbol was matched to the
-upstream provider) that isn't part of the documented contract above and may change without
-notice. Don't build against undocumented fields.
-</Note>
 
 ## Example
 
